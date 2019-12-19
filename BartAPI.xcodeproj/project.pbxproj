@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		933BF8B323A9BDED00A501A0 /* StationDetails.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */; };
+		933BF8B523A9C3C700A501A0 /* StationDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933BF8B423A9C3C700A501A0 /* StationDetailMapCell.swift */; };
+		933BF8B823A9C58B00A501A0 /* StationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933BF8B723A9C58B00A501A0 /* StationDetailViewController.swift */; };
+		933BF8BA23A9C5E200A501A0 /* StationDetailInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933BF8B923A9C5E200A501A0 /* StationDetailInfoCell.swift */; };
+		934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */; };
+		936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */; };
+		936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3323AB673800BD9E56 /* StationInfo.swift */; };
 		93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1923A99154007766BB /* AppDelegate.swift */; };
 		93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1B23A99154007766BB /* SceneDelegate.swift */; };
 		93DF8F1E23A99154007766BB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1D23A99154007766BB /* ViewController.swift */; };
@@ -14,9 +21,19 @@
 		93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F2223A99154007766BB /* BartAPI.xcdatamodeld */; };
 		93DF8F2623A99157007766BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93DF8F2523A99157007766BB /* Assets.xcassets */; };
 		93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93DF8F2723A99157007766BB /* LaunchScreen.storyboard */; };
+		93DF8F3223A99260007766BB /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F3123A99260007766BB /* Station.swift */; };
+		93DF8F3423A99781007766BB /* StationTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F3323A99781007766BB /* StationTableCell.swift */; };
+		93DF8F3823A99BDF007766BB /* StationsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F3723A99BDF007766BB /* StationsTableController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StationDetails.storyboard; sourceTree = "<group>"; };
+		933BF8B423A9C3C700A501A0 /* StationDetailMapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailMapCell.swift; sourceTree = "<group>"; };
+		933BF8B723A9C58B00A501A0 /* StationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailViewController.swift; sourceTree = "<group>"; };
+		933BF8B923A9C5E200A501A0 /* StationDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailInfoCell.swift; sourceTree = "<group>"; };
+		934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRoutesTableCell.swift; sourceTree = "<group>"; };
+		936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
+		936E9C3323AB673800BD9E56 /* StationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
 		93DF8F1623A99153007766BB /* BartAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BartAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93DF8F1923A99154007766BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93DF8F1B23A99154007766BB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -26,6 +43,9 @@
 		93DF8F2523A99157007766BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93DF8F2823A99157007766BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		93DF8F2A23A99157007766BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93DF8F3123A99260007766BB /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
+		93DF8F3323A99781007766BB /* StationTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationTableCell.swift; sourceTree = "<group>"; };
+		93DF8F3723A99BDF007766BB /* StationsTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsTableController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -39,6 +59,35 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		933BF8AF23A9BC5A00A501A0 /* Storyboards */ = {
+			isa = PBXGroup;
+			children = (
+				93DF8F1F23A99154007766BB /* Main.storyboard */,
+				93DF8F2723A99157007766BB /* LaunchScreen.storyboard */,
+				933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */,
+			);
+			path = Storyboards;
+			sourceTree = "<group>";
+		};
+		933BF8B623A9C3CE00A501A0 /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				93DF8F3323A99781007766BB /* StationTableCell.swift */,
+				933BF8B423A9C3C700A501A0 /* StationDetailMapCell.swift */,
+				933BF8B923A9C5E200A501A0 /* StationDetailInfoCell.swift */,
+				934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */,
+			);
+			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		936E9C3023AB240900BD9E56 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		93DF8F0D23A99153007766BB = {
 			isa = PBXGroup;
 			children = (
@@ -58,16 +107,45 @@
 		93DF8F1823A99153007766BB /* BartAPI */ = {
 			isa = PBXGroup;
 			children = (
+				936E9C3023AB240900BD9E56 /* Extensions */,
+				933BF8AF23A9BC5A00A501A0 /* Storyboards */,
+				93DF8F3623A99BC3007766BB /* Controllers */,
+				93DF8F3523A99785007766BB /* Views */,
+				93DF8F3023A99252007766BB /* Models */,
 				93DF8F1923A99154007766BB /* AppDelegate.swift */,
 				93DF8F1B23A99154007766BB /* SceneDelegate.swift */,
 				93DF8F1D23A99154007766BB /* ViewController.swift */,
-				93DF8F1F23A99154007766BB /* Main.storyboard */,
 				93DF8F2523A99157007766BB /* Assets.xcassets */,
-				93DF8F2723A99157007766BB /* LaunchScreen.storyboard */,
 				93DF8F2A23A99157007766BB /* Info.plist */,
 				93DF8F2223A99154007766BB /* BartAPI.xcdatamodeld */,
 			);
 			path = BartAPI;
+			sourceTree = "<group>";
+		};
+		93DF8F3023A99252007766BB /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				93DF8F3123A99260007766BB /* Station.swift */,
+				936E9C3323AB673800BD9E56 /* StationInfo.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		93DF8F3523A99785007766BB /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				933BF8B623A9C3CE00A501A0 /* TableViewCells */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		93DF8F3623A99BC3007766BB /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				93DF8F3723A99BDF007766BB /* StationsTableController.swift */,
+				933BF8B723A9C58B00A501A0 /* StationDetailViewController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -128,6 +206,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				933BF8B323A9BDED00A501A0 /* StationDetails.storyboard in Resources */,
 				93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */,
 				93DF8F2623A99157007766BB /* Assets.xcassets in Resources */,
 				93DF8F2123A99154007766BB /* Main.storyboard in Resources */,
@@ -141,10 +220,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				933BF8B523A9C3C700A501A0 /* StationDetailMapCell.swift in Sources */,
 				93DF8F1E23A99154007766BB /* ViewController.swift in Sources */,
+				936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */,
+				93DF8F3423A99781007766BB /* StationTableCell.swift in Sources */,
+				93DF8F3223A99260007766BB /* Station.swift in Sources */,
+				936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */,
+				934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */,
 				93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
+				933BF8B823A9C58B00A501A0 /* StationDetailViewController.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
+				93DF8F3823A99BDF007766BB /* StationsTableController.swift in Sources */,
+				933BF8BA23A9C5E200A501A0 /* StationDetailInfoCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

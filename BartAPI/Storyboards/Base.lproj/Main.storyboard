@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n2X-1Y-YUs">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Home-->
+        <scene sceneID="KVB-dG-L3z">
+            <objects>
+                <tableViewController id="3Li-Ik-AKq" customClass="StationsTableController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="g1Y-66-nND">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="StationTableCell" rowHeight="100" id="mJl-j3-ipl" customClass="StationTableCell" customModule="BartAPI" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="28" width="414" height="100"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mJl-j3-ipl" id="cSB-kx-jd2">
+                                    <rect key="frame" x="0.0" y="0.0" width="414" height="100"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <stackView opaque="NO" contentMode="scaleToFill" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="Qxo-4z-acq">
+                                            <rect key="frame" x="25" y="16" width="364" height="68"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="pEt-Gl-z7K">
+                                                    <rect key="frame" x="0.0" y="0.0" width="317" height="68"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="San Francisco International Airport" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6gM-IV-a1H">
+                                                            <rect key="frame" x="0.0" y="0.0" width="265" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Cg8-Tx-GuU">
+                                                            <rect key="frame" x="0.0" y="28.5" width="63" height="20.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="City" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lpa-yK-Anm">
+                                                            <rect key="frame" x="0.0" y="57" width="30.5" height="11"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                </stackView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="SFIA" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0rU-v5-Gjb">
+                                                    <rect key="frame" x="317" y="0.0" width="47" height="30.5"/>
+                                                    <fontDescription key="fontDescription" name="AvenirNext-Medium" family="Avenir Next" pointSize="22"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </stackView>
+                                    </subviews>
+                                    <constraints>
+                                        <constraint firstAttribute="trailingMargin" secondItem="Qxo-4z-acq" secondAttribute="trailing" constant="5" id="C1T-9u-sES"/>
+                                        <constraint firstItem="Qxo-4z-acq" firstAttribute="top" secondItem="cSB-kx-jd2" secondAttribute="topMargin" constant="5" id="K8w-Ka-Y84"/>
+                                        <constraint firstAttribute="bottomMargin" secondItem="Qxo-4z-acq" secondAttribute="bottom" constant="5" id="d8s-04-Qtr"/>
+                                        <constraint firstItem="Qxo-4z-acq" firstAttribute="leading" secondItem="cSB-kx-jd2" secondAttribute="leadingMargin" constant="5" id="ob5-85-3Tm"/>
+                                    </constraints>
+                                </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="stationAbbr" destination="0rU-v5-Gjb" id="LRM-NQ-Fk9"/>
+                                    <outlet property="stationAddress" destination="Cg8-Tx-GuU" id="oII-aI-gQ4"/>
+                                    <outlet property="stationCity" destination="lpa-yK-Anm" id="7bl-uV-nSZ"/>
+                                    <outlet property="stationName" destination="6gM-IV-a1H" id="dQ1-zp-L90"/>
+                                </connections>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="3Li-Ik-AKq" id="wan-hQ-bHc"/>
+                            <outlet property="delegate" destination="3Li-Ik-AKq" id="Owm-fE-1M6"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Home" id="hm5-oZ-B0f"/>
+                    <connections>
+                        <segue destination="MKg-Df-MfS" kind="show" identifier="StationDetailSeque" id="CkN-XJ-1Do"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Uin-ly-czd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2049" y="96"/>
+        </scene>
+        <!--StationDetailView-->
+        <scene sceneID="EqE-Um-MPQ">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="StationDetailView" storyboardName="StationDetails" referencedIdentifier="StationDetailView" id="MKg-Df-MfS" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="ywe-MA-bfJ"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Ql-vS-mgt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2927" y="96"/>
+        </scene>
+        <!--Stations-->
+        <scene sceneID="5Ei-wr-arh">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Vby-EM-Nom" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Stations" image="tram.fill" catalog="system" id="NFK-zM-ppC"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Rq4-ws-8RF">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="3Li-Ik-AKq" kind="relationship" relationship="rootViewController" id="N23-xb-bty"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Taf-qN-GXA" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1039.1304347826087" y="95.758928571428569"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="buf-Ql-g6s">
+            <objects>
+                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="n2X-1Y-YUs" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="QRi-fZ-k17">
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Vby-EM-Nom" kind="relationship" relationship="viewControllers" id="E30-pr-nRL"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="7Nz-Yb-viF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="128.98550724637681" y="95.758928571428569"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="tram.fill" catalog="system" width="48" height="64"/>
+    </resources>
+</document>
