@@ -10,3 +10,7 @@ The user will be able to:
 * View next train at specific station.
 * What the fare between 2 stations is + time of arrival.
 * Any advisory information such as Train Count and Elevator Information.
+
+
+### Note:
+Will update with screenshots as the views get completed.
