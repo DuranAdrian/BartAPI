@@ -177,7 +177,7 @@ class StationsTableController: UITableViewController {
                 let destinationController = segue.destination as! StationDetailViewController
                 destinationController.stationAbbr = stations[indexPath.row].abbreviation
                 destinationController.station = stations[indexPath.row]
-                destinationController.navigationItem.title = stations[indexPath.row].name
+                destinationController.navigationItem.title = stations[indexPath.row].abbreviation
             }
             
         }

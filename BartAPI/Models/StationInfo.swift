@@ -22,6 +22,8 @@ struct StationInfo: Codable {
     let location: CLLocation
     let northRoute: [String]
     let southRoute: [String]
+    let northPlatform: [String]
+    let southPlatform: [String]
     
     
     enum CodingKeys: String, CodingKey {
@@ -36,6 +38,8 @@ struct StationInfo: Codable {
         case zipcode
         case northRoute = "north_routes"
         case southRoute = "south_routes"
+        case northPlatform = "north_platforms"
+        case southPlatform = "south_platforms"
     }
     enum RootKey: String, CodingKey {
         case root
@@ -46,6 +50,9 @@ struct StationInfo: Codable {
     }
     enum RouteKey: String, CodingKey {
         case route
+    }
+    enum PlatformKey: String, CodingKey {
+        case platform
     }
     
     init(from decoder: Decoder) throws {
@@ -64,6 +71,11 @@ struct StationInfo: Codable {
         northRoute = try northRouteContainer.decode([String].self, forKey: .route)
         let southRouteContainer = try container.nestedContainer(keyedBy: RouteKey.self, forKey: .southRoute)
         southRoute = try southRouteContainer.decode([String].self, forKey: .route)
+        let northPlatformContainer = try container.nestedContainer(keyedBy: PlatformKey.self, forKey: .northPlatform)
+        northPlatform = try northPlatformContainer.decode([String].self, forKey: .platform)
+        let southPlatformContainer = try container.nestedContainer(keyedBy: PlatformKey.self, forKey: .southPlatform)
+        southPlatform = try southPlatformContainer.decode([String].self, forKey: .platform)
+
     }
 }
 

@@ -20,6 +20,16 @@
 	<string>1</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>MKDirectionsApplicationSupportedModes</key>
+	<array/>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>You need to grant this app access to your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>This application uses current location to find closest BART Station.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>This application uses current location to find closest BART Station.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>This application requires current location when in use for better experience.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>

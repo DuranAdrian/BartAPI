@@ -1,19 +1,17 @@
 //
-//  StationTableCell.swift
+//  StationDetailNameTableCell.swift
 //  BartAPI
 //
-//  Created by Adrian Duran on 12/17/19.
+//  Created by Adrian Duran on 12/20/19.
 //  Copyright © 2019 Adrian Duran. All rights reserved.
 //
 
 import UIKit
 
-class StationTableCell: UITableViewCell {
-    
-    @IBOutlet var stationName: UILabel!
-    @IBOutlet var stationCity: UILabel!
-    @IBOutlet var stationAbbr: UILabel!
-    @IBOutlet var stationAddress: UILabel!
+class StationDetailNameTableCell: UITableViewCell {
+    @IBOutlet weak var stationName: UILabel!
+    @IBOutlet weak var stationAddress: UILabel!
+    @IBOutlet weak var stationCity: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -25,7 +23,5 @@ class StationTableCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
-    
-    
 
 }

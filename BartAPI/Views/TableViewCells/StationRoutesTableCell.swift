@@ -10,10 +10,9 @@ import UIKit
 
 class StationRoutesTableCell: UITableViewCell {
 
-    @IBOutlet var northRoutes: UILabel!
-    @IBOutlet var southRoutes: UILabel!
-    @IBOutlet var northPlatforms: UILabel!
-    @IBOutlet var southPlatforms: UILabel!
+    @IBOutlet var routes: UILabel!
+    @IBOutlet var compassImage: UIImageView!
+    @IBOutlet var platform: UILabel!
     
     override func awakeFromNib() {
         super.awakeFromNib()
