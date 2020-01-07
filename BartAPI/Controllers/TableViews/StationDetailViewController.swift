@@ -20,12 +20,10 @@ class StationDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         DispatchQueue.global(qos: .userInitiated).async {
-            print("DISPATCH STATION INFO QUEUE")
             self.getStationInfoData()
         }
         
         DispatchQueue.global(qos: .userInitiated).async {
-            print("DISPATCH ROUTE QUEUE")
             self.getRouteData()
         }
         
@@ -33,9 +31,6 @@ class StationDetailViewController: UITableViewController {
         tableView.register(UINib(nibName: "StationDetailNameTableCell", bundle: nil), forCellReuseIdentifier: "StationDetailNameTableCell")
 
 //        tableView.tableFooterView = UIView()
-        
-        
-//        print(station.location.coordinate)
 
         // Uncomment the following line to preserve selection between presentations
         // self.clearsSelectionOnViewWillAppear = false
@@ -56,7 +51,6 @@ class StationDetailViewController: UITableViewController {
             
             ///Connection Successful
             if let data = data {
-                print("Found Route Data: \(data)")
                 self.routes = self.parseRouteJSONData(data: data)
             }
         })
@@ -88,7 +82,6 @@ class StationDetailViewController: UITableViewController {
             
             ///connection succesfull
             if let data = data {
-                print("Found Station Info Data \(data)")
                 // Used for debugging
 //                if let JSONString = String(data: data, encoding: String.Encoding.utf8) {
 //                   print(JSONString)
@@ -114,12 +107,9 @@ class StationDetailViewController: UITableViewController {
             
             let stationInfoItemData = try decoder.decode(StationInfoContainer.self, from: data)
             stationInfoItem.append(stationInfoItemData.stations)
-            print("NAME: \(stationInfoItem[0].name)")
-            print(stationInfoItem[0])
             return stationInfoItemData.stations
-//            return stationInfoItem[0]
         } catch {
-            print("Oh oh, could not decode stationDetails: \(error)")
+            print("ERROR PARSING STATION INFO JSON DATA: \(error)")
         }
         
 //        return stationInfoItem[0]
@@ -159,7 +149,9 @@ class StationDetailViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
+        //Find if north and south route exists
         return 1
+        
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

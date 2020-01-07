@@ -21,10 +21,17 @@
 		934E3F8723ADBAAE004A1EE3 /* StationMapTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934E3F8623ADBAAE004A1EE3 /* StationMapTableCell.xib */; };
 		936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */; };
 		936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3323AB673800BD9E56 /* StationInfo.swift */; };
+		9370226A23BE80FA00D45D8C /* Train.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9370226923BE80FA00D45D8C /* Train.swift */; };
 		9371C97223B042B10022C0F4 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9371C97123B042B10022C0F4 /* UIView+Ext.swift */; };
 		9371C97423B0444E0022C0F4 /* NearestStationTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */; };
 		9371C97623B28A330022C0F4 /* NearestStationTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */; };
+		93762AFA23C3E56B002D3460 /* DelayedNextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */; };
+		93762AFE23C3F49E002D3460 /* DelayedNextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */; };
+		93762B0323C40EC3002D3460 /* HomeWithSpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0223C40EC3002D3460 /* HomeWithSpinnerView.swift */; };
 		93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */; };
+		93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */; };
+		93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */; };
+		93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */; };
 		93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1923A99154007766BB /* AppDelegate.swift */; };
 		93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1B23A99154007766BB /* SceneDelegate.swift */; };
 		93DF8F1E23A99154007766BB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1D23A99154007766BB /* ViewController.swift */; };
@@ -52,10 +59,17 @@
 		934E3F8623ADBAAE004A1EE3 /* StationMapTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationMapTableCell.xib; sourceTree = "<group>"; };
 		936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		936E9C3323AB673800BD9E56 /* StationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
+		9370226923BE80FA00D45D8C /* Train.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Train.swift; sourceTree = "<group>"; };
 		9371C97123B042B10022C0F4 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NearestStationTableCell.xib; sourceTree = "<group>"; };
 		9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestStationTableCell.swift; sourceTree = "<group>"; };
+		93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DelayedNextTrainCell.xib; sourceTree = "<group>"; };
+		93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedNextTrainCell.swift; sourceTree = "<group>"; };
+		93762B0223C40EC3002D3460 /* HomeWithSpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWithSpinnerView.swift; sourceTree = "<group>"; };
 		93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Ext.swift"; sourceTree = "<group>"; };
+		93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
+		93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NextTrainCell.xib; sourceTree = "<group>"; };
+		93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextTrainCell.swift; sourceTree = "<group>"; };
 		93DF8F1623A99153007766BB /* BartAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BartAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93DF8F1923A99154007766BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93DF8F1B23A99154007766BB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +124,8 @@
 				934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */,
 				934E3F7D23ADB42E004A1EE3 /* StationDetailNameTableCell.swift */,
 				9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */,
+				93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */,
+				93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -131,6 +147,8 @@
 				934E3F7B23ADB40C004A1EE3 /* StationDetailNameTableCell.xib */,
 				934E3F8623ADBAAE004A1EE3 /* StationMapTableCell.xib */,
 				9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */,
+				93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */,
+				93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -143,6 +161,14 @@
 				93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		93762B0123C40EAE002D3460 /* UIViews */ = {
+			isa = PBXGroup;
+			children = (
+				93762B0223C40EC3002D3460 /* HomeWithSpinnerView.swift */,
+			);
+			path = UIViews;
 			sourceTree = "<group>";
 		};
 		93DF8F0D23A99153007766BB = {
@@ -186,6 +212,7 @@
 				93DF8F3123A99260007766BB /* Station.swift */,
 				936E9C3323AB673800BD9E56 /* StationInfo.swift */,
 				93214C8D23AE9FA1008BD634 /* Route.swift */,
+				9370226923BE80FA00D45D8C /* Train.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -193,7 +220,9 @@
 		93DF8F3523A99785007766BB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				93762B0123C40EAE002D3460 /* UIViews */,
 				933BF8B623A9C3CE00A501A0 /* TableViewCells */,
+				93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -264,9 +293,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */,
 				9371C97423B0444E0022C0F4 /* NearestStationTableCell.xib in Resources */,
 				933BF8B323A9BDED00A501A0 /* StationDetails.storyboard in Resources */,
 				93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */,
+				93762AFA23C3E56B002D3460 /* DelayedNextTrainCell.xib in Resources */,
 				934E3F7A23ADAF3F004A1EE3 /* StationTableCell.xib in Resources */,
 				93DF8F2623A99157007766BB /* Assets.xcassets in Resources */,
 				934E3F8723ADBAAE004A1EE3 /* StationMapTableCell.xib in Resources */,
@@ -284,6 +315,8 @@
 			files = (
 				9371C97223B042B10022C0F4 /* UIView+Ext.swift in Sources */,
 				933BF8B523A9C3C700A501A0 /* StationDetailMapCell.swift in Sources */,
+				9370226A23BE80FA00D45D8C /* Train.swift in Sources */,
+				93762B0323C40EC3002D3460 /* HomeWithSpinnerView.swift in Sources */,
 				93DF8F1E23A99154007766BB /* ViewController.swift in Sources */,
 				936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */,
 				9371C97623B28A330022C0F4 /* NearestStationTableCell.swift in Sources */,
@@ -294,13 +327,16 @@
 				93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */,
 				934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */,
 				93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */,
+				93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
 				933BF8B823A9C58B00A501A0 /* StationDetailViewController.swift in Sources */,
+				93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */,
 				934E3F7E23ADB42E004A1EE3 /* StationDetailNameTableCell.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
 				934E3F8023ADB947004A1EE3 /* HomeScreenTableViewController.swift in Sources */,
 				93DF8F3823A99BDF007766BB /* StationsTableController.swift in Sources */,
 				933BF8BA23A9C5E200A501A0 /* StationDetailInfoCell.swift in Sources */,
+				93762AFE23C3F49E002D3460 /* DelayedNextTrainCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

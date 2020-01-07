@@ -11,27 +11,45 @@ import MapKit
 
 class HomeScreenTableViewController: UITableViewController {
     let stationAPIURL = "https://api.bart.gov/api/stn.aspx?cmd=stns&key=MW9S-E7SL-26DU-VV8V&json=y"
-
+    var mapView: MKMapView!
+    fileprivate let locationManager: CLLocationManager! = CLLocationManager()
 
     var stations = [Station]()
+    var northTrains = [Train]()
+    var nextNorthTrain = EstimateDeparture()
+    var southTrains = [Train]()
+    var nextSouthTrain = EstimateDeparture()
     var closestStation: Station?
     var closestDistance: CLLocationDistance?
     
-    var testFlag: Bool = true
+    let activityView: UIActivityIndicatorView = UIActivityIndicatorView()
+    var timer: Timer?
+    
+    var hasPulledData: Bool = false
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setUpNavBar()
         setUpTableView()
         setUpNavBar()
-
         // load nearest station using .userInteractive
-        print("ViewDidLoad thread: \(Thread.current)")
         DispatchQueue.userInteractiveThread(delay: 5.0, background: { self.getData() }, completion: {
-            print("UIThread thread: \(Thread.current)")
-            self.testFlag = false
-            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0),IndexPath(row: 1, section: 0)], with: .fade)
-//            print("Coming back from thread: ",self.stations)
+            print("Has pulled data complete")
+            self.hasPulledData = true
+//            self.tableView.reloadData()
+            self.activityView.stopAnimating()
+            self.tableView.reloadSections([0,1], with: .fade)
+            print("Starting background thread timer...")
+            DispatchQueue.backgroundThread(delay: 5.0, background: {
+                print("INSIDE BACKGROUND THREAD")
+                self.timer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
+                print("Timer complete") }, completion: {
+                self.activityView.stopAnimating()
+                self.tableView.reloadSections([1], with: .fade)
+            })
+            
+//            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0),IndexPath(row: 1, section: 0),IndexPath(row: 0, section: 1),IndexPath(row: 1, section: 1)], with: .fade)
         })
+        
         
         //        self.tableView.tableFooterView = UIView()
         // Uncomment the following line to preserve selection between presentations
@@ -41,17 +59,45 @@ class HomeScreenTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
-        
+    @objc func timerFunction() {
+        print("PULLING NEW DATA! \(Date())")
+        activityView.startAnimating()
+        getData()
+    }
+    
+            
     func setUpTableView() {
         self.tableView.tableFooterView = UIView()
+//        self.tableView.separatorInset = UIEdgeInsets.zero
+//        self.tableView.layoutMargins = UIEdgeInsets.zero
         self.tableView.register(UINib(nibName: "StationMapTableCell", bundle: nil), forCellReuseIdentifier: "StationMapTableCell")
         self.tableView.register(UINib(nibName: "NearestStationTableCell", bundle: nil), forCellReuseIdentifier: "NearestStationTableCell")
+        self.tableView.register(UINib(nibName: "NextTrainCell", bundle: nil), forCellReuseIdentifier: "NextTrainCell")
+        self.tableView.register(UINib(nibName: "DelayedNextTrainCell", bundle: nil), forCellReuseIdentifier: "DelayedNextTrainCell")
+//        self.tableView.rowHeight = UITableView.automaticDimension
+//        self.tableView.estimatedRowHeight = UITableView.automaticDimension
+//        self.tableView.delegate = self
+//        self.tableView.dataSource = self
     }
     
     func setUpNavBar() {
         self.navigationItem.title = "Home"
+        
+        
+        if !hasPulledData {
+//            let activityView: UIActivityIndicatorView = UIActivityIndicatorView()
+            let activityIcon = UIBarButtonItem(customView: activityView)
+//            let loadingIcon = UIBarButtonItem(barButtonSystemItem: .refresh, target: nil, action: nil)
+//            loadingIcon.tintColor = .lightGray
+//            self.navigationItem.rightBarButtonItem = activityIcon
+            self.navigationItem.setRightBarButton(activityIcon, animated: true)
+            activityView.startAnimating()
+            
+        }
     }
     
+        
+    /// Get nearest station
     func getData() {
         guard let stationURL = URL(string: stationAPIURL) else { return }
         
@@ -63,15 +109,13 @@ class HomeScreenTableViewController: UITableViewController {
             
             ///connection succesfull
             if let data = data {
-                print("Current thread: \(Thread.current)")
                 self.stations = self.parseJSONData(data: data)
-                print("")
+                
                 ///Stations exist, can now find closest station
                 self.findClosetStation()
                 OperationQueue.main.addOperation {
                     print("Stations Data has been successfully parsed, reloading View.")
-//                    print(self.stations[0].name)
-//                        self.tableView.reloadData()
+//                    self.tableView.reloadData()
                 }
             }
             
@@ -86,22 +130,117 @@ class HomeScreenTableViewController: UITableViewController {
         do {
             let stationDataStore = try decoder.decode(StationContainer.self, from: data)
             stations = stationDataStore.stations
-//            print(stations)
         } catch {
-            print(error)
+            print("ERROR PARSING STATION LIST JSON DATA: \(error)")
         }
         
         return stations
     }
     
+    /// Get Next Train at nearst station
+    
+    
+    
+    func getTrainData(_ direction: String) {
+        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
+//        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=daly&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
+        ;
+        guard let trainURL = URL(string: filteredTrainAPIUrl) else { print("HAD TO RETURN FROM TRAINURL"); return }
+            
+        let task = URLSession.shared.dataTask(with: trainURL, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print("Could not connect to filteredTrainAPIUrl: \(error)")
+                return
+            }
+            
+            ///connection succesfull
+            if let data = data {
+                if direction == "n" {
+                    self.northTrains = self.parseTrainJSONData(data: data)
+//
+                    self.nextNorthTrain = self.findNextTrain(self.northTrains, "North")
+                    print("NEXT NORTH TRAIN: \(self.nextNorthTrain)")
+                    
+//                    for destination in self.northTrains[0].estimate {
+//                        print("Destination: \(destination.destination)")
+//                        for train in destination.nextEstimate {
+//                            print("Next train at: \(train.arrival) Mins at Platform: \(train.platform)")
+//                        }
+//                    }
+                } else {
+                    self.southTrains = self.parseTrainJSONData(data: data)
+                    print("Train estimate count: \(self.southTrains[0].estimate[0].nextEstimate.count)")
+                    self.nextSouthTrain = self.findNextTrain(self.southTrains, "South")
+                    print("NEXT SOUTH TRAIN: \(self.nextSouthTrain)")
+//                    for destination in self.southTrains[0].estimate {
+//                        self.findNextTrain(self.southTrains, "South")
+//                        print("Destination: \(destination.destination)")
+//                        for train in destination.nextEstimate {
+//                            print("Next train at: \(train.arrival) Mins at Platform: \(train.platform)")
+//                        }
+//                    }
+                }
+                
+//                OperationQueue.main.addOperation {
+//                    print("Stations Data has been successfully parsed, reloading View.")
+//                    print(self.stations[0].name)
+//                }
+            }
+//
+        })
+        task.resume()
+    }
+    
+    func parseTrainJSONData(data: Data) -> [Train] {
+        var parsedTrains = [Train]()
+        let decoder = JSONDecoder()
+        
+        do {
+            let trainDataStore = try decoder.decode(TrainContainer.self, from: data)
+            parsedTrains = trainDataStore.trains
+//            print("FOUND TRAINS: \(parsedTrains)")
+        } catch {
+            print("Error parsing Train JSON Data: \(error)")
+        }
+        
+        return parsedTrains
+    }
+    
+    // Find next train
+    func findNextTrain(_ trains: [Train], _ direction: String) -> EstimateDeparture {
+        print("Finding next train from \(direction)...")
+        // Visual comparision to all trains
+//        for destination in trains[0].estimate {
+//            print("Destination: \(destination.destination)")
+//            for train in destination.nextEstimate {
+//                print("Next train at: \(train.arrival) Mins at Platform: \(train.platform)")
+//            }
+//        }
+        var nextTrainAtTime: Int32 = UINT8_MAX
+        var position = 0
+        
+        for (index, destination) in trains[0].estimate.enumerated() {
+            var checkingNexttime: Int32
+            if destination.nextEstimate[0].arrival == "Leaving" {
+                checkingNexttime = 0
+            } else {
+                checkingNexttime = Int32(destination.nextEstimate[0].arrival)!
+            }
+            if checkingNexttime < nextTrainAtTime {
+                nextTrainAtTime = checkingNexttime
+                position = index
+            }
+        }
+        print("Next train heading to \(trains[0].estimate[position].destination) in about \(nextTrainAtTime) minutes")
+        return trains[0].estimate[position]
+    }
+    
     func findClosetStation() {
-        print("Stations exist, can now attempt to look for closest station")
         guard let userLocation = CLLocationManager().location else {
             print("Cannot find user location")
             return
         }
 
-        print("Successfully found user location")
         var closestStation: Station?
         var smallestDistance: CLLocationDistance?
         for station in stations {
@@ -113,6 +252,8 @@ class HomeScreenTableViewController: UITableViewController {
         }
         self.closestStation = closestStation
         self.closestDistance = smallestDistance
+        self.getTrainData("n")
+        self.getTrainData("s")
     }
     
     func convertMetersToMiles(_ distance: Double) -> String {
@@ -124,76 +265,213 @@ class HomeScreenTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 1
+//        return hasPulledData ? 2 : 1
+        return 2
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if CLLocationManager.locationServicesEnabled() {
-//            print("LocationTRUE")
-            return 3
+        // Each section has 2 rows
+        return 2
+
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        // Section one contains mapview and nearest Station
+        // Section 2 contains next trains arriving at platforms
+        if (hasPulledData && section == 1) {
+            return "Next Arriving Train"
         }
-        return 1
+        return nil
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
-        case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "StationMapTableCell", for: indexPath) as! StationDetailMapCell
-            
-            // Configure the cell...
-            cell.setUpLocationManager(closestStation)
+        // MAP View and closest station
+        if indexPath.section == 0 {
+            switch indexPath.row {
+            case 0:
+                print("Attempting to create StationMapTableCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
 
-            return cell
-        case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "NearestStationTableCell", for: indexPath) as! NearestStationTableCell
-            // Get current user location
-            // get list of station coordinates
-//            print(stations)
-//            guard let confirmedStations = stations.count else { print("Stations has not been initialized"); return cell }
-//            print(confirmedStations)
-            if stations.count == 0 {
-                print("Data has not been colllected, Cannot create cell")
-                cell.isHidden = testFlag ? true : false
+                let cell = tableView.dequeueReusableCell(withIdentifier: "StationMapTableCell", for: indexPath) as! StationDetailMapCell
+                
+                // Configure the cell...
+                cell.setUpLocationManager(closestStation)
+
                 return cell
-            } else {
-                print("Data has been succesfully collected, can now create cell")
-                cell.stationName.text = closestStation!.name
-                cell.stationDistance.text = String(describing: convertMetersToMiles(closestDistance!)) + " Miles"
-                cell.isHidden = testFlag ? true : false
+            case 1:
+//                let cell = tableView.dequeueReusableCell(withIdentifier: "NearestStationTableCell", for: indexPath) as! NearestStationTableCell
+                // Get current user location
+                // get list of station coordinates
+    //            print(stations)
+    //            guard let confirmedStations = stations.count else { print("Stations has not been initialized"); return cell }
+    //            print(confirmedStations)
+                if stations.count == 0 {
+                    print("Data has not been collected, Cannot create cell. return empty tablecell")
+                    
+                    print("Attempting to create empty NearestStationTableCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+                    let cell = UITableViewCell()
+                    cell.isHidden = hasPulledData ? false : true
+                    return cell
+                    
+                } else {
+                    print("Data has been succesfully collected, can now create cell")
+                    print("Attempting to create NearestStationTableCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "NearestStationTableCell", for: indexPath) as! NearestStationTableCell
+
+                    cell.stationName.text = closestStation!.name
+                    cell.stationDistance.text = String(describing: convertMetersToMiles(closestDistance!)) + " Miles"
+                    cell.isHidden = hasPulledData ? false : true
+                    return cell
+                }
+                
+            default:
+                fatalError("Error intializing home screen")
+            }
+        }
+        else {
+            switch indexPath.row {
+            case 0:
+                // NORTH TRAIN
+                if hasPulledData {
+                    /// Find if Delays
+                    if (nextNorthTrain.nextEstimate[0].isDelayed()) {
+                        print("Attempting to create North DelayedNextTrainCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                        let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
+                        cell.isHidden = !hasPulledData
+                        let color = UIColor.BARTCOLORS(rawValue: nextNorthTrain.nextEstimate[0].color)
+                        cell.routeColorView.backgroundColor = color?.colors
+                        cell.routeDirection.text = nextNorthTrain.nextEstimate[0].direction
+                        cell.destination.text = nextNorthTrain.destination
+                        if nextNorthTrain.nextEstimate[0].arrival == "Leaving" {
+                            cell.timeUntilArrival.text = "Leaving Now"
+                        } else {
+                            cell.timeUntilArrival.text = "\(Int(nextNorthTrain.nextEstimate[0].arrival)! + nextNorthTrain.nextEstimate[0].computeDelayTime()) Mins"
+                        }
+                        
+                        return cell
+
+                    } else {
+                        let cell = tableView.dequeueReusableCell(withIdentifier: "NextTrainCell", for: indexPath) as! NextTrainCell
+                        print("Attempting to create North NextTrainCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                        cell.isHidden = !hasPulledData
+                        let color = UIColor.BARTCOLORS(rawValue: nextNorthTrain.nextEstimate[0].color)
+                        cell.routeColorView.backgroundColor = color?.colors
+                        cell.routeDirection.text = nextNorthTrain.nextEstimate[0].direction
+                        cell.destination.text = nextNorthTrain.destination
+                        if nextNorthTrain.nextEstimate[0].arrival == "Leaving" {
+                            cell.timeUntilArrival.text = "Leaving Now"
+                        } else {
+                            cell.timeUntilArrival.text = "\(nextNorthTrain.nextEstimate[0].arrival) Mins"
+                        }
+                        
+                        return cell
+                    }
+                    
+                } else {
+                let cell = UITableViewCell()
+                    print("Attempting to create Empty North NextTrainCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                cell.isHidden = !hasPulledData
+                
                 return cell
             }
-            
-        case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "NearestStationTableCell", for: indexPath) as! NearestStationTableCell
-            // Get current user location
-            // get list of station coordinates
-//            print(stations)
-            cell.stationName.text = "Row should be pushed down soon"
-            cell.stationDistance.text = "0.0 Miles"
-            return cell
-              
-        default:
-            fatalError("Error intializing home screen")
+                
+            case 1:
+                // SOUTH TRAIN
+                
+                if hasPulledData {
+                    /// Find if Delays
+                    if (nextSouthTrain.nextEstimate[0].isDelayed()) {
+                        print("Attempting to create South DelayedNextTrainCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                        let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
+                        cell.isHidden = !hasPulledData
+                        let color = UIColor.BARTCOLORS(rawValue: nextSouthTrain.nextEstimate[0].color)
+                        cell.routeColorView.backgroundColor = color?.colors
+                        cell.routeDirection.text = nextSouthTrain.nextEstimate[0].direction
+                        cell.destination.text = nextSouthTrain.destination
+                        if nextSouthTrain.nextEstimate[0].arrival == "Leaving" {
+                            cell.timeUntilArrival.text = "Leaving Now"
+                        } else {
+                            cell.timeUntilArrival.text = "\(Int(nextSouthTrain.nextEstimate[0].arrival)! + nextSouthTrain.nextEstimate[0].computeDelayTime()) Mins"
+                        }
+                        
+                        return cell
+
+                    } else {
+                        print("Attempting to create South NextTrainCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                        let cell = tableView.dequeueReusableCell(withIdentifier: "NextTrainCell", for: indexPath) as! NextTrainCell
+                        cell.isHidden = !hasPulledData
+                        let color = UIColor.BARTCOLORS(rawValue: nextSouthTrain.nextEstimate[0].color)
+                        cell.routeColorView.backgroundColor = color?.colors
+                        cell.routeDirection.text = nextSouthTrain.nextEstimate[0].direction
+                        cell.destination.text = nextSouthTrain.destination
+                        if nextSouthTrain.nextEstimate[0].arrival == "Leaving" {
+                            cell.timeUntilArrival.text = "Leaving Now"
+                        } else {
+                            cell.timeUntilArrival.text = "\(nextSouthTrain.nextEstimate[0].arrival) Mins"
+                        }
+                        
+                        return cell
+                    }
+                    
+                } else {
+                    print("Attempting to create Empty South NextTrainCell in indexPath: row - \(indexPath.row), section - \(indexPath.section)")
+
+                    let cell = UITableViewCell()
+                    cell.isHidden = !hasPulledData
+                    
+                    return cell
+                }
+            default:
+                fatalError("Whoops")
+            }
         }
-        
         
         
     }
     
+//    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+//        if indexPath.row == 0 {
+//            return self.view.getSafeAreaSize().height/2
+//        } else {
+//            return 44.0
+//        }
+//
+//    }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.row {
-        case 0:
-            return self.view.getSafeAreaSize().height/2
-        case 1:
-            return testFlag ? 0 : 100.0
-//            return 100.0
-        case 2:
-            return 100.0
-        default:
-            return 43.0
+
+        if indexPath.section == 0 {
+            if indexPath.row == 0 {
+                return self.view.getSafeAreaSize().height/2
+            } else {
+                return hasPulledData ? 68.0 : 0.0
+            }
+        } else {
+            
+            return hasPulledData ? 63.0 : 0.0
         }
+//        switch indexPath.row {
+//        case 0:
+//            // Return Map View height
+//            return self.view.getSafeAreaSize().height/2
+//        case 1:
+//            // Return Nearest Station height
+//            return hasPulledData ? 0.0 : 68.0
+//        case 2:
+//            // Return next train
+//            return hasPulledData ? 0.0 : 63.0
+//        case 3:
+//            // Return next train
+//            return hasPulledData ? 0.0 : 63.0
+//        default:
+//            return 44.0
+//        }
     }
 
 

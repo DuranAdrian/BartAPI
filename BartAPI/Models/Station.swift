@@ -51,52 +51,6 @@ struct Station: Codable {
 
 struct StationContainer {
     let stations: [Station]
-    func getStationList() -> [Station] {
-            let stationAPIURL = "https://api.bart.gov/api/stn.aspx?cmd=stns&key=MW9S-E7SL-26DU-VV8V&json=y"
-            return getData(stationAPIURL)
-    //        return
-        }
-        
-        func getData(_ url: String) -> [Station] {
-                guard let stationURL = URL(string: url) else { return [] }
-                var stationList = [Station]()
-                
-                let task = URLSession.shared.dataTask(with: stationURL, completionHandler: { (data, response, error) -> Void in
-                    if let error = error {
-                        print("Could not connect to stationAPI: \(error)")
-                        return
-                    }
-                    
-                    ///connection succesfull
-                    if let data = data {
-                        stationList = self.parseJSONData(data: data)
-                        
-    //                    OperationQueue.main.addOperation {
-    //                        print("Stations Data has been parsed, reloading View.")
-    //    //                    print(self.stations[0].name)
-    //                        self.tableView.reloadData()
-    //                    }
-                    }
-                    
-                })
-                task.resume()
-                return stationList
-            }
-            
-            func parseJSONData(data: Data) -> [Station] {
-                var stations = [Station]()
-                let decoder = JSONDecoder()
-                
-                do {
-                    let stationDataStore = try decoder.decode(StationContainer.self, from: data)
-                    stations = stationDataStore.stations
-                } catch {
-                    print(error)
-                }
-                
-                return stations
-            }
-
 }
 
 extension StationContainer: Decodable {

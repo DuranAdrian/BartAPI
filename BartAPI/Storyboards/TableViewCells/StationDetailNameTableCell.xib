@@ -16,7 +16,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="zkD-AI-7T9">
-                        <rect key="frame" x="20" y="11" width="374" height="78"/>
+                        <rect key="frame" x="20" y="11" width="374" height="54"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="mappin.and.ellipse" catalog="system" translatesAutoresizingMaskIntoConstraints="NO" id="a1W-ja-0Z1">
                                 <rect key="frame" x="0.0" y="-0.5" width="20" height="20.5"/>
@@ -25,23 +25,23 @@
                                     <constraint firstAttribute="height" constant="20" id="zrH-Nr-uec"/>
                                 </constraints>
                             </imageView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fDr-B1-h1W">
-                                <rect key="frame" x="25" y="0.0" width="349" height="77.5"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="1000" axis="vertical" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="fDr-B1-h1W">
+                                <rect key="frame" x="25" y="0.0" width="349" height="54"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="San Francisco International Airport" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n2w-wU-bcF">
-                                        <rect key="frame" x="0.0" y="0.0" width="265" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="StationName" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="n2w-wU-bcF">
+                                        <rect key="frame" x="0.0" y="0.0" width="99" height="20.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3CC-In-OqH">
-                                        <rect key="frame" x="0.0" y="28.5" width="63" height="20.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="748" text="Address" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3CC-In-OqH">
+                                        <rect key="frame" x="0.0" y="28.5" width="63" height="0.0"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="749" text="City" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8BX-er-f9h">
-                                        <rect key="frame" x="0.0" y="57" width="30.5" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="36.5" width="30.5" height="17.5"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -50,12 +50,22 @@
                             </stackView>
                         </subviews>
                     </stackView>
+                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QHo-wd-Fkl">
+                        <rect key="frame" x="325" y="-9" width="74" height="94"/>
+                        <color key="backgroundColor" red="0.46274509800000002" green="0.70588235290000001" blue="0.74117647060000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <state key="normal" title="Find Route"/>
+                    </button>
                 </subviews>
                 <constraints>
                     <constraint firstItem="zkD-AI-7T9" firstAttribute="top" secondItem="Mc9-Og-cJp" secondAttribute="topMargin" id="7I3-j3-AyG"/>
                     <constraint firstAttribute="trailingMargin" secondItem="zkD-AI-7T9" secondAttribute="trailing" id="Ccp-1a-ih5"/>
+                    <constraint firstAttribute="trailing" secondItem="QHo-wd-Fkl" secondAttribute="trailing" constant="15" id="FJ7-u4-4M1"/>
+                    <constraint firstItem="QHo-wd-Fkl" firstAttribute="top" secondItem="Mc9-Og-cJp" secondAttribute="top" constant="15" id="S7O-yX-9fd"/>
                     <constraint firstItem="zkD-AI-7T9" firstAttribute="leading" secondItem="Mc9-Og-cJp" secondAttribute="leadingMargin" id="VWj-Hj-gog"/>
+                    <constraint firstItem="QHo-wd-Fkl" firstAttribute="centerY" secondItem="zkD-AI-7T9" secondAttribute="centerY" id="Vdv-ao-iJd"/>
+                    <constraint firstAttribute="bottom" secondItem="QHo-wd-Fkl" secondAttribute="bottom" constant="15" id="Veh-U2-2ST"/>
                     <constraint firstAttribute="bottomMargin" secondItem="zkD-AI-7T9" secondAttribute="bottom" id="ieA-Cm-ep4"/>
+                    <constraint firstItem="QHo-wd-Fkl" firstAttribute="top" secondItem="Mc9-Og-cJp" secondAttribute="topMargin" constant="-20" id="xTS-0v-HdU"/>
                 </constraints>
             </tableViewCellContentView>
             <connections>
@@ -63,7 +73,7 @@
                 <outlet property="stationCity" destination="8BX-er-f9h" id="3K0-EU-otn"/>
                 <outlet property="stationName" destination="n2w-wU-bcF" id="5GO-wC-pqM"/>
             </connections>
-            <point key="canvasLocation" x="42" y="221"/>
+            <point key="canvasLocation" x="126" y="225"/>
         </tableViewCell>
     </objects>
     <resources>

@@ -13,23 +13,19 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
     
     @IBOutlet var mapView: MKMapView! {
         didSet {
-            print("Setting mapView")
             mapView.delegate = self
-            print("Showing userLocation: \(mapView.showsUserLocation)")
         }
     }
-    
+
     fileprivate let locationManager: CLLocationManager! = CLLocationManager()
 
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        print("awakeFromNib")
 //        setUpLocationManager()
     }
     
     func setUpLocationManager(_ closestStation: Station?) {
-//        print("Setting up location manager")
         locationManager.requestWhenInUseAuthorization()
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.distanceFilter = kCLDistanceFilterNone
@@ -45,38 +41,40 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
 //            annotation.coordinate = userLocation.coordinate
 //            mapView.addAnnotation(annotation)
             
-//            print(Thread.current)
-//            sleep(10000)
             mapView.setRegion(region, animated: true)
             mapView.userTrackingMode = .follow
-            print("Number of annotations: \(self.mapView.annotations.count)")
-            for annotation in self.mapView.annotations {
-                print("Name: \(annotation.title)")
-            }
+
+            // FOR ROUTE SET UP
+            setUpRoute(validStation.location)
         } else {
             mapView.setRegion(region, animated: true)
         }
         
     }
     
-    func testingClosure(firstBlock: (() -> Void)? = nil, secondBlock: (() -> Void)? = nil) {
+    func setUpRoute(_ destination: CLLocation) {
+        let sourceLocation = MKMapItem.forCurrentLocation()
+        let destinationLocation = MKMapItem(placemark: MKPlacemark(coordinate: (CLLocationCoordinate2D(latitude: destination.coordinate.latitude, longitude: destination.coordinate.longitude))))
         
-        print("Inside function: \(Thread.current)")
-        let group = DispatchGroup()
-
-        group.enter()
-        print("Starting first block")
-        firstBlock?()
-        print("First block is now done")
-        group.leave()
-        group.notify(queue: .main) {secondBlock?()}
+        let directionRequest = MKDirections.Request()
+        directionRequest.source = sourceLocation
+        directionRequest.destination = destinationLocation
+        directionRequest.transportType = .automobile
+        
+        let directions = MKDirections(request: directionRequest)
+        directions.calculate(completionHandler: {(response, error) -> Void in
+            guard let response = response else {
+                if let error = error {
+                    print("Error with route overlay: \(error)")
+                }
+                return
+            }
+            let route = response.routes[0]
+            self.mapView.addOverlay((route.polyline), level: MKOverlayLevel.aboveRoads)
             
-        
-//        print("Starting second block")
-//
-////        secondBlock?()
-//        print("Second block is now done")
-//        group.leave()
+            let rect = route.polyline.boundingMapRect
+            self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
+        })
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -107,13 +105,21 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
         
     }
     
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.Custom.annotationBlue
+        renderer.lineWidth = 4.0
+        
+        return renderer
+    }
+    
     func locationToMap(location: CLLocation) {
         let geoCoder = CLGeocoder()
         
         geoCoder.reverseGeocodeLocation(location, completionHandler: {(placemarks, error) in
         
             if let error = error {
-                print(error)
+                print("Error reversing GeoCodeLocaiton: \(error)")
             }
             if let placemarks = placemarks {
                 let placemark = placemarks[0]
@@ -125,10 +131,7 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
                     annotation.coordinate = location.coordinate
                     annotation.title = "Station"
                     self.mapView.addAnnotation(annotation)
-                    print("New number of annotions: \(self.mapView.annotations.count)")
-//                    for annotation in self.mapView.annotations {
-//                        print("New name: \(annotation.title)")
-//                    }
+                    
                     // Set Zoom Level
                     let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 450, longitudinalMeters: 450)
                     self.mapView.showAnnotations(self.mapView.annotations, animated: true)
@@ -142,10 +145,9 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
     func addressToMap(location: String) {
         // Get Location
         let geoCoder = CLGeocoder()
-        print(location)
         geoCoder.geocodeAddressString(location, completionHandler: { placemarks, error in
             if let error = error {
-                print(error.localizedDescription)
+                print("Error with geocodeAddressString: \(error.localizedDescription)")
                 return
             }
             // Get First PlaceMark

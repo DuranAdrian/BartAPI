@@ -69,7 +69,6 @@ class StationsTableController: UITableViewController {
                 
                 OperationQueue.main.addOperation {
                     print("Stations Data has been parsed, reloading View.")
-//                    print(self.stations[0].name)
                     self.tableView.reloadData()
                 }
             }
@@ -86,7 +85,7 @@ class StationsTableController: UITableViewController {
             let stationDataStore = try decoder.decode(StationContainer.self, from: data)
             stations = stationDataStore.stations
         } catch {
-            print(error)
+            print("ERROR PARSING STATIONLIST JSON DATA:  \(error)")
         }
         
         return stations
@@ -125,7 +124,8 @@ class StationsTableController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("Selected station: \(stations[indexPath.row].name)")
+        let text = (searchController.isActive) ? searchResults[indexPath.row].name : stations[indexPath.row].name
+        print("Selected station: \(text)")
         performSegue(withIdentifier: "StationDetailSeque", sender: self)
     }
     
