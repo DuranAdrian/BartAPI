@@ -22,7 +22,20 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        // auto Zoom in to user location
 //        setUpLocationManager()
+    }
+    
+    func initialZoom() {
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.distanceFilter = kCLDistanceFilterNone
+        locationManager.startUpdatingLocation()
+        mapView.showsUserLocation = true
+        
+        guard let userLocation = locationManager?.location else { return }
+        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 1500, longitudinalMeters: 1500)
+        mapView.setRegion(region, animated: true)
     }
     
     func setUpLocationManager(_ closestStation: Station?) {
@@ -33,7 +46,7 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
         
         mapView.showsUserLocation = true
         guard let userLocation = locationManager?.location else { return }
-        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 400, longitudinalMeters: 400)
+        let region = MKCoordinateRegion(center: userLocation.coordinate, latitudinalMeters: 800, longitudinalMeters: 800)
         if let validStation = closestStation {
             
             self.locationToMap(location: validStation.location)
@@ -43,6 +56,9 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
             
             mapView.setRegion(region, animated: true)
             mapView.userTrackingMode = .follow
+//            var array = mapView.annotations
+//            array.append(mapView.userLocation as! MKAnnotation)
+//            mapView.showAnnotations(array, animated: true)
 
             // FOR ROUTE SET UP
             setUpRoute(validStation.location)
@@ -73,7 +89,10 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
             self.mapView.addOverlay((route.polyline), level: MKOverlayLevel.aboveRoads)
             
             let rect = route.polyline.boundingMapRect
-            self.mapView.setRegion(MKCoordinateRegion(rect), animated: true)
+            let padding = UIEdgeInsets(top: 15.0, left: 15.0, bottom: 15.0, right: 15.0)
+            let biggerRect = self.mapView.mapRectThatFits(rect, edgePadding: padding)
+            self.mapView.setRegion(MKCoordinateRegion(biggerRect), animated: true)
+            
         })
     }
 

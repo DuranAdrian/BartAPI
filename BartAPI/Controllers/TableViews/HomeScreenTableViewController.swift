@@ -286,6 +286,7 @@ class HomeScreenTableViewController: UITableViewController {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "StationMapTableCell", for: indexPath) as! StationDetailMapCell
                 
                 // Configure the cell...
+                cell.initialZoom()
                 cell.setUpLocationManager(closestStation)
 
                 return cell
