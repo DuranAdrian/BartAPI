@@ -28,10 +28,16 @@
 		93762AFA23C3E56B002D3460 /* DelayedNextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */; };
 		93762AFE23C3F49E002D3460 /* DelayedNextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */; };
 		93762B0323C40EC3002D3460 /* HomeWithSpinnerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0223C40EC3002D3460 /* HomeWithSpinnerView.swift */; };
+		93762B0523C57BD4002D3460 /* AdvisoryPopUp.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762B0423C57BD4002D3460 /* AdvisoryPopUp.xib */; };
+		93762B0723C677EA002D3460 /* StationTableCell_2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762B0623C677EA002D3460 /* StationTableCell_2.xib */; };
+		93762B0923C67818002D3460 /* StationTableCell_2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0823C67818002D3460 /* StationTableCell_2.swift */; };
+		93762B0B23C6BBB7002D3460 /* FindRouteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */; };
 		93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */; };
 		93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */; };
 		93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */; };
 		93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */; };
+		93BFD5F423C9597D00930419 /* StationArrivalsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93BFD5F323C9597D00930419 /* StationArrivalsCell.xib */; };
+		93BFD5F623C97ED800930419 /* StationArrivalsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BFD5F523C97ED800930419 /* StationArrivalsCell.swift */; };
 		93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1923A99154007766BB /* AppDelegate.swift */; };
 		93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1B23A99154007766BB /* SceneDelegate.swift */; };
 		93DF8F1E23A99154007766BB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1D23A99154007766BB /* ViewController.swift */; };
@@ -66,10 +72,16 @@
 		93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DelayedNextTrainCell.xib; sourceTree = "<group>"; };
 		93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedNextTrainCell.swift; sourceTree = "<group>"; };
 		93762B0223C40EC3002D3460 /* HomeWithSpinnerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeWithSpinnerView.swift; sourceTree = "<group>"; };
+		93762B0423C57BD4002D3460 /* AdvisoryPopUp.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AdvisoryPopUp.xib; sourceTree = "<group>"; };
+		93762B0623C677EA002D3460 /* StationTableCell_2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationTableCell_2.xib; sourceTree = "<group>"; };
+		93762B0823C67818002D3460 /* StationTableCell_2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationTableCell_2.swift; sourceTree = "<group>"; };
+		93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindRouteButton.swift; sourceTree = "<group>"; };
 		93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Ext.swift"; sourceTree = "<group>"; };
 		93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
 		93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NextTrainCell.xib; sourceTree = "<group>"; };
 		93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextTrainCell.swift; sourceTree = "<group>"; };
+		93BFD5F323C9597D00930419 /* StationArrivalsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationArrivalsCell.xib; sourceTree = "<group>"; };
+		93BFD5F523C97ED800930419 /* StationArrivalsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationArrivalsCell.swift; sourceTree = "<group>"; };
 		93DF8F1623A99153007766BB /* BartAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BartAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93DF8F1923A99154007766BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93DF8F1B23A99154007766BB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -111,6 +123,7 @@
 				93DF8F1F23A99154007766BB /* Main.storyboard */,
 				93DF8F2723A99157007766BB /* LaunchScreen.storyboard */,
 				933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */,
+				93762B0423C57BD4002D3460 /* AdvisoryPopUp.xib */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -126,6 +139,8 @@
 				9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */,
 				93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */,
 				93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */,
+				93762B0823C67818002D3460 /* StationTableCell_2.swift */,
+				93BFD5F523C97ED800930419 /* StationArrivalsCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -149,6 +164,8 @@
 				9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */,
 				93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */,
 				93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */,
+				93762B0623C677EA002D3460 /* StationTableCell_2.xib */,
+				93BFD5F323C9597D00930419 /* StationArrivalsCell.xib */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -223,6 +240,7 @@
 				93762B0123C40EAE002D3460 /* UIViews */,
 				933BF8B623A9C3CE00A501A0 /* TableViewCells */,
 				93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */,
+				93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -294,8 +312,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */,
+				93762B0523C57BD4002D3460 /* AdvisoryPopUp.xib in Resources */,
+				93762B0723C677EA002D3460 /* StationTableCell_2.xib in Resources */,
 				9371C97423B0444E0022C0F4 /* NearestStationTableCell.xib in Resources */,
 				933BF8B323A9BDED00A501A0 /* StationDetails.storyboard in Resources */,
+				93BFD5F423C9597D00930419 /* StationArrivalsCell.xib in Resources */,
 				93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */,
 				93762AFA23C3E56B002D3460 /* DelayedNextTrainCell.xib in Resources */,
 				934E3F7A23ADAF3F004A1EE3 /* StationTableCell.xib in Resources */,
@@ -326,11 +347,14 @@
 				936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */,
 				93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */,
 				934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */,
+				93762B0923C67818002D3460 /* StationTableCell_2.swift in Sources */,
 				93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */,
 				93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
 				933BF8B823A9C58B00A501A0 /* StationDetailViewController.swift in Sources */,
+				93762B0B23C6BBB7002D3460 /* FindRouteButton.swift in Sources */,
 				93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */,
+				93BFD5F623C97ED800930419 /* StationArrivalsCell.swift in Sources */,
 				934E3F7E23ADB42E004A1EE3 /* StationDetailNameTableCell.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
 				934E3F8023ADB947004A1EE3 /* HomeScreenTableViewController.swift in Sources */,

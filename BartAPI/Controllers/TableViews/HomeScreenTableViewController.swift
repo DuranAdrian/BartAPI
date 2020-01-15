@@ -75,7 +75,7 @@ class HomeScreenTableViewController: UITableViewController {
     @objc func timerFunction() {
         print("PULLING NEW DATA! \(Date())")
         self.activityView.startAnimating()
-        DispatchQueue.backgroundThread(delay: 5.0, background: {
+        DispatchQueue.backgroundThread(delay: 1.0, background: {
             self.getTrainData("n")
             self.getTrainData("s")
         }, completion: {
@@ -163,8 +163,7 @@ class HomeScreenTableViewController: UITableViewController {
     
     func getTrainData(_ direction: String) {
         let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
-//        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=daly&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
-        ;
+
         guard let trainURL = URL(string: filteredTrainAPIUrl) else { print("HAD TO RETURN FROM TRAINURL"); return }
             
         let task = URLSession.shared.dataTask(with: trainURL, completionHandler: { (data, response, error) -> Void in

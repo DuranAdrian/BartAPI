@@ -15,29 +15,65 @@ class StationDetailViewController: UITableViewController {
     var station: Station!
     var stationAbbr: String!
     var stationInfo: StationInfo!
+    var allTrains: [EstimateDeparture]!
+    var NorthTrains: [EstimateDeparture]! = []
+    var SouthTrains: [EstimateDeparture]! = []
+    var platformsAndTrains: [Int: [EstimateDeparture]]! = [:]
     var routes: [Route]!
+    var successFullDataPull: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        DispatchQueue.global(qos: .userInitiated).async {
+        
+        DispatchQueue.userInitiatedThread(delay: 1.0, background: {
             self.getStationInfoData()
-        }
-        
-        DispatchQueue.global(qos: .userInitiated).async {
-            self.getRouteData()
-        }
-        
-        self.tableView.tableFooterView = UIView()
-        tableView.register(UINib(nibName: "StationDetailNameTableCell", bundle: nil), forCellReuseIdentifier: "StationDetailNameTableCell")
-
-//        tableView.tableFooterView = UIView()
-
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
+        }, completion: {
+            DispatchQueue.userInitiatedThread(delay: 1.0, background: {
+                self.getRouteData()
+                self.getTrainData()
+            }, completion: {
+                self.tableView.beginUpdates()
+                self.successFullDataPull = true
+                self.tableView.insertSections(IndexSet(self.platformsAndTrains.keys), with: .fade)
+                self.tableView.reloadData()
+                self.tableView.endUpdates()
+            })
+            
+        })
+        setUpTableView()
+        setUpNavBar()
     }
+    
+    func setUpTableView() {
+        self.tableView.tableFooterView = UIView()
+        self.tableView.rowHeight = UITableView.automaticDimension
+        self.tableView.estimatedRowHeight = 215.0
+        tableView.register(UINib(nibName: "StationDetailNameTableCell", bundle: nil), forCellReuseIdentifier: "StationDetailNameTableCell")
+        tableView.register(UINib(nibName: "StationArrivalsCell", bundle: nil), forCellReuseIdentifier: "StationArrivalsCell")
+    }
+    
+    func setUpNavBar(){
+        self.navigationController!.navigationBar.prefersLargeTitles = true
+        guard let title = station?.name, #available(iOS 11.0, *) else { return }
+
+        let maxWidth = UIScreen.main.bounds.size.width - 60
+        var fontSize = UIFont.preferredFont(forTextStyle: .largeTitle).pointSize
+        var width = title.size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]).width
+
+        while width > maxWidth {
+          fontSize -= 1
+            width = title.size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: fontSize)]).width
+        }
+
+        navigationController?.navigationBar.largeTitleTextAttributes =
+            [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: fontSize)
+        ]
+        
+        navigationItem.title = title
+
+    }
+    
+    // ROUTE DATA
     
     func getRouteData() {
         let routeAPIURL = "https://api.bart.gov/api/route.aspx?cmd=routes&key=\(apiKey)&json=y"
@@ -70,6 +106,8 @@ class StationDetailViewController: UITableViewController {
         return processedRoutes
     }
     
+    // STATION INFO DATA
+    
     func getStationInfoData() {
         let stationInfoAPIURL = "https://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=\(String(describing: stationAbbr.lowercased()))&key=\(apiKey)&json=y"
         guard let stationURL = URL(string: stationInfoAPIURL) else { return }
@@ -100,21 +138,72 @@ class StationDetailViewController: UITableViewController {
     }
     
     func parseStationInfoJSONData(data: Data) -> StationInfo {
-        
         let decoder = JSONDecoder()
         var stationInfoItem = [StationInfo]()
         do {
-            
             let stationInfoItemData = try decoder.decode(StationInfoContainer.self, from: data)
             stationInfoItem.append(stationInfoItemData.stations)
             return stationInfoItemData.stations
         } catch {
             print("ERROR PARSING STATION INFO JSON DATA: \(error)")
+            return stationInfoItem[0]
+        }
+    }
+    
+    // TRAIN DATA
+    func getTrainData() {
+        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.station!.abbreviation.lowercased()))&key=\(apiKey)&json=y"
+
+        guard let trainURL = URL(string: filteredTrainAPIUrl) else { print("HAD TO RETURN FROM TRAINURL"); return }
+            
+        let task = URLSession.shared.dataTask(with: trainURL, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print("Could not connect to filteredTrainAPIUrl: \(error)")
+                return
+            }
+            
+            ///connection succesfull
+            if let data = data {
+                print("Success")
+                let mytrains = self.parseTrainJSONData(data: data)
+            }
+//
+        })
+        task.resume()
+    }
+    
+    func parseTrainJSONData(data: Data) -> [Train] {
+        var parsedTrains = [Train]()
+        let decoder = JSONDecoder()
+        
+        do {
+            let trainDataStore = try decoder.decode(TrainContainer.self, from: data)
+            parsedTrains = trainDataStore.trains
+            self.setUpTrains(parsedTrains)
+        } catch {
+            print("Error parsing Train JSON Data: \(error)")
+            
         }
         
-//        return stationInfoItem[0]
-        return stationInfoItem[0]
+        return parsedTrains
     }
+    
+    func setUpTrains(_ trainList: [Train]) {
+        print("Attempting to set up trains with count: \(trainList.count)")
+        print("Number of estimate: \(trainList[0].estimate.count)")
+        print(trainList)
+        for train in trainList[0].estimate {
+            if let _ = platformsAndTrains[Int(train.nextEstimate[0].platform)!] {
+                // key exist, only append to array
+                platformsAndTrains[Int(train.nextEstimate[0].platform)!]?.append(train)
+            } else {
+                // key does not exist, add key, start new array
+                platformsAndTrains[Int(train.nextEstimate[0].platform)!] = [train]
+            }
+        }
+    }
+    
+    // FORMATTING FUNCTIONS
     
     func formatRoutes(_ routes: [String]) -> String {
         var routeToFormat = "Routes: "
@@ -144,76 +233,207 @@ class StationDetailViewController: UITableViewController {
         return platformToFormat
     }
     
+    func formatArrivalTime(_ time: String) -> String {
+        if time == "leaving" {
+            return "Leaving"
+        }
+        if time == "1" {
+            return time + " Min"
+        }
+        return time + " Mins"
+    }
+    
 
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        //Find if north and south route exists
-        return 1
+        var numOfValidSections = 1
+        // First check if able to pull station info
+        guard let _ = stationInfo else {
+            print("station info is invalid")
+            return numOfValidSections
+        }
+        print("Station info pulled success")
+        if successFullDataPull {
+            print("sections should now be added")
+            numOfValidSections = 1 + platformsAndTrains.count
+        }
+        
+        return numOfValidSections
         
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 4
+
+        guard let _ = stationInfo else {
+            return 1
+        }
+        
+        switch section {
+            case 0:
+                return 2
+            case 1:
+                print("Number of rows in 1: \(platformsAndTrains[1]!.count)")
+                return platformsAndTrains[1]!.count
+            case 2:
+                print("Number of rows in 2: \(platformsAndTrains[2]!.count)")
+                return platformsAndTrains[2]!.count
+            case 3:
+                print("Number of rows in 3: \(platformsAndTrains[3]!.count)")
+                return platformsAndTrains[3]!.count
+            default:
+                return 0
+        }
     }
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch indexPath.row {
-        // Map View
+        switch indexPath.section {
         case 0:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDetailMapCell.self), for: indexPath) as! StationDetailMapCell
-            if let station = stationInfo {
-                cell.locationToMap(location: station.location)
+            switch indexPath.row {
+                case 0:
+                    print("Setting up Station Map Cell...")
+                    let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDetailMapCell.self), for: indexPath) as! StationDetailMapCell
+                    if let station = stationInfo {
+                        cell.locationToMap(location: station.location)
+                    }
+                    print("Completed Station Map Cell")
+                    return cell
+                case 1:
+                    print("Setting up Station Detail Cell...")
+                    let cell = tableView.dequeueReusableCell(withIdentifier: "StationDetailNameTableCell", for: indexPath) as! StationDetailNameTableCell
+                    if let station = stationInfo {
+                        cell.stationAddress.text = station.address
+                        cell.stationCity.text = [station.city, station.zipcode].joined(separator: ", ")
+                    }
+                    print("Completed Station Detail Cell")
+                    return cell
+                default:
+                    return UITableViewCell()
             }
-
-            return cell
-        // Station Details
         case 1:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "StationDetailNameTableCell", for: indexPath) as! StationDetailNameTableCell
-            if let station = stationInfo {
-                cell.stationName.text = station.name
-                cell.stationAddress.text = station.address
-                cell.stationCity.text = [station.city, station.zipcode].joined(separator: ", ")
+            // PLATFORM 1
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationArrivalsCell.self), for: indexPath) as! StationArrivalsCell
+            let cellTrain = platformsAndTrains[1]![indexPath.row]
+            let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
+            cell.routeColorView.backgroundColor = color?.colors
+            cell.destinationName.text = cellTrain.destination
+            cell.directionLabel.text = cellTrain.nextEstimate[0].direction
+            switch cellTrain.nextEstimate.count {
+            case 1:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = ""
+                cell.thirdTime.text = ""
+
+            case 2:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.thirdTime.text = ""
+
+            case 3:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.thirdTime.text = formatArrivalTime(cellTrain.nextEstimate[2].arrival)
+
+            default:
+                cell.firstTime.text = ""
+                cell.secondTime.text = ""
+                cell.thirdTime.text = ""
+
             }
             return cell
-        // North routes and Platform number
         case 2:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationRoutesTableCell.self), for: indexPath) as! StationRoutesTableCell
-            if let cellStation = stationInfo {
-                cell.platform.text = formatPlatforms(cellStation.northPlatform)
-                cell.routes.text = formatRoutes(cellStation.northRoute)
+            // PLATFORM 2
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationArrivalsCell.self), for: indexPath) as! StationArrivalsCell
+            let cellTrain = platformsAndTrains[2]![indexPath.row]
+            let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
+            cell.routeColorView.backgroundColor = color?.colors
+            cell.destinationName.text = cellTrain.destination
+            cell.directionLabel.text = cellTrain.nextEstimate[0].direction
+            switch cellTrain.nextEstimate.count {
+            case 1:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = ""
+                cell.thirdTime.text = ""
+
+            case 2:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.thirdTime.text = ""
+
+            case 3:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.thirdTime.text = formatArrivalTime(cellTrain.nextEstimate[2].arrival)
+
+            default:
+                cell.firstTime.text = ""
+                cell.secondTime.text = ""
+                cell.thirdTime.text = ""
+
             }
-            cell.compassImage.image = UIImage(systemName: "arrow.up.circle.fill")
             return cell
-        // South Routes and Platform number
         case 3:
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationRoutesTableCell.self), for: indexPath) as! StationRoutesTableCell
-            if let cellStation = stationInfo {
-                cell.platform.text = formatPlatforms(cellStation.southPlatform)
-                cell.routes.text = formatRoutes(cellStation.southRoute)
-                
+            // PLATFORM 3
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationArrivalsCell.self), for: indexPath) as! StationArrivalsCell
+            let cellTrain = platformsAndTrains[3]![indexPath.row]
+            let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
+            cell.routeColorView.backgroundColor = color?.colors
+            cell.destinationName.text = cellTrain.destination
+            cell.directionLabel.text = cellTrain.nextEstimate[0].direction
+            
+            // find number of next estimaets
+            switch cellTrain.nextEstimate.count {
+            case 1:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = ""
+                cell.thirdTime.text = ""
+
+            case 2:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.thirdTime.text = ""
+
+            case 3:
+                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.thirdTime.text = formatArrivalTime(cellTrain.nextEstimate[2].arrival)
+
+            default:
+                cell.firstTime.text = ""
+                cell.secondTime.text = ""
+                cell.thirdTime.text = ""
+
             }
-            cell.compassImage.image = UIImage(systemName: "arrow.down.circle.fill")
-            return cell
+            
+           return cell
 
         default:
-            fatalError("ERROR")
+            return UITableViewCell()
+            
         }
-
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch indexPath.row {
-        case 0:
-            return 215.0
-        case 1:
-            return 100.0
-        default:
-            return 43.0
+        if indexPath == [0,0] {
+            return 215
         }
+        return UITableView.automaticDimension
+        
+    }
+    
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Platform 1"
+        }
+        if section == 2 {
+            return "Platform 2"
+        }
+        if section == 3 {
+            return "Platform 3"
+        }
+        return nil
     }
 
 

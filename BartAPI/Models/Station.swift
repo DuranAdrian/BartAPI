@@ -67,8 +67,11 @@ extension StationContainer: Decodable {
     }
     
     init(from decoder: Decoder) throws {
+        print("Trying coding keys...")
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        print("Trying rootkeys...")
         let rootContainer = try container.nestedContainer(keyedBy: RootKey.self, forKey: .root)
+        print("Trying stationkeys...")
         let stationContainer = try rootContainer.nestedContainer(keyedBy: StationKey.self, forKey: .stations)
         stations = try stationContainer.decode([Station].self, forKey: .station)
     }

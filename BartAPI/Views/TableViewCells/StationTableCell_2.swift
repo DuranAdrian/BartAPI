@@ -1,16 +1,18 @@
 //
-//  StationDetailNameTableCell.swift
+//  StationTableCell_2.swift
 //  BartAPI
 //
-//  Created by Adrian Duran on 12/20/19.
-//  Copyright © 2019 Adrian Duran. All rights reserved.
+//  Created by Adrian Duran on 1/8/20.
+//  Copyright © 2020 Adrian Duran. All rights reserved.
 //
 
 import UIKit
 
-class StationDetailNameTableCell: UITableViewCell {
-    @IBOutlet weak var stationAddress: UILabel!
-    @IBOutlet weak var stationCity: UILabel!
+class StationTableCell_2: UITableViewCell {
+    
+    @IBOutlet var stationName: UILabel!
+    @IBOutlet var stationCity: UILabel!
+    @IBOutlet var stationAbbr: UILabel!
 
     override func awakeFromNib() {
         super.awakeFromNib()

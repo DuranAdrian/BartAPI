@@ -18,14 +18,15 @@ class StationsTableController: UITableViewController {
     
     var stations = [Station]()
     var searchResults = [Station]()
+    var stationSelected = StationInfo()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-    
+        setUpNavBar()
         DispatchQueue.global(qos: .utility).async {
             self.getData()
         }
-        tableView.tableFooterView = UIView()
+        setUpTableView()
         setUpSearchBar()
 
         // Uncomment the following line to preserve selection between presentations
@@ -33,6 +34,16 @@ class StationsTableController: UITableViewController {
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
+    }
+    
+    func setUpTableView() {
+        tableView.tableFooterView = UIView()
+        self.tableView.register(UINib(nibName: "StationTableCell_2", bundle: nil), forCellReuseIdentifier: "StationTableCell_2")
+
+    }
+    
+    func setUpNavBar() {
+        self.navigationItem.title = "All Stations"
     }
 
     func setUpSearchBar(){
@@ -47,6 +58,7 @@ class StationsTableController: UITableViewController {
     func filterContent(for searchText:String) {
         searchResults = stations.filter({ (station) -> Bool in
 //            if let name = station.name {
+//            let begins = station.name.starts(with: searchText)
                 let isMatch = station.name.localizedCaseInsensitiveContains(searchText)
                 return isMatch
 //            }
@@ -90,6 +102,50 @@ class StationsTableController: UITableViewController {
         
         return stations
     }
+    
+    
+    func getStationInfoData(_ station: Station) -> StationInfo {
+        var stationToReturn: StationInfo = StationInfo()
+        let stationInfoAPIURL = "https://api.bart.gov/api/stn.aspx?cmd=stninfo&orig=\(String(describing: station.abbreviation.lowercased()))&key=\(bartAPIKey)&json=y"
+            guard let stationURL = URL(string: stationInfoAPIURL) else { return stationToReturn }
+            
+            let task = URLSession.shared.dataTask(with: stationURL, completionHandler: { (data, response, error) -> Void in
+                if let error = error {
+                    print("Could not connect to stationAPI: \(error)")
+                    return
+                }
+                
+                ///connection succesfull
+                if let data = data {
+                    // Used for debugging
+    //                if let JSONString = String(data: data, encoding: String.Encoding.utf8) {
+    //                   print(JSONString)
+    //                }
+                    stationToReturn = self.parseStationInfoJSONData(data: data)
+                }
+                
+            })
+            task.resume()
+            print("Found Station Info: \(stationToReturn)")
+            return stationToReturn
+        }
+        
+    func parseStationInfoJSONData(data: Data) -> StationInfo {
+        
+        let decoder = JSONDecoder()
+        var stationInfoItem = [StationInfo]()
+        do {
+            
+            let stationInfoItemData = try decoder.decode(StationInfoContainer.self, from: data)
+            stationInfoItem.append(stationInfoItemData.stations)
+            return stationInfoItemData.stations
+        } catch {
+            print("ERROR PARSING STATION INFO JSON DATA: \(error)")
+        }
+        
+        return stationInfoItem[0]
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -108,7 +164,7 @@ class StationsTableController: UITableViewController {
 
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationTableCell.self), for: indexPath) as! StationTableCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationTableCell_2.self), for: indexPath) as! StationTableCell_2
         
         let station = (searchController.isActive) ? searchResults[indexPath.row] : stations[indexPath.row]
     
@@ -119,17 +175,21 @@ class StationsTableController: UITableViewController {
         cell.stationAbbr.sizeToFit()
         cell.stationCity.text = station.city
         cell.stationName.text = station.name
-        cell.stationAddress.text = station.address
+//        cell.stationAddress.text = station.address
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let text = (searchController.isActive) ? searchResults[indexPath.row].name : stations[indexPath.row].name
-        print("Selected station: \(text)")
-        performSegue(withIdentifier: "StationDetailSeque", sender: self)
+        let station = (searchController.isActive) ? searchResults[indexPath.row] : stations[indexPath.row]
+        print("Selected station: \(station.name)")
+        print("Performing segue with sender: \(self)")
+//        DispatchQueue.backgroundThread(delay: 0.0, background: {self.stationSelected = self.getStationInfoData(station)}, completion: {self.performSegue(withIdentifier: "StationDetailSeque", sender: self )})
+        self.performSegue(withIdentifier: "StationDetailSeque", sender: self )
     }
     
-
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 56
+    }
     /*
     // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
@@ -175,9 +235,16 @@ class StationsTableController: UITableViewController {
         if segue.identifier == "StationDetailSeque" {
             if let indexPath = tableView.indexPathForSelectedRow {
                 let destinationController = segue.destination as! StationDetailViewController
-                destinationController.stationAbbr = stations[indexPath.row].abbreviation
-                destinationController.station = stations[indexPath.row]
-                destinationController.navigationItem.title = stations[indexPath.row].abbreviation
+                let selectedStation = (searchController.isActive) ? searchResults[indexPath.row] : stations[indexPath.row]
+                destinationController.stationAbbr = selectedStation.abbreviation
+                destinationController.station = selectedStation
+//                destinationController.navigationItem.title = selectedStation.name
+                
+                // create UILabel
+
+                
+                
+                
             }
             
         }
