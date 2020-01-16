@@ -21,9 +21,6 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        // Initialization code
-        // auto Zoom in to user location
-//        setUpLocationManager()
     }
     
     func initialZoom() {

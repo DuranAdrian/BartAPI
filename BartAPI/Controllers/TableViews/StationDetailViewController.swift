@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MapKit
 
 class StationDetailViewController: UITableViewController {
     let apiKey = "MW9S-E7SL-26DU-VV8V"
@@ -21,6 +22,10 @@ class StationDetailViewController: UITableViewController {
     var platformsAndTrains: [Int: [EstimateDeparture]]! = [:]
     var routes: [Route]!
     var successFullDataPull: Bool = false
+    
+    // MapView for table cell
+    var customMapView: MKMapView = MKMapView()
+    var willShowRoute: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +55,9 @@ class StationDetailViewController: UITableViewController {
         self.tableView.estimatedRowHeight = 215.0
         tableView.register(UINib(nibName: "StationDetailNameTableCell", bundle: nil), forCellReuseIdentifier: "StationDetailNameTableCell")
         tableView.register(UINib(nibName: "StationArrivalsCell", bundle: nil), forCellReuseIdentifier: "StationArrivalsCell")
+        tableView.register(UINib(nibName: "ModifiedStationDetailMapCell", bundle: nil), forCellReuseIdentifier: "ModifiedStationDetailMapCell")
+        tableView.register(UINib(nibName: "StationDelayedArrivalsCell", bundle: nil), forCellReuseIdentifier: "StationDelayedArrivalsCell")
+        
     }
     
     func setUpNavBar(){
@@ -72,6 +80,9 @@ class StationDetailViewController: UITableViewController {
         navigationItem.title = title
 
     }
+    
+    // Timer for pulling data on background
+    
     
     // ROUTE DATA
     
@@ -234,13 +245,82 @@ class StationDetailViewController: UITableViewController {
     }
     
     func formatArrivalTime(_ time: String) -> String {
-        if time == "leaving" {
+        switch time {
+        case "leaving":
             return "Leaving"
-        }
-        if time == "1" {
+        case "Leaving":
+            return "Leaving"
+        case "1":
             return time + " Min"
+        default:
+            return time + " Mins"
         }
-        return time + " Mins"
+        
+    }
+    
+    func formatDelayArrival(_ estimate: Estimate) -> NSAttributedString {
+        var normalArrival: String
+        var normalAttributes: [NSAttributedString.Key: NSObject]
+        switch estimate.arrival {
+            case "leaving":
+                normalArrival = "Leaving"
+            case "Leaving":
+                normalArrival = "Leaving"
+            case "1":
+                normalArrival = "1 Min"
+            default:
+                normalArrival = estimate.arrival + " Mins"
+        }
+        if #available(iOS 13, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                normalAttributes = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .footnote), NSAttributedString.Key.foregroundColor: UIColor.white]
+            } else {
+                normalAttributes = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .footnote), NSAttributedString.Key.foregroundColor: UIColor.black]
+
+            }
+        } else {
+            normalAttributes = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .footnote), NSAttributedString.Key.foregroundColor: UIColor.black]
+        }
+        
+        if estimate.isDelayed() {
+            // Change color to red
+            let delayedAttributes = [NSAttributedString.Key.foregroundColor: UIColor.Custom.errorRed, NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .footnote)]
+            // Add delayed time to actual time
+            var delayedArrival: String
+            var arrivalPlaceHolder: Int
+            switch estimate.arrival {
+                case "leaving":
+                    arrivalPlaceHolder = 0
+                    break
+                case "Leaving":
+                    arrivalPlaceHolder = 0
+                    break
+                default:
+                    arrivalPlaceHolder = Int(estimate.arrival)!
+            }
+            arrivalPlaceHolder = arrivalPlaceHolder + estimate.computeDelayTime()
+            switch arrivalPlaceHolder {
+            case 0:
+                delayedArrival = "Leaving"
+                break
+            case 1:
+                delayedArrival = "1 Min"
+                break
+            default:
+                delayedArrival = "\(arrivalPlaceHolder) Mins"
+            }
+            
+            return NSAttributedString(string: delayedArrival, attributes: delayedAttributes)
+        }
+        
+        return NSAttributedString(string: normalArrival, attributes: normalAttributes)
+
+    }
+    
+    // Map Manipulation
+    
+    @objc func findRoute(_ sender: UIButton) {
+        print("Attemping to find route...")
     }
     
 
@@ -294,9 +374,13 @@ class StationDetailViewController: UITableViewController {
             switch indexPath.row {
                 case 0:
                     print("Setting up Station Map Cell...")
-                    let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDetailMapCell.self), for: indexPath) as! StationDetailMapCell
-                    if let station = stationInfo {
-                        cell.locationToMap(location: station.location)
+                    let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ModifiedStationDetailMapCell.self), for: indexPath) as! ModifiedStationDetailMapCell
+                    cell.mapView.delegate = self
+                    if willShowRoute {
+                        cell.mapView.routeToDestination(stationInfo.location)
+                    } else {
+                        cell.mapView.removeRoute()
+                        cell.mapView.addLocation(station.location)
                     }
                     print("Completed Station Map Cell")
                     return cell
@@ -307,6 +391,8 @@ class StationDetailViewController: UITableViewController {
                         cell.stationAddress.text = station.address
                         cell.stationCity.text = [station.city, station.zipcode].joined(separator: ", ")
                     }
+                    cell.routeDelegate = self
+//                    cell.findRouteButton.target(forAction: #selector(findRoute(_:)), withSender: self)
                     print("Completed Station Detail Cell")
                     return cell
                 default:
@@ -314,27 +400,38 @@ class StationDetailViewController: UITableViewController {
             }
         case 1:
             // PLATFORM 1
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationArrivalsCell.self), for: indexPath) as! StationArrivalsCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             let cellTrain = platformsAndTrains[1]![indexPath.row]
+            
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
             cell.directionLabel.text = cellTrain.nextEstimate[0].direction
+            
+            // By adding a label, we can break out of the whole loop when a single delay has been found.
+            findDelay:
+            for train in cellTrain.nextEstimate {
+                if train.isDelayed() {
+                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    break findDelay
+                }
+            }
+            
             switch cellTrain.nextEstimate.count {
             case 1:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.text = ""
                 cell.thirdTime.text = ""
 
             case 2:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
-                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
+                cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
                 cell.thirdTime.text = ""
 
             case 3:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
-                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
-                cell.thirdTime.text = formatArrivalTime(cellTrain.nextEstimate[2].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
+                cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
+                cell.thirdTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[2])
 
             default:
                 cell.firstTime.text = ""
@@ -345,27 +442,37 @@ class StationDetailViewController: UITableViewController {
             return cell
         case 2:
             // PLATFORM 2
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationArrivalsCell.self), for: indexPath) as! StationArrivalsCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             let cellTrain = platformsAndTrains[2]![indexPath.row]
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
             cell.directionLabel.text = cellTrain.nextEstimate[0].direction
+            
+            // By adding a label, we can break out of the whole loop when a single delay has been found.
+            findDelay:
+            for train in cellTrain.nextEstimate {
+                if train.isDelayed() {
+                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    break findDelay
+                }
+            }
+            
             switch cellTrain.nextEstimate.count {
             case 1:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.text = ""
                 cell.thirdTime.text = ""
 
             case 2:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
-                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
+                cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
                 cell.thirdTime.text = ""
 
             case 3:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
-                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
-                cell.thirdTime.text = formatArrivalTime(cellTrain.nextEstimate[2].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
+                cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
+                cell.thirdTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[2])
 
             default:
                 cell.firstTime.text = ""
@@ -376,29 +483,38 @@ class StationDetailViewController: UITableViewController {
             return cell
         case 3:
             // PLATFORM 3
-            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationArrivalsCell.self), for: indexPath) as! StationArrivalsCell
+            let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             let cellTrain = platformsAndTrains[3]![indexPath.row]
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
             cell.directionLabel.text = cellTrain.nextEstimate[0].direction
             
+            // By adding a label, we can break out of the whole loop when a single delay has been found.
+            findDelay:
+            for train in cellTrain.nextEstimate {
+                if train.isDelayed() {
+                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    break findDelay
+                }
+            }
+            
             // find number of next estimaets
             switch cellTrain.nextEstimate.count {
             case 1:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.text = ""
                 cell.thirdTime.text = ""
 
             case 2:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
-                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
+                cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
                 cell.thirdTime.text = ""
 
             case 3:
-                cell.firstTime.text = formatArrivalTime(cellTrain.nextEstimate[0].arrival)
-                cell.secondTime.text = formatArrivalTime(cellTrain.nextEstimate[1].arrival)
-                cell.thirdTime.text = formatArrivalTime(cellTrain.nextEstimate[2].arrival)
+                cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
+                cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
+                cell.thirdTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[2])
 
             default:
                 cell.firstTime.text = ""
@@ -482,4 +598,68 @@ class StationDetailViewController: UITableViewController {
     }
     */
 
+}
+extension StationDetailViewController: mapViewDelegate, MKMapViewDelegate {
+    func didPressButton() {
+        if willShowRoute {
+            // Remove Route
+            customMapView.removeRoute()
+            willShowRoute = false
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+        } else {
+            // Show Route
+            customMapView.delegate = self
+            let locationManager: CLLocationManager! = CLLocationManager()
+            locationManager.requestWhenInUseAuthorization()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.distanceFilter = kCLDistanceFilterNone
+            locationManager.startUpdatingLocation()
+            guard let _ = locationManager?.location else { return }
+            customMapView.showsUserLocation = true
+            customMapView.userTrackingMode = .follow
+            customMapView.addLocation(stationInfo.location)
+            customMapView.routeToDestination(stationInfo.location)
+            willShowRoute = true
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+        }
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        let identifier = "MyMarker"
+                
+        if annotation.isKind(of: MKUserLocation.self) {
+            return nil
+        }
+        
+        // Reuse the annotation if possible
+        var annotationView: MKMarkerAnnotationView? = mapView.dequeueReusableAnnotationView(withIdentifier: identifier) as? MKMarkerAnnotationView
+
+        if annotationView == nil {
+            annotationView = MKMarkerAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+        }
+
+//        annotationView?.glyphText = "😋"
+        annotationView?.glyphImage = UIImage(systemName: "tram.fill")
+        annotationView?.markerTintColor = UIColor.Custom.annotationBlue
+
+        return annotationView
+    }
+    
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer {
+        let renderer = MKPolylineRenderer(overlay: overlay)
+        renderer.strokeColor = UIColor.Custom.annotationBlue
+        renderer.lineWidth = 4.0
+        
+        return renderer
+    }
+}
+
+extension StationDetailViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            self.tableView.reloadSections(IndexSet(self.platformsAndTrains.keys), with: .fade)
+        }
+    }
 }

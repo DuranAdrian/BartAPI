@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -44,7 +44,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9YL-PQ-caO" customClass="FindRouteButton" customModule="BartAPI" customModuleProvider="target">
-                                <rect key="frame" x="280" y="0.0" width="94" height="38"/>
+                                <rect key="frame" x="280" y="0.0" width="94" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="94" id="DQy-rh-D2I"/>
                                 </constraints>
@@ -52,6 +52,9 @@
                                 <state key="normal" title="Find Route">
                                     <color key="titleColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
+                                <connections>
+                                    <action selector="routeButtonPressed" destination="qP8-aT-Dfj" eventType="touchUpInside" id="TGN-fF-OWa"/>
+                                </connections>
                             </button>
                         </subviews>
                     </stackView>
@@ -64,6 +67,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
+                <outlet property="findRouteButton" destination="9YL-PQ-caO" id="acz-5O-7UM"/>
                 <outlet property="stationAddress" destination="QP7-ft-9pg" id="TGm-ID-bA4"/>
                 <outlet property="stationCity" destination="qhD-Rx-j7h" id="LI9-Je-ndG"/>
             </connections>

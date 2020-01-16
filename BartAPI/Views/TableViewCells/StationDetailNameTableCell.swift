@@ -9,8 +9,20 @@
 import UIKit
 
 class StationDetailNameTableCell: UITableViewCell {
+    var routeDelegate: mapViewDelegate?
+    
     @IBOutlet weak var stationAddress: UILabel!
     @IBOutlet weak var stationCity: UILabel!
+    @IBOutlet weak var findRouteButton: UIButton! {
+        didSet {
+            findRouteButton.target(forAction: #selector(routeButtonPressed), withSender: self)
+        }
+    }
+    
+    @IBAction func routeButtonPressed() {
+        routeDelegate?.didPressButton()
+    }
+    
 
     override func awakeFromNib() {
         super.awakeFromNib()

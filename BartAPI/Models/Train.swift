@@ -120,7 +120,6 @@ struct Estimate: Codable {
 
 extension Estimate {
     func computeDelayTime() -> Int {
-        print("Attempting to update time for \(self.direction) direction...")
         let secondsToConvert: Double = Double(self.delay)!
         var minutes: Int = 0
         minutes = Int((secondsToConvert/60).rounded(.up))
