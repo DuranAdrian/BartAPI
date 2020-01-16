@@ -407,15 +407,19 @@ class StationDetailViewController: UITableViewController {
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
             cell.directionLabel.text = cellTrain.nextEstimate[0].direction
-            
+            var foundDelay: Bool = false
             // By adding a label, we can break out of the whole loop when a single delay has been found.
             findDelay:
             for train in cellTrain.nextEstimate {
+                print("Looking for delay in \(cellTrain.destination)")
                 if train.isDelayed() {
-                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    print("Found delay for train bount to \(cellTrain.destination)")
+//                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    foundDelay = true
                     break findDelay
                 }
             }
+            cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: foundDelay)
             
             switch cellTrain.nextEstimate.count {
             case 1:
@@ -448,15 +452,19 @@ class StationDetailViewController: UITableViewController {
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
             cell.directionLabel.text = cellTrain.nextEstimate[0].direction
-            
+            var foundDelay = false
             // By adding a label, we can break out of the whole loop when a single delay has been found.
             findDelay:
             for train in cellTrain.nextEstimate {
+                print("Looking for delay in \(cellTrain.destination)")
                 if train.isDelayed() {
-                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    print("Found delay for train bount to \(cellTrain.destination)")
+//                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    foundDelay = true
                     break findDelay
                 }
             }
+            cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: foundDelay)
             
             switch cellTrain.nextEstimate.count {
             case 1:
@@ -486,6 +494,7 @@ class StationDetailViewController: UITableViewController {
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             let cellTrain = platformsAndTrains[3]![indexPath.row]
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
+            var foundDelay: Bool = false
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
             cell.directionLabel.text = cellTrain.nextEstimate[0].direction
@@ -493,12 +502,15 @@ class StationDetailViewController: UITableViewController {
             // By adding a label, we can break out of the whole loop when a single delay has been found.
             findDelay:
             for train in cellTrain.nextEstimate {
+                print("Looking for delay in \(cellTrain.destination)")
                 if train.isDelayed() {
-                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
+                    print("Found delay for train bount to \(cellTrain.destination)")
+                    foundDelay = true
+//                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
                     break findDelay
                 }
             }
-            
+            cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: foundDelay)
             // find number of next estimaets
             switch cellTrain.nextEstimate.count {
             case 1:
