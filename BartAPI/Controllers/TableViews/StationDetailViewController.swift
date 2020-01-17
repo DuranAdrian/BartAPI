@@ -108,7 +108,6 @@ class StationDetailViewController: UITableViewController {
     }
     
     @objc func timerFunction() {
-        print("PULLING NEW DATA! \(Date())")
         self.activityView.startAnimating()
         DispatchQueue.backgroundThread(delay: 1.0, background: {
             self.getTrainData()
@@ -214,7 +213,6 @@ class StationDetailViewController: UITableViewController {
             
             ///connection succesfull
             if let data = data {
-                print("Success")
                 let _ = self.parseTrainJSONData(data: data)
             }
 //
@@ -240,7 +238,7 @@ class StationDetailViewController: UITableViewController {
     }
     
     func setUpTrains(_ trainList: [Train]) {
-        print(trainList)
+//        print(trainList)
         var listOfTrains: [Int: [EstimateDeparture]]! = [:]
         for train in trainList[0].estimate {
             if let _ = listOfTrains[Int(train.nextEstimate[0].platform)!] {
@@ -382,9 +380,8 @@ class StationDetailViewController: UITableViewController {
             print("station info is invalid")
             return numOfValidSections
         }
-        print("Station info pulled success")
         if successFullDataPull {
-            print("sections should now be added: \(platformSections)")
+//            print("sections should now be added: \(platformSections)")
             numOfValidSections = 1 + platformSections.count
         }
         
@@ -403,13 +400,13 @@ class StationDetailViewController: UITableViewController {
             case 0:
                 return 2
             case 1:
-                print("Number of rows in 1: \(platformsAndTrains[keys[0]]!.count)")
+//                print("Number of rows in 1: \(platformsAndTrains[keys[0]]!.count)")
                 return platformsAndTrains[keys[0]]!.count
             case 2:
-                print("Number of rows in 2: \(platformsAndTrains[keys[1]]!.count)")
+//                print("Number of rows in 2: \(platformsAndTrains[keys[1]]!.count)")
                 return platformsAndTrains[keys[1]]!.count
             case 3:
-                print("Number of rows in 3: \(platformsAndTrains[keys[2]]!.count)")
+//                print("Number of rows in 3: \(platformsAndTrains[keys[2]]!.count)")
                 return platformsAndTrains[keys[2]]!.count
             default:
                 return 0
@@ -449,6 +446,7 @@ class StationDetailViewController: UITableViewController {
             }
         case 1:
             // PLATFORM 1
+            print("1: Setting up StationDelayedArrivalsCell Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             let key = Array(platformsAndTrains.keys).sorted()
             let cellTrain = platformsAndTrains[key[0]]![indexPath.row]
@@ -461,10 +459,7 @@ class StationDetailViewController: UITableViewController {
             // By adding a label, we can break out of the whole loop when a single delay has been found.
             findDelay:
             for train in cellTrain.nextEstimate {
-                print("Looking for delay in \(cellTrain.destination)")
                 if train.isDelayed() {
-                    print("Found delay for train bount to \(cellTrain.destination)")
-//                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
                     foundDelay = true
                     break findDelay
                 }
@@ -474,14 +469,13 @@ class StationDetailViewController: UITableViewController {
             switch cellTrain.nextEstimate.count {
             case 1:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
-//                cell.secondTime.text = ""
-                cell.secondTime.isHidden = true
-//                cell.thirdTime.isHidden = true
+                cell.secondTime.text = " "
+                cell.thirdTime.text = " "
 
             case 2:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
-                cell.thirdTime.text = ""
+                cell.thirdTime.text = " "
 
             case 3:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
@@ -490,18 +484,18 @@ class StationDetailViewController: UITableViewController {
 //                cell.thirdTime.text = " "
 
             default:
-                cell.firstTime.text = ""
-                cell.secondTime.text = ""
-                cell.thirdTime.text = ""
+                cell.firstTime.text = " "
+                cell.secondTime.text = " "
+                cell.thirdTime.text = " "
 
             }
             return cell
         case 2:
             // PLATFORM 2
+            print("2: Setting up StationDelayedArrivalsCell Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             
             let key = Array(platformsAndTrains.keys).sorted()
-            print("Looking at key: \(key[1]) with indexPath.row: \(indexPath.row)")
             let cellTrain = platformsAndTrains[key[1]]![indexPath.row]
             
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
@@ -512,10 +506,7 @@ class StationDetailViewController: UITableViewController {
             // By adding a label, we can break out of the whole loop when a single delay has been found.
             findDelay:
             for train in cellTrain.nextEstimate {
-                print("Looking for delay in \(cellTrain.destination)")
                 if train.isDelayed() {
-                    print("Found delay for train bount to \(cellTrain.destination)")
-//                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
                     foundDelay = true
                     break findDelay
                 }
@@ -525,13 +516,13 @@ class StationDetailViewController: UITableViewController {
             switch cellTrain.nextEstimate.count {
             case 1:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
-                cell.secondTime.text = ""
-                cell.thirdTime.text = ""
+                cell.secondTime.text = " "
+                cell.thirdTime.text = " "
 
             case 2:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
-                cell.thirdTime.text = ""
+                cell.thirdTime.text = " "
 
             case 3:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
@@ -539,18 +530,18 @@ class StationDetailViewController: UITableViewController {
                 cell.thirdTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[2])
 
             default:
-                cell.firstTime.text = ""
-                cell.secondTime.text = ""
-                cell.thirdTime.text = ""
+                cell.firstTime.text = " "
+                cell.secondTime.text = " "
+                cell.thirdTime.text = " "
 
             }
             return cell
         case 3:
             // PLATFORM 3
+            print("3: Setting up StationDelayedArrivalsCell Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             
             let key = Array(platformsAndTrains.keys).sorted()
-            print("Looking at key: \(key[2]) with indexPath.row: \(indexPath.row)")
             let cellTrain = platformsAndTrains[key[2]]![indexPath.row]
             
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
@@ -562,11 +553,8 @@ class StationDetailViewController: UITableViewController {
             // By adding a label, we can break out of the whole loop when a single delay has been found.
             findDelay:
             for train in cellTrain.nextEstimate {
-                print("Looking for delay in \(cellTrain.destination)")
                 if train.isDelayed() {
-                    print("Found delay for train bount to \(cellTrain.destination)")
                     foundDelay = true
-//                    cell.delayArrivalTitle.attributedText = cell.setUpTitle(delay: true)
                     break findDelay
                 }
             }
@@ -575,13 +563,13 @@ class StationDetailViewController: UITableViewController {
             switch cellTrain.nextEstimate.count {
             case 1:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
-                cell.secondTime.text = ""
-                cell.thirdTime.text = ""
+                cell.secondTime.text = " "
+                cell.thirdTime.text = " "
 
             case 2:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
-                cell.thirdTime.text = ""
+                cell.thirdTime.text = " "
 
             case 3:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
@@ -589,9 +577,9 @@ class StationDetailViewController: UITableViewController {
                 cell.thirdTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[2])
 
             default:
-                cell.firstTime.text = ""
-                cell.secondTime.text = ""
-                cell.thirdTime.text = ""
+                cell.firstTime.text = " "
+                cell.secondTime.text = " "
+                cell.thirdTime.text = " "
 
             }
             
@@ -613,7 +601,6 @@ class StationDetailViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let keys = Array(platformsAndTrains.keys).sorted()
-        print("Keys: \(keys)")
         if section == 1 {
             return "Platform \(platformsAndTrains[keys[0]]![0].nextEstimate[0].platform)"
 //            print("Keys at index 0: \(keys[0])")
