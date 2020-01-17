@@ -53,8 +53,22 @@ class HomeScreenTableViewController: UITableViewController {
         // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        print("Timer should be invalidated..")
+        timer?.invalidate()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        guard let _ = timer else {
+            return
+        }
+        createtimer()
+    }
+    
     func createtimer() {
-        let initTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
+        let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
         RunLoop.current.add(initTimer, forMode: .common)
         initTimer.tolerance = 0.5
         self.timer = initTimer
@@ -157,10 +171,7 @@ class HomeScreenTableViewController: UITableViewController {
         return stations
     }
     
-    /// Get Next Train at nearst station
-    
-    
-    
+    /// Get Next Train at nearest station
     func getTrainData(_ direction: String) {
         let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
 
@@ -369,6 +380,7 @@ class HomeScreenTableViewController: UITableViewController {
                 
                 if hasPulledData {
                     /// Find if Delays
+                    // FIXME :-  INDEX OUT OF RANGE
                     if (nextSouthTrain.nextEstimate[0].isDelayed()) {
                         
                         let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell

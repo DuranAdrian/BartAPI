@@ -20,8 +20,11 @@ class StationDetailViewController: UITableViewController {
     var NorthTrains: [EstimateDeparture]! = []
     var SouthTrains: [EstimateDeparture]! = []
     var platformsAndTrains: [Int: [EstimateDeparture]]! = [:]
+    var platformSections: [Int] = []
     var routes: [Route]!
     var successFullDataPull: Bool = false
+    let activityView: UIActivityIndicatorView = UIActivityIndicatorView()
+    var timer: Timer?
     
     // MapView for table cell
     var customMapView: MKMapView = MKMapView()
@@ -37,16 +40,25 @@ class StationDetailViewController: UITableViewController {
                 self.getRouteData()
                 self.getTrainData()
             }, completion: {
-                self.tableView.beginUpdates()
                 self.successFullDataPull = true
-                self.tableView.insertSections(IndexSet(self.platformsAndTrains.keys), with: .fade)
-                self.tableView.reloadData()
-                self.tableView.endUpdates()
+                self.activityView.stopAnimating()
+                if self.platformSections.count > 0 {
+                    self.tableView.beginUpdates()
+                    self.tableView.insertSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
+                    self.tableView.reloadData()
+                    self.tableView.endUpdates()
+                    self.createtimer()
+                }
             })
             
         })
         setUpTableView()
         setUpNavBar()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        timer?.invalidate()
     }
     
     func setUpTableView() {
@@ -78,11 +90,38 @@ class StationDetailViewController: UITableViewController {
         ]
         
         navigationItem.title = title
+        
+        if !successFullDataPull {
+            let activityIcon = UIBarButtonItem(customView: activityView)
+            self.navigationItem.setRightBarButton(activityIcon, animated: true)
+            self.activityView.startAnimating()
+        }
 
     }
     
     // Timer for pulling data on background
+    func createtimer() {
+        let trainTimer = Timer.scheduledTimer(timeInterval: 60.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
+        RunLoop.current.add(trainTimer, forMode: .common)
+        trainTimer.tolerance = 0.5
+        self.timer = trainTimer
+    }
     
+    @objc func timerFunction() {
+        print("PULLING NEW DATA! \(Date())")
+        self.activityView.startAnimating()
+        DispatchQueue.backgroundThread(delay: 1.0, background: {
+            self.getTrainData()
+        }, completion: {
+            self.activityView.stopAnimating()
+            if self.platformSections.count > 0 {
+                self.tableView.reloadSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
+
+            }
+        })
+        
+    }
+
     
     // ROUTE DATA
     
@@ -176,7 +215,7 @@ class StationDetailViewController: UITableViewController {
             ///connection succesfull
             if let data = data {
                 print("Success")
-                let mytrains = self.parseTrainJSONData(data: data)
+                let _ = self.parseTrainJSONData(data: data)
             }
 //
         })
@@ -193,6 +232,7 @@ class StationDetailViewController: UITableViewController {
             self.setUpTrains(parsedTrains)
         } catch {
             print("Error parsing Train JSON Data: \(error)")
+            return parsedTrains
             
         }
         
@@ -200,18 +240,26 @@ class StationDetailViewController: UITableViewController {
     }
     
     func setUpTrains(_ trainList: [Train]) {
-        print("Attempting to set up trains with count: \(trainList.count)")
-        print("Number of estimate: \(trainList[0].estimate.count)")
         print(trainList)
+        var listOfTrains: [Int: [EstimateDeparture]]! = [:]
         for train in trainList[0].estimate {
-            if let _ = platformsAndTrains[Int(train.nextEstimate[0].platform)!] {
+            if let _ = listOfTrains[Int(train.nextEstimate[0].platform)!] {
                 // key exist, only append to array
-                platformsAndTrains[Int(train.nextEstimate[0].platform)!]?.append(train)
+                listOfTrains[Int(train.nextEstimate[0].platform)!]?.append(train)
             } else {
                 // key does not exist, add key, start new array
-                platformsAndTrains[Int(train.nextEstimate[0].platform)!] = [train]
+                listOfTrains[Int(train.nextEstimate[0].platform)!] = [train]
             }
         }
+        
+        var platformNum: Int = 1
+        var numSections: [Int] = []
+        for (index, value) in listOfTrains.enumerated() {
+            numSections.append(platformNum)
+            platformNum += 1
+        }
+        platformSections = numSections
+        platformsAndTrains = listOfTrains
     }
     
     // FORMATTING FUNCTIONS
@@ -336,8 +384,8 @@ class StationDetailViewController: UITableViewController {
         }
         print("Station info pulled success")
         if successFullDataPull {
-            print("sections should now be added")
-            numOfValidSections = 1 + platformsAndTrains.count
+            print("sections should now be added: \(platformSections)")
+            numOfValidSections = 1 + platformSections.count
         }
         
         return numOfValidSections
@@ -349,19 +397,20 @@ class StationDetailViewController: UITableViewController {
         guard let _ = stationInfo else {
             return 1
         }
-        
+//        print(platformsAndTrains)
+        let keys = Array(platformsAndTrains.keys).sorted()
         switch section {
             case 0:
                 return 2
             case 1:
-                print("Number of rows in 1: \(platformsAndTrains[1]!.count)")
-                return platformsAndTrains[1]!.count
+                print("Number of rows in 1: \(platformsAndTrains[keys[0]]!.count)")
+                return platformsAndTrains[keys[0]]!.count
             case 2:
-                print("Number of rows in 2: \(platformsAndTrains[2]!.count)")
-                return platformsAndTrains[2]!.count
+                print("Number of rows in 2: \(platformsAndTrains[keys[1]]!.count)")
+                return platformsAndTrains[keys[1]]!.count
             case 3:
-                print("Number of rows in 3: \(platformsAndTrains[3]!.count)")
-                return platformsAndTrains[3]!.count
+                print("Number of rows in 3: \(platformsAndTrains[keys[2]]!.count)")
+                return platformsAndTrains[keys[2]]!.count
             default:
                 return 0
         }
@@ -401,7 +450,8 @@ class StationDetailViewController: UITableViewController {
         case 1:
             // PLATFORM 1
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
-            let cellTrain = platformsAndTrains[1]![indexPath.row]
+            let key = Array(platformsAndTrains.keys).sorted()
+            let cellTrain = platformsAndTrains[key[0]]![indexPath.row]
             
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             cell.routeColorView.backgroundColor = color?.colors
@@ -424,8 +474,9 @@ class StationDetailViewController: UITableViewController {
             switch cellTrain.nextEstimate.count {
             case 1:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
-                cell.secondTime.text = ""
-                cell.thirdTime.text = ""
+//                cell.secondTime.text = ""
+                cell.secondTime.isHidden = true
+//                cell.thirdTime.isHidden = true
 
             case 2:
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
@@ -436,6 +487,7 @@ class StationDetailViewController: UITableViewController {
                 cell.firstTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[0])
                 cell.secondTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[1])
                 cell.thirdTime.attributedText = formatDelayArrival(cellTrain.nextEstimate[2])
+//                cell.thirdTime.text = " "
 
             default:
                 cell.firstTime.text = ""
@@ -447,7 +499,11 @@ class StationDetailViewController: UITableViewController {
         case 2:
             // PLATFORM 2
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
-            let cellTrain = platformsAndTrains[2]![indexPath.row]
+            
+            let key = Array(platformsAndTrains.keys).sorted()
+            print("Looking at key: \(key[1]) with indexPath.row: \(indexPath.row)")
+            let cellTrain = platformsAndTrains[key[1]]![indexPath.row]
+            
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             cell.routeColorView.backgroundColor = color?.colors
             cell.destinationName.text = cellTrain.destination
@@ -492,7 +548,11 @@ class StationDetailViewController: UITableViewController {
         case 3:
             // PLATFORM 3
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
-            let cellTrain = platformsAndTrains[3]![indexPath.row]
+            
+            let key = Array(platformsAndTrains.keys).sorted()
+            print("Looking at key: \(key[2]) with indexPath.row: \(indexPath.row)")
+            let cellTrain = platformsAndTrains[key[2]]![indexPath.row]
+            
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             var foundDelay: Bool = false
             cell.routeColorView.backgroundColor = color?.colors
@@ -552,14 +612,19 @@ class StationDetailViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let keys = Array(platformsAndTrains.keys).sorted()
+        print("Keys: \(keys)")
         if section == 1 {
-            return "Platform 1"
+            return "Platform \(platformsAndTrains[keys[0]]![0].nextEstimate[0].platform)"
+//            print("Keys at index 0: \(keys[0])")
+//            return ""
+//            return "Platform 1"
         }
         if section == 2 {
-            return "Platform 2"
+            return "Platform \(platformsAndTrains[keys[1]]![0].nextEstimate[0].platform)"
         }
         if section == 3 {
-            return "Platform 3"
+            return "Platform \(platformsAndTrains[keys[2]]![0].nextEstimate[0].platform)"
         }
         return nil
     }
@@ -671,7 +736,7 @@ extension StationDetailViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            self.tableView.reloadSections(IndexSet(self.platformsAndTrains.keys), with: .fade)
+            self.tableView.reloadSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
         }
     }
 }
