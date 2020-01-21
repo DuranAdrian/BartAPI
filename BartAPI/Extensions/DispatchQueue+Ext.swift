@@ -45,16 +45,17 @@ extension DispatchQueue {
     static func userInitiatedThread(delay: Double = 0.0, background:(() -> Void)? = nil, completion: (() -> Void)? = nil) {
         DispatchQueue.global(qos: .userInitiated).async {
             background?()
-            if let completion = completion {
+//            DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: { completion?() })
+            if let completion = completion?() {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {
-                    completion()
+                    completion
                 })
             }
         }
     }
     
     static func userInteractiveThread(delay: Double = 0.0, background:(() -> Void)? = nil, completion: (() -> Void)? = nil) {
-        DispatchQueue.global(qos: .userInteractive).async {
+        DispatchQueue.global(qos: .userInteractive).sync {
             background?()
             if let completion = completion {
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: {

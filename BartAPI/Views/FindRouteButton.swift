@@ -29,7 +29,7 @@ class FindRouteButton: UIButton {
         // Common logic goes here
         self.layer.backgroundColor = UIColor.Custom.annotationBlue.cgColor
         self.layer.cornerRadius = 15
-        self.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 5.0, bottom: 10.0, right: 5.0)
+        self.contentEdgeInsets = UIEdgeInsets(top: 10.0, left: 15.0, bottom: 10.0, right: 15.0)
         self.layer.masksToBounds = true
         
         

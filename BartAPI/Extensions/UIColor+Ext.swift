@@ -31,6 +31,7 @@ extension UIColor {
     
     struct Custom {
         static let annotationBlue = UIColor(41, 168, 171)
+        static let disabledBlue = UIColor(26, 110, 112)
         static let errorRed = UIColor(231,76, 60)
         static let bartRed = UIColor(255, 0, 0)
         static let bartOrange = UIColor(255, 153, 51)

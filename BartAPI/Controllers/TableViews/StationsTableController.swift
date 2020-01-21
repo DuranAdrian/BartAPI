@@ -78,7 +78,7 @@ class StationsTableController: UITableViewController {
             ///connection succesfull
             if let data = data {
                 self.stations = self.parseJSONData(data: data)
-                
+                self.getParsedNames()
                 OperationQueue.main.addOperation {
                     print("Stations Data has been parsed, reloading View.")
                     self.tableView.reloadData()
@@ -87,6 +87,25 @@ class StationsTableController: UITableViewController {
             
         })
         task.resume()
+    }
+    
+    func getParsedNames() {
+        var myvar: [String] = []
+        
+        for station in stations {
+            let stationName = station.name
+            let stationAbbr = station.abbreviation.lowercased()
+            let myElement = """
+            "\(stationName)": "\(stationAbbr)"
+            """
+//            print(myElement)
+            myvar.append(myElement)
+        }
+        for el in myvar {
+            print(el)
+        }
+        print(myvar.joined(separator: ", "))
+        
     }
     
     func parseJSONData(data: Data) -> [Station] {

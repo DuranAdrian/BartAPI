@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15702" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n2X-1Y-YUs">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="n2X-1Y-YUs">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15704"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -86,6 +86,33 @@
             </objects>
             <point key="canvasLocation" x="2049" y="96"/>
         </scene>
+        <!--Fare-->
+        <scene sceneID="mhW-yl-UZN">
+            <objects>
+                <navigationController id="fSO-VJ-ZRD" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Fare" image="dollarsign.square.fill" catalog="system" id="wlX-0W-668"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="vkn-7m-ZIW">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="X1a-BV-axe" kind="relationship" relationship="rootViewController" id="USE-Uv-CSK"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lSZ-9h-avU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1071" y="863"/>
+        </scene>
+        <!--FindFareView-->
+        <scene sceneID="HgQ-NE-fIn">
+            <objects>
+                <viewControllerPlaceholder storyboardName="StationFare" referencedIdentifier="FindFareView" id="X1a-BV-axe" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="Ixn-vW-Lcd"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uCL-9F-AFy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2089" y="863"/>
+        </scene>
         <!--StationDetailView-->
         <scene sceneID="EqE-Um-MPQ">
             <objects>
@@ -157,6 +184,7 @@
                     <connections>
                         <segue destination="YoM-cn-p8L" kind="relationship" relationship="viewControllers" id="6lp-Gb-lPh"/>
                         <segue destination="Vby-EM-Nom" kind="relationship" relationship="viewControllers" id="FtX-j6-WNO"/>
+                        <segue destination="fSO-VJ-ZRD" kind="relationship" relationship="viewControllers" id="ndT-Mu-NlI"/>
                     </connections>
                 </tabBarController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7Nz-Yb-viF" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -184,6 +212,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="dollarsign.square.fill" catalog="system" width="64" height="56"/>
         <image name="house" catalog="system" width="64" height="54"/>
         <image name="tram.fill" catalog="system" width="48" height="64"/>
     </resources>
