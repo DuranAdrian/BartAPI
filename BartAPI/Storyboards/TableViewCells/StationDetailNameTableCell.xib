@@ -27,7 +27,7 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" axis="vertical" alignment="top" translatesAutoresizingMaskIntoConstraints="NO" id="Cvc-cg-0H2">
-                                <rect key="frame" x="25" y="0.0" width="299" height="39"/>
+                                <rect key="frame" x="25" y="0.0" width="294" height="39"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="751" text="International Terminal, Level 3" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QP7-ft-9pg">
                                         <rect key="frame" x="0.0" y="0.0" width="216.5" height="19.5"/>
@@ -44,12 +44,14 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="252" horizontalCompressionResistancePriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9YL-PQ-caO" customClass="FindRouteButton" customModule="BartAPI" customModuleProvider="target">
-                                <rect key="frame" x="329" y="0.0" width="45" height="42"/>
+                                <rect key="frame" x="324" y="0.0" width="50" height="45"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="45" id="gmQ-Lz-XOB"/>
+                                    <constraint firstAttribute="height" constant="45" id="HNo-U1-Gkx"/>
+                                    <constraint firstAttribute="width" constant="50" id="gmQ-Lz-XOB"/>
                                 </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                 <color key="tintColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <state key="normal" image="map.fill" catalog="system">
+                                <state key="normal" image="arrow.up.right.diamond.fill" catalog="system">
                                     <color key="titleColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
                                 <connections>
@@ -75,7 +77,7 @@
         </tableViewCell>
     </objects>
     <resources>
-        <image name="map.fill" catalog="system" width="64" height="56"/>
+        <image name="arrow.up.right.diamond.fill" catalog="system" width="64" height="60"/>
         <image name="mappin.and.ellipse" catalog="system" width="58" height="64"/>
     </resources>
 </document>

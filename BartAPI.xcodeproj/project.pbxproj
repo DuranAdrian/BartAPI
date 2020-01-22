@@ -61,6 +61,7 @@
 		93E1EEF723D02E3F00C5676A /* ModifiedStationDetailMapCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93E1EEF623D02E3F00C5676A /* ModifiedStationDetailMapCell.xib */; };
 		93E1EEF923D0E16F00C5676A /* StationDelayedArrivalsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E1EEF823D0E16F00C5676A /* StationDelayedArrivalsCell.swift */; };
 		93E1EEFB23D0E19600C5676A /* StationDelayedArrivalsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93E1EEFA23D0E19600C5676A /* StationDelayedArrivalsCell.xib */; };
+		93FE712D23D7C75700A5BC88 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FE712C23D7C75700A5BC88 /* LoadingButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -120,6 +121,7 @@
 		93E1EEF623D02E3F00C5676A /* ModifiedStationDetailMapCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModifiedStationDetailMapCell.xib; sourceTree = "<group>"; };
 		93E1EEF823D0E16F00C5676A /* StationDelayedArrivalsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDelayedArrivalsCell.swift; sourceTree = "<group>"; };
 		93E1EEFA23D0E19600C5676A /* StationDelayedArrivalsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationDelayedArrivalsCell.xib; sourceTree = "<group>"; };
+		93FE712C23D7C75700A5BC88 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -287,6 +289,7 @@
 				93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */,
 				93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */,
 				934B350E23D29D8C00A692F0 /* FareSegController.swift */,
+				93FE712C23D7C75700A5BC88 /* LoadingButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -403,6 +406,7 @@
 				930B19AD23D3C59000D7A325 /* Fare.swift in Sources */,
 				936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */,
 				93E1EEF923D0E16F00C5676A /* StationDelayedArrivalsCell.swift in Sources */,
+				93FE712D23D7C75700A5BC88 /* LoadingButton.swift in Sources */,
 				9371C97623B28A330022C0F4 /* NearestStationTableCell.swift in Sources */,
 				93DF8F3423A99781007766BB /* StationTableCell.swift in Sources */,
 				93C68D8723D6488C005F74C0 /* FareCostCell.swift in Sources */,

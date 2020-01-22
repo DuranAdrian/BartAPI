@@ -334,6 +334,7 @@ class HomeScreenTableViewController: UITableViewController {
                 // NORTH TRAIN
                 if hasPulledData {
                     /// Find if Delays
+                    print(nextNorthTrain.nextEstimate[0])
                     if (nextNorthTrain.nextEstimate[0].isDelayed()) {
 
                         let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
@@ -381,6 +382,7 @@ class HomeScreenTableViewController: UITableViewController {
                 if hasPulledData {
                     /// Find if Delays
                     // FIXME :-  INDEX OUT OF RANGE
+                    print(nextSouthTrain.nextEstimate[0])
                     if (nextSouthTrain.nextEstimate[0].isDelayed()) {
                         
                         let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell

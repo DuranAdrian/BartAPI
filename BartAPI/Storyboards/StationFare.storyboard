@@ -10,7 +10,6 @@
         <!--Fare Picker Controller-->
         <scene sceneID="U8l-gN-yh7">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="LaT-6q-HOu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <viewController storyboardIdentifier="FindFareView" id="KqV-5j-pkE" customClass="FarePickerController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="JyZ-qq-gnW">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
@@ -32,7 +31,7 @@
                             <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zOd-JC-a75">
                                 <rect key="frame" x="0.0" y="91.5" width="375" height="216"/>
                             </pickerView>
-                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SXO-yR-yzq" customClass="FindRouteButton" customModule="BartAPI" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SXO-yR-yzq" customClass="loadingButton" customModule="BartAPI" customModuleProvider="target">
                                 <rect key="frame" x="50" y="607" width="275" height="30"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -68,121 +67,9 @@
                         <outlet property="viewFareButton" destination="SXO-yR-yzq" id="5u9-7p-s37"/>
                     </connections>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="LaT-6q-HOu" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="66.666666666666671" y="70.982142857142847"/>
-        </scene>
-        <!--Fare Picker Controller-->
-        <scene sceneID="2Zf-nm-2bg">
-            <objects>
-                <viewController storyboardIdentifier="FarePickerScrollController" id="rRd-dU-fBk" customClass="FarePickerController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="2Qn-3a-eWU">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="n8w-rA-1BR">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                                <subviews>
-                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="roZ-hO-ZaU" customClass="FareSegController" customModule="BartAPI" customModuleProvider="target">
-                                        <rect key="frame" x="75" y="45.5" width="225" height="32"/>
-                                        <segments>
-                                            <segment title="From"/>
-                                            <segment title="To"/>
-                                        </segments>
-                                    </segmentedControl>
-                                    <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4yM-oL-iZO">
-                                        <rect key="frame" x="0.0" y="91.5" width="375" height="216"/>
-                                    </pickerView>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="FOW-0n-zBl">
-                                        <rect key="frame" x="50" y="437" width="275" height="97"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price: $3.75" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="obp-pV-zrb">
-                                                <rect key="frame" x="91.5" y="0.0" width="92.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price: $3.75" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bci-YE-bt6">
-                                                <rect key="frame" x="91.5" y="25.5" width="92.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price: $3.75" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9iK-8n-9jO">
-                                                <rect key="frame" x="91.5" y="51" width="92.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Price: $3.75" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="sE3-vN-v6s">
-                                                <rect key="frame" x="91.5" y="76.5" width="92.5" height="20.5"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                    </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SQs-Zc-eoo" customClass="FindRouteButton" customModule="BartAPI" customModuleProvider="target">
-                                        <rect key="frame" x="50" y="584" width="275" height="38"/>
-                                        <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <color key="tintColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                        <state key="normal" title="View Fare">
-                                            <color key="titleColor" red="0.93333333330000001" green="0.93333333330000001" blue="0.93333333330000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        </state>
-                                    </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="San Leandro To Daly City" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0RW-0t-B8l">
-                                        <rect key="frame" x="5" y="15" width="365" height="20.5"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <nil key="textColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
-                                <constraints>
-                                    <constraint firstItem="roZ-hO-ZaU" firstAttribute="leading" secondItem="pvG-iE-Oqa" secondAttribute="leading" constant="75" id="9Ov-y9-Xok"/>
-                                    <constraint firstItem="pvG-iE-Oqa" firstAttribute="trailing" secondItem="4yM-oL-iZO" secondAttribute="trailing" id="ANx-cB-uUw"/>
-                                    <constraint firstItem="pvG-iE-Oqa" firstAttribute="trailing" secondItem="FOW-0n-zBl" secondAttribute="trailing" constant="50" id="GHe-Ku-e9a"/>
-                                    <constraint firstItem="pvG-iE-Oqa" firstAttribute="bottom" secondItem="SQs-Zc-eoo" secondAttribute="bottom" constant="45" id="GL7-ga-kfM"/>
-                                    <constraint firstItem="pvG-iE-Oqa" firstAttribute="trailing" secondItem="roZ-hO-ZaU" secondAttribute="trailing" constant="75" id="Gbt-IY-uGK"/>
-                                    <constraint firstItem="FOW-0n-zBl" firstAttribute="top" relation="greaterThanOrEqual" secondItem="4yM-oL-iZO" secondAttribute="bottom" constant="50" id="JmB-n8-n9V"/>
-                                    <constraint firstItem="SQs-Zc-eoo" firstAttribute="top" secondItem="FOW-0n-zBl" secondAttribute="bottom" constant="50" id="Kmk-My-YF9"/>
-                                    <constraint firstItem="0RW-0t-B8l" firstAttribute="centerX" secondItem="n8w-rA-1BR" secondAttribute="centerX" id="LZW-EB-F7F"/>
-                                    <constraint firstItem="roZ-hO-ZaU" firstAttribute="top" secondItem="0RW-0t-B8l" secondAttribute="bottom" constant="10" id="MSj-DR-x3e"/>
-                                    <constraint firstItem="pvG-iE-Oqa" firstAttribute="trailing" secondItem="0RW-0t-B8l" secondAttribute="trailing" constant="5" id="Mzt-oo-72r"/>
-                                    <constraint firstItem="pvG-iE-Oqa" firstAttribute="trailing" secondItem="SQs-Zc-eoo" secondAttribute="trailing" constant="50" id="gIZ-Bt-28k"/>
-                                    <constraint firstItem="SQs-Zc-eoo" firstAttribute="centerX" secondItem="n8w-rA-1BR" secondAttribute="centerX" id="gbD-55-vBc"/>
-                                    <constraint firstItem="4yM-oL-iZO" firstAttribute="top" secondItem="roZ-hO-ZaU" secondAttribute="bottom" constant="15" id="hLj-Ro-GQm"/>
-                                    <constraint firstItem="FOW-0n-zBl" firstAttribute="leading" secondItem="pvG-iE-Oqa" secondAttribute="leading" constant="50" id="iSv-u8-7L3"/>
-                                    <constraint firstItem="0RW-0t-B8l" firstAttribute="top" secondItem="pvG-iE-Oqa" secondAttribute="top" constant="15" id="icV-Df-JCh"/>
-                                    <constraint firstItem="0RW-0t-B8l" firstAttribute="leading" secondItem="pvG-iE-Oqa" secondAttribute="leading" constant="5" id="nl9-9e-jWq"/>
-                                    <constraint firstItem="4yM-oL-iZO" firstAttribute="leading" secondItem="pvG-iE-Oqa" secondAttribute="leading" id="qfm-vT-e8A"/>
-                                    <constraint firstItem="SQs-Zc-eoo" firstAttribute="leading" secondItem="pvG-iE-Oqa" secondAttribute="leading" constant="50" id="vGL-cC-lWZ"/>
-                                </constraints>
-                                <viewLayoutGuide key="contentLayoutGuide" id="9fs-tG-cEf"/>
-                                <viewLayoutGuide key="frameLayoutGuide" id="pvG-iE-Oqa"/>
-                            </scrollView>
-                        </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
-                        <constraints>
-                            <constraint firstItem="a1f-Fu-cTL" firstAttribute="bottom" secondItem="n8w-rA-1BR" secondAttribute="bottom" id="8zt-jC-qt3"/>
-                            <constraint firstItem="n8w-rA-1BR" firstAttribute="top" secondItem="a1f-Fu-cTL" secondAttribute="top" id="eWi-Fy-gn5"/>
-                            <constraint firstItem="a1f-Fu-cTL" firstAttribute="trailing" secondItem="n8w-rA-1BR" secondAttribute="trailing" id="pEC-qe-VJ2"/>
-                            <constraint firstItem="n8w-rA-1BR" firstAttribute="leading" secondItem="a1f-Fu-cTL" secondAttribute="leading" id="xME-bu-JS3"/>
-                        </constraints>
-                        <viewLayoutGuide key="safeArea" id="a1f-Fu-cTL"/>
-                    </view>
-                    <connections>
-                        <outlet property="cashPriceLabel" destination="Bci-YE-bt6" id="rCH-vT-nvX"/>
-                        <outlet property="clipperPriceLabel" destination="obp-pV-zrb" id="zCh-As-9uX"/>
-                        <outlet property="pickerWheel" destination="4yM-oL-iZO" id="PUC-Gf-fFE"/>
-                        <outlet property="segController" destination="roZ-hO-ZaU" id="PXh-kL-zad"/>
-                        <outlet property="seniorPriceLabel" destination="9iK-8n-9jO" id="A3C-eb-pua"/>
-                        <outlet property="stationsLabel" destination="0RW-0t-B8l" id="PaV-lX-EiV"/>
-                        <outlet property="studentPriceLabel" destination="sE3-vN-v6s" id="IUE-Kf-DFA"/>
-                        <outlet property="viewFareButton" destination="SQs-Zc-eoo" id="Ih0-5S-mK8"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="VRd-VE-GOo" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="922" y="71"/>
         </scene>
     </scenes>
 </document>

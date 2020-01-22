@@ -32,7 +32,8 @@ class StationDetailViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        setUpTableView()
+        setUpNavBar()
         DispatchQueue.userInitiatedThread(delay: 1.0, background: {
             self.getStationInfoData()
         }, completion: {
@@ -42,6 +43,7 @@ class StationDetailViewController: UITableViewController {
             }, completion: {
                 self.successFullDataPull = true
                 self.activityView.stopAnimating()
+                print("COUNT: \(self.platformSections.count)")
                 if self.platformSections.count > 0 {
                     self.tableView.beginUpdates()
                     self.tableView.insertSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
@@ -52,8 +54,11 @@ class StationDetailViewController: UITableViewController {
             })
             
         })
-        setUpTableView()
-        setUpNavBar()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+//        self.activityView.stopAnimating()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -169,10 +174,7 @@ class StationDetailViewController: UITableViewController {
             
             ///connection succesfull
             if let data = data {
-                // Used for debugging
-//                if let JSONString = String(data: data, encoding: String.Encoding.utf8) {
-//                   print(JSONString)
-//                }
+                
                 self.stationInfo = self.parseStationInfoJSONData(data: data)
                 
                 OperationQueue.main.addOperation {
@@ -238,7 +240,6 @@ class StationDetailViewController: UITableViewController {
     }
     
     func setUpTrains(_ trainList: [Train]) {
-//        print(trainList)
         var listOfTrains: [Int: [EstimateDeparture]]! = [:]
         for train in trainList[0].estimate {
             if let _ = listOfTrains[Int(train.nextEstimate[0].platform)!] {
@@ -368,7 +369,6 @@ class StationDetailViewController: UITableViewController {
     @objc func findRoute(_ sender: UIButton) {
         print("Attemping to find route...")
     }
-    
 
     // MARK: - Table view data source
 
@@ -377,11 +377,9 @@ class StationDetailViewController: UITableViewController {
         var numOfValidSections = 1
         // First check if able to pull station info
         guard let _ = stationInfo else {
-            print("station info is invalid")
             return numOfValidSections
         }
         if successFullDataPull {
-//            print("sections should now be added: \(platformSections)")
             numOfValidSections = 1 + platformSections.count
         }
         
@@ -615,52 +613,6 @@ class StationDetailViewController: UITableViewController {
         }
         return nil
     }
-
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }
 extension StationDetailViewController: mapViewDelegate, MKMapViewDelegate {

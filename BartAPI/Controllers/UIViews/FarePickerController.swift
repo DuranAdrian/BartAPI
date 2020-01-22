@@ -17,15 +17,13 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     @IBOutlet weak var segController: FareSegController! {
         didSet {
-//            segController.target(forAction: #selector(selectPicker(_:)), withSender: self)
             segController.addTarget(self, action: #selector(selectPicker(_:)), for: .valueChanged)
         }
     }
     @IBOutlet weak var pickerWheel: UIPickerView!
-    @IBOutlet weak var viewFareButton: FindRouteButton! {
+    @IBOutlet weak var viewFareButton: loadingButton! {
         didSet {
             viewFareButton.isEnabled = false
-//            viewDetailsButton.layer.backgroundColor = UIColor.Custom.disabledBlue.cgColor
             viewFareButton.layer.backgroundColor = UIColor.darkGray.cgColor
             viewFareButton.addTarget(self, action: #selector(calculateFare(_:)), for: .touchUpInside)
         }
@@ -36,6 +34,8 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
     lazy var tripFare: FareContainer? = nil
     var fareTableView = UITableView()
     lazy var fareSubViewFlag: Bool = false
+    
+    var activityIndicator: UIActivityIndicatorView!
 
     
     // FIXME: - Replace with [Station]
@@ -65,11 +65,13 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         
         viewFareButton.isEnabled = false
         viewFareButton.layer.backgroundColor = UIColor.darkGray.cgColor
+        viewFareButton.setTitle("View Fare", for: .normal)
         if fareSubViewFlag {
             // Remove fare subviews. no animation
             self.view.viewWithTag(98)?.removeFromSuperview()
             self.view.viewWithTag(99)?.removeFromSuperview()
             self.view.viewWithTag(100)?.removeFromSuperview()
+            fareSubViewFlag = false
         }
         
     }
@@ -112,11 +114,23 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         fareTableView.dataSource = self
         fareTableView.delegate = self
         fareTableView.tableFooterView = UIView()
+        fareTableView.separatorColor = .clear
         fareTableView.allowsSelection = false
         fareTableView.allowsMultipleSelection = false
-        fareTableView.backgroundColor = .darkGray
+        if #available(iOS 13, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                fareTableView.backgroundColor = .darkGray
+            } else {
+                fareTableView.backgroundColor = .systemGray6
+            }
+        } else {
+            fareTableView.backgroundColor = .lightGray
+        }
         fareTableView.layer.cornerRadius = 15.0
         fareTableView.layer.masksToBounds = true
+        fareTableView.layer.borderWidth = 1
+        fareTableView.layer.borderColor = UIColor.Custom.annotationBlue.cgColor
+        
         fareTableView.register(UINib(nibName: "FareCostCell", bundle: nil), forCellReuseIdentifier: "FareCostCell")
     }
     
@@ -154,17 +168,26 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         tableViewContainer.addGestureRecognizer(tapToRemove)
         tableViewContainer.addGestureRecognizer(swipeDownToRemove)
         
-        // ADD BLACK UIVIEW BEHIND TAB BAR (makes it seems view pops up above tab bar)
-        let blackTabBackground = UIView()
-        blackTabBackground.tag = 98
+        // ADD COLORED UIVIEW BEHIND TAB BAR (makes it seems view pops up above tab bar)
+        let tabBarBackground = UIView()
+        tabBarBackground.tag = 98
         let blackBarFrame = CGRect(x: 0, y: self.view.frame.height - tabBarHeight!, width: self.view.frame.width, height: tabBarHeight!)
-        blackTabBackground.frame = blackBarFrame
-        blackTabBackground.backgroundColor = UIColor.black
+        tabBarBackground.frame = blackBarFrame
+        if #available(iOS 13, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                tabBarBackground.backgroundColor = UIColor.black
+            } else {
+                tabBarBackground.backgroundColor = UIColor.white
+            }
+        } else {
+            tabBarBackground.backgroundColor = UIColor.white
+        }
+        
         
         
         // ADD SUBVIEWS
         self.view.addSubview(fareTableView)
-        self.view.addSubview(blackTabBackground)
+        self.view.addSubview(tabBarBackground)
         self.view.addSubview(tableViewContainer)
         self.view.isUserInteractionEnabled = true
         
@@ -237,13 +260,18 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
     }
     
     @objc func calculateFare(_ sender: UIButton) {
+        self.viewFareButton.setTitle("Loading...", for: .normal)
+        self.viewFareButton.showLoading()
         pullFareData(completionHandler: { [weak self ] (tripFare) in
             self?.tripFare = tripFare
             DispatchQueue.main.async {
                 self?.createCustomPush()
+                self?.viewFareButton.hideLoading()
+                self?.viewFareButton.setTitle("View Fare", for: .normal)
             }
         })
     }
+    
 
     // MARK: - PickerView
 
@@ -264,29 +292,22 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         if segController.selectedSegmentIndex == 0 {
             // FROM SELECTION
             fromStation = pickerDataKeys[row]
-            print(pickerDataDictionary[fromStation])
         } else {
             // TO SELECTION
             toStation = pickerDataKeys[row]
-            print(pickerDataDictionary[toStation])
         }
         stationsLabel.text = fromStation + " to " + toStation
         stationsLabel.adjustsFontSizeToFitWidth = true
-        if !toStation.isEmpty && !fromStation.isEmpty {
+        if (!toStation.isEmpty && !fromStation.isEmpty) && (fromStation != toStation) {
             viewFareButton.isEnabled = true
             viewFareButton.layer.backgroundColor = UIColor.Custom.annotationBlue.cgColor
         }
-    }
+        if fromStation == toStation {
+            viewFareButton.isEnabled = false
+            viewFareButton.layer.backgroundColor = UIColor.darkGray.cgColor
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+        }
     }
-    */
 
 }
 
@@ -298,6 +319,7 @@ extension FarePickerController: UIViewControllerTransitioningDelegate {
     }
     
 }
+
 class HalfSizePresentationController : UIPresentationController {
     var interactiveDismiss = true
     
@@ -321,6 +343,7 @@ extension FarePickerController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FareCostCell.self), for: indexPath) as! FareCostCell
+        
         let fare = tripFare!.standardFares.fare[indexPath.row]
         cell.cost.text = "$ \(fare.amount)"
         
@@ -329,12 +352,46 @@ extension FarePickerController: UITableViewDelegate, UITableViewDataSource {
         } else {
             cell.fareType.text = fare.type
         }
+        
         cell.selectionStyle = .none
-        cell.layer.backgroundColor = UIColor.darkGray.cgColor
+        
+        if #available(iOS 13, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                cell.layer.backgroundColor = UIColor.darkGray.cgColor
+            } else {
+                cell.layer.backgroundColor = UIColor.systemGray6.cgColor
+            }
+        } else {
+            cell.layer.backgroundColor = UIColor.systemGray6.cgColor
+        }
+
         return cell
     }
-    
-    
+
+}
+
+extension FarePickerController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
+            let tabBackground = self.view.viewWithTag(98)
+            if previousTraitCollection?.userInterfaceStyle == .dark {
+                // GONE TO LIGHT
+                tabBackground?.backgroundColor = .white
+                fareTableView.backgroundColor = .systemGray6
+            } else {
+                // GONE TO DARK
+                tabBackground?.backgroundColor = .black
+                fareTableView.backgroundColor = .darkGray
+            }
+            
+            tabBackground?.layoutIfNeeded()
+            fareTableView.reloadSections(IndexSet(integer: 0), with: .fade)
+            fareTableView.layoutIfNeeded()
+            
+        }
+    }
 }
 
 
