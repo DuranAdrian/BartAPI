@@ -33,6 +33,7 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
     lazy var toStation: String = ""
     lazy var tripFare: FareContainer? = nil
     var fareTableView = UITableView()
+    // WILL DETERMINE IF FARE TABLEVIEW IS VISIBLE
     lazy var fareSubViewFlag: Bool = false
     
     var activityIndicator: UIActivityIndicatorView!
@@ -52,6 +53,11 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         setUpTableView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+    }
+    
+    
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         // RESET VIEW top to bottom
@@ -68,9 +74,7 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         viewFareButton.setTitle("View Fare", for: .normal)
         if fareSubViewFlag {
             // Remove fare subviews. no animation
-            self.view.viewWithTag(98)?.removeFromSuperview()
-            self.view.viewWithTag(99)?.removeFromSuperview()
-            self.view.viewWithTag(100)?.removeFromSuperview()
+            fareTableView.removeFromSuperview()
             fareSubViewFlag = false
         }
         
@@ -130,6 +134,19 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         fareTableView.layer.masksToBounds = true
         fareTableView.layer.borderWidth = 1
         fareTableView.layer.borderColor = UIColor.Custom.annotationBlue.cgColor
+
+        // REMOVE ALL DEFAULT GESTURES.
+        fareTableView.gestureRecognizers?.removeAll()
+        // ADD TAP GESTURE TO REMOVE VIEW
+        let tapRemove = UITapGestureRecognizer(target: self, action: #selector(removeFareTableView(_:)))
+        tapRemove.numberOfTouchesRequired = 1
+        tapRemove.numberOfTapsRequired = 1
+        fareTableView.addGestureRecognizer(tapRemove)
+        
+        // ADD SWIPE DOWN GESTURE TO REMOVE VIEW
+        let swipeDownRemove = UISwipeGestureRecognizer(target: self, action: #selector(swipeToRemoveFareTableView(_:)))
+        swipeDownRemove.direction = .down
+        fareTableView.addGestureRecognizer(swipeDownRemove)
         
         fareTableView.register(UINib(nibName: "FareCostCell", bundle: nil), forCellReuseIdentifier: "FareCostCell")
     }
@@ -139,103 +156,36 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         self.navigationItem.title = "Fare"
     }
     
-    func createCustomPush() {
-        // FIND HEIGHT OF TABLE VIEW
-        let cell = FareCostCell()
-        let tableViewHeight = CGFloat((tripFare!.standardFares.fare.count * Int(cell.frame.height)))
-        let tabBarHeight = self.tabBarController?.tabBar.frame.height
-        let tableContainerViewHeight = CGFloat(tableViewHeight + tabBarHeight!)
+    func createFarePopUp() {
+        // ADD FARETABLEVIEW TO BOTTOM OF VIEW
+        fareTableView.layoutIfNeeded()
+        fareTableView.frame = CGRect(x: 0, y: self.view.frame.height, width: self.view.frame.width, height: fareTableView.contentSize.height + self.tabBarController!.tabBar.frame.height)
         
-        // SET FRAME
-        let frame = CGRect(x: 0, y: self.view.frame.height, width: self.view.frame.width, height: tableContainerViewHeight)
-        
-        // ADD GESTURE TO SWIPE DOWN TO REMOVE
-        fareTableView.isUserInteractionEnabled = false
-        fareTableView.frame = frame
-        fareTableView.tag = 99
-        let tapToRemove = UITapGestureRecognizer(target: self, action: #selector(self.tappedFunction(_:)))
-        tapToRemove.numberOfTouchesRequired = 1
-        tapToRemove.numberOfTapsRequired = 1
-        let swipeDownToRemove = UISwipeGestureRecognizer(target: self, action: #selector(self.swipedDownGesture(_:)))
-        swipeDownToRemove.direction = .down
-        
-        // CREATE CONTAINER UIVIEW TO ADD TABLEVIEW
-        let tableViewContainer = UIView()
-        tableViewContainer.tag = 100
-        tableViewContainer.frame = frame
-        tableViewContainer.layer.backgroundColor = UIColor.clear.cgColor
-        tableViewContainer.isUserInteractionEnabled = true
-        tableViewContainer.addGestureRecognizer(tapToRemove)
-        tableViewContainer.addGestureRecognizer(swipeDownToRemove)
-        
-        // ADD COLORED UIVIEW BEHIND TAB BAR (makes it seems view pops up above tab bar)
-        let tabBarBackground = UIView()
-        tabBarBackground.tag = 98
-        let blackBarFrame = CGRect(x: 0, y: self.view.frame.height - tabBarHeight!, width: self.view.frame.width, height: tabBarHeight!)
-        tabBarBackground.frame = blackBarFrame
-        if #available(iOS 13, *) {
-            if self.traitCollection.userInterfaceStyle == .dark {
-                tabBarBackground.backgroundColor = UIColor.black
-            } else {
-                tabBarBackground.backgroundColor = UIColor.white
-            }
-        } else {
-            tabBarBackground.backgroundColor = UIColor.white
-        }
-        
-        
-        
-        // ADD SUBVIEWS
         self.view.addSubview(fareTableView)
-        self.view.addSubview(tabBarBackground)
-        self.view.addSubview(tableViewContainer)
-        self.view.isUserInteractionEnabled = true
         
-        // SHOW SUBVIEW
         UIView.animate(withDuration: 1.0, animations: {
-            self.fareTableView.frame.origin.y = self.view.frame.height - tableContainerViewHeight
-            tableViewContainer.frame.origin.y = self.view.frame.height - tableContainerViewHeight
-        }, completion: { (value: Bool) in
-            self.fareSubViewFlag = true
+            self.fareTableView.frame.origin.y = self.view.frame.height - (self.fareTableView.contentSize.height + self.tabBarController!.tabBar.frame.height)
         })
     }
     
-    @objc func tappedFunction(_ sender: UITapGestureRecognizer) {
-        let blackSubView = self.view.viewWithTag(98)
-        let tableSubView = self.view.viewWithTag(99)
-        let containerView = self.view.viewWithTag(100)
-        
+    @objc func removeFareTableView(_ sender: UITapGestureRecognizer) {
         UIView.animate(withDuration: 1.0, animations: {
-            tableSubView?.frame.origin.y = self.view.frame.height
-            containerView?.frame.origin.y = self.view.frame.height
-            
-        }, completion: { (value: Bool) in
-            blackSubView?.removeFromSuperview()
-            tableSubView?.removeFromSuperview()
-            containerView?.removeFromSuperview()
-            self.fareSubViewFlag = false
-        })
-        
-    }
-    
-    @objc func swipedDownGesture(_ sender: UISwipeGestureRecognizer) {
-        let blackSubView = self.view.viewWithTag(98)
-        let tableSubView = self.view.viewWithTag(99)
-        let containerView = self.view.viewWithTag(100)
-        
-        UIView.animate(withDuration: 1.0, animations: {
-            tableSubView?.frame.origin.y = self.view.frame.height
-            containerView?.frame.origin.y = self.view.frame.height
-
-        }, completion: { (value: Bool) in
-            blackSubView?.removeFromSuperview()
-            tableSubView?.removeFromSuperview()
-            containerView?.removeFromSuperview()
+            self.fareTableView.frame.origin.y = self.view.frame.height
+        }, completion: { _ in
+            self.fareTableView.removeFromSuperview()
             self.fareSubViewFlag = false
         })
     }
     
-        
+    @objc func swipeToRemoveFareTableView(_ sender: UISwipeGestureRecognizer) {
+        UIView.animate(withDuration: 1.0, animations: {
+            self.fareTableView.frame.origin.y = self.view.frame.height
+        }, completion: { _ in
+            self.fareTableView.removeFromSuperview()
+            self.fareSubViewFlag = false
+        })
+    }
+    
     @objc func selectPicker(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
             case 0:
@@ -265,7 +215,7 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         pullFareData(completionHandler: { [weak self ] (tripFare) in
             self?.tripFare = tripFare
             DispatchQueue.main.async {
-                self?.createCustomPush()
+                self?.createFarePopUp()
                 self?.viewFareButton.hideLoading()
                 self?.viewFareButton.setTitle("View Fare", for: .normal)
             }
@@ -321,8 +271,6 @@ extension FarePickerController: UIViewControllerTransitioningDelegate {
 }
 
 class HalfSizePresentationController : UIPresentationController {
-    var interactiveDismiss = true
-    
 
     override var frameOfPresentedViewInContainerView: CGRect {
         return CGRect(x: 0, y: containerView!.bounds.height/2, width: containerView!.bounds.width, height: containerView!.bounds.height/2)
@@ -353,7 +301,6 @@ extension FarePickerController: UITableViewDelegate, UITableViewDataSource {
             cell.fareType.text = fare.type
         }
         
-        cell.selectionStyle = .none
         
         if #available(iOS 13, *) {
             if self.traitCollection.userInterfaceStyle == .dark {
@@ -373,23 +320,20 @@ extension FarePickerController: UITableViewDelegate, UITableViewDataSource {
 extension FarePickerController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
+
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            let tabBackground = self.view.viewWithTag(98)
+            
             if previousTraitCollection?.userInterfaceStyle == .dark {
                 // GONE TO LIGHT
-                tabBackground?.backgroundColor = .white
                 fareTableView.backgroundColor = .systemGray6
             } else {
                 // GONE TO DARK
-                tabBackground?.backgroundColor = .black
                 fareTableView.backgroundColor = .darkGray
             }
             
-            tabBackground?.layoutIfNeeded()
             fareTableView.reloadSections(IndexSet(integer: 0), with: .fade)
             fareTableView.layoutIfNeeded()
-            
+
         }
     }
 }

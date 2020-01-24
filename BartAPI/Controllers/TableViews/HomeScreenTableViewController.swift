@@ -64,7 +64,6 @@ class HomeScreenTableViewController: UITableViewController {
     
     func createAdvisory(_ adv: Advisory) {
         
-        print("WHOOPS")
         popUp = AdvisoryPopUp()
         popUp.layer.borderColor = UIColor.Custom.annotationBlue.cgColor
         popUp.layer.backgroundColor = UIColor.Custom.errorRed.cgColor
@@ -374,7 +373,6 @@ class HomeScreenTableViewController: UITableViewController {
 
     override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-//        return hasPulledData ? 2 : 1
         return 2
     }
 
