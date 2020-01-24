@@ -165,7 +165,7 @@ extension StationInfoContainer: Decodable {
             let stationContainer = try rootContainer.nestedContainer(keyedBy: StationKey.self, forKey: .stations)
             stations = try stationContainer.decode(StationInfo.self, forKey: .station)
         } catch {
-            print("Shit hit the fan")
+            print("Error decoding station info")
             stations = StationInfo()
         }
         

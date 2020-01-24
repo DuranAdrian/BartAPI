@@ -24,33 +24,28 @@ class HomeScreenTableViewController: UITableViewController {
     
     let activityView: UIActivityIndicatorView = UIActivityIndicatorView()
     var timer: Timer?
+    var popUp: AdvisoryPopUp!
+    var hidePopUpContraint: NSLayoutConstraint!
+    var showPopUpContraint: NSLayoutConstraint!
     
     var hasPulledData: Bool = false
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpNavBar()
         setUpTableView()
-        setUpNavBar()
+
         // load nearest station using .userInteractive
         DispatchQueue.userInteractiveThread(delay: 5.0, background: { self.getData() }, completion: {
             print("Has pulled data complete")
             self.hasPulledData = true
-//            self.tableView.reloadData()
+            self.getAdvisoryData()
             self.activityView.stopAnimating()
             self.tableView.reloadSections([0,1], with: .fade)
             print("Starting background thread timer...")
             self.createtimer()
         })
-            
-//            self.tableView.reloadRows(at: [IndexPath(row: 0, section: 0),IndexPath(row: 1, section: 0),IndexPath(row: 0, section: 1),IndexPath(row: 1, section: 1)], with: .fade)
         
-        
-        //        self.tableView.tableFooterView = UIView()
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -65,6 +60,90 @@ class HomeScreenTableViewController: UITableViewController {
             return
         }
         createtimer()
+    }
+    
+    func createAdvisory(_ adv: Advisory) {
+        
+        print("WHOOPS")
+        popUp = AdvisoryPopUp()
+        popUp.layer.borderColor = UIColor.Custom.annotationBlue.cgColor
+        popUp.layer.backgroundColor = UIColor.Custom.errorRed.cgColor
+        popUp.layer.borderWidth = 1.0
+        popUp.layer.cornerRadius = 15.0
+        popUp.layer.masksToBounds = true
+        popUp.tag = 100
+        popUp.setMessage(message: adv.bsa[0].description)
+        let tapToRemoveGesture = UITapGestureRecognizer(target: self, action: #selector(hidePopUp(_:)))
+        tapToRemoveGesture.numberOfTouchesRequired = 1
+        tapToRemoveGesture.numberOfTapsRequired = 1
+        popUp.addGestureRecognizer(tapToRemoveGesture)
+        
+        self.tableView.addSubview(popUp)
+        
+        // Hide above screen
+        popUp.translatesAutoresizingMaskIntoConstraints = false
+        popUp.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 5).isActive = true
+        popUp.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -5).isActive = true
+        
+        hidePopUpContraint = popUp.bottomAnchor.constraint(equalTo: self.tableView.topAnchor)
+        showPopUpContraint = popUp.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: 10)
+        
+        hidePopUpContraint.isActive = true
+        showPopUpContraint.isActive = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            self.hidePopUpContraint.isActive = false
+            self.showPopUpContraint.isActive = true
+            UIView.animate(withDuration: 1.5, delay: 0.0, options: .curveLinear, animations: {
+                self.tableView.layoutIfNeeded()
+            }, completion: nil)
+            
+        })
+        
+    }
+    
+    func getAdvisoryData() {
+//        let urlString = "https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=MW9S-E7SL-26DU-VV8V&json=y"
+        let urlString = "https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=MW9S-E7SL-26DU-VV8V&json=y"
+        guard let advisoryURL = URL(string: urlString) else { print("adv failed"); return }
+        let task = URLSession.shared.dataTask(with: advisoryURL, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print("Could not connect to ADVISORYAPI: \(error)")
+                return
+            }
+            
+            if let data = data {
+                let test = self.parseAdvisoryData(data: data)
+                print("displaying advisory....")
+                
+                DispatchQueue.main.async {
+                    self.createAdvisory(test)
+                }
+            }
+            
+        })
+        task.resume()
+    }
+    
+    func parseAdvisoryData(data: Data) -> Advisory {
+        let decoder = JSONDecoder()
+        do {
+            let dataStore = try decoder.decode(Advisory.self, from: data)
+            return dataStore
+        } catch {
+            print("Error parsing JSON")
+        }
+        return Advisory()
+    }
+    
+    @objc func hidePopUp(_ sender: UITapGestureRecognizer) {
+        self.showPopUpContraint.isActive = false
+        self.hidePopUpContraint.isActive = true
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
+            self.tableView.layoutIfNeeded()
+        }, completion: { _ in
+            self.tableView.viewWithTag(100)?.removeFromSuperview()
+        })
     }
     
     func createtimer() {
@@ -116,17 +195,44 @@ class HomeScreenTableViewController: UITableViewController {
     
     func setUpNavBar() {
         self.navigationItem.title = "Home"
-        
-        
+        // MUST ADD BACKGROUND COLOR TO HIDE ADVISORY
+        changeNavBarColor()
         if !hasPulledData {
-//            let activityView: UIActivityIndicatorView = UIActivityIndicatorView()
             let activityIcon = UIBarButtonItem(customView: activityView)
-//            let loadingIcon = UIBarButtonItem(barButtonSystemItem: .refresh, target: nil, action: nil)
-//            loadingIcon.tintColor = .lightGray
-//            self.navigationItem.rightBarButtonItem = activityIcon
             self.navigationItem.setRightBarButton(activityIcon, animated: true)
             activityView.startAnimating()
             
+        }
+    }
+    
+    func changeNavBarColor() {
+        if #available(iOS 13, *) {
+            let appearance = UINavigationBarAppearance()
+            if self.traitCollection.userInterfaceStyle == .dark {
+                appearance.backgroundColor = .black
+                appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
+
+                self.navigationController?.navigationBar.tintColor = .black
+
+            } else {
+                appearance.backgroundColor = .white
+                appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
+                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
+
+                self.navigationController?.navigationBar.tintColor = .white
+
+            }
+            self.navigationController?.navigationBar.standardAppearance = appearance
+            self.navigationController?.navigationBar.compactAppearance = appearance
+            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
+            self.navigationController?.navigationBar.layoutSubviews()
+            self.navigationController?.navigationBar.layoutIfNeeded()
+        } else {
+
+            UINavigationBar.appearance().tintColor = .black
+            UINavigationBar.appearance().barTintColor = .white
+            UINavigationBar.appearance().isTranslucent = false
         }
     }
     
@@ -334,7 +440,7 @@ class HomeScreenTableViewController: UITableViewController {
                 // NORTH TRAIN
                 if hasPulledData {
                     /// Find if Delays
-                    print(nextNorthTrain.nextEstimate[0])
+//                    print(nextNorthTrain.nextEstimate[0])
                     if (nextNorthTrain.nextEstimate[0].isDelayed()) {
 
                         let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
@@ -435,14 +541,6 @@ class HomeScreenTableViewController: UITableViewController {
         
     }
     
-//    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-//        if indexPath.row == 0 {
-//            return self.view.getSafeAreaSize().height/2
-//        } else {
-//            return 44.0
-//        }
-//
-//    }
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 
         if indexPath.section == 0 {
@@ -458,53 +556,11 @@ class HomeScreenTableViewController: UITableViewController {
 
     }
 
+}
 
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
+extension HomeScreenTableViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        changeNavBarColor()
     }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-    
-    // MARK: - MapView
-    
-
 }
