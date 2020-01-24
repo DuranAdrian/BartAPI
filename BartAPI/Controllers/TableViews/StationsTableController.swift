@@ -49,7 +49,6 @@ class StationsTableController: UITableViewController {
     func setUpSearchBar(){
         searchController = UISearchController(searchResultsController: nil)
         searchController.searchResultsUpdater = self
-//        searchController.dimsBackgroundDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         self.navigationItem.searchController = searchController
         
@@ -57,12 +56,8 @@ class StationsTableController: UITableViewController {
     
     func filterContent(for searchText:String) {
         searchResults = stations.filter({ (station) -> Bool in
-//            if let name = station.name {
-//            let begins = station.name.starts(with: searchText)
                 let isMatch = station.name.localizedCaseInsensitiveContains(searchText)
                 return isMatch
-//            }
-//            return false
         })
     }
 
@@ -78,7 +73,7 @@ class StationsTableController: UITableViewController {
             ///connection succesfull
             if let data = data {
                 self.stations = self.parseJSONData(data: data)
-                self.getParsedNames()
+                
                 OperationQueue.main.addOperation {
                     print("Stations Data has been parsed, reloading View.")
                     self.tableView.reloadData()
@@ -87,25 +82,6 @@ class StationsTableController: UITableViewController {
             
         })
         task.resume()
-    }
-    
-    func getParsedNames() {
-        var myvar: [String] = []
-        
-        for station in stations {
-            let stationName = station.name
-            let stationAbbr = station.abbreviation.lowercased()
-            let myElement = """
-            "\(stationName)": "\(stationAbbr)"
-            """
-//            print(myElement)
-            myvar.append(myElement)
-        }
-        for el in myvar {
-            print(el)
-        }
-        print(myvar.joined(separator: ", "))
-        
     }
     
     func parseJSONData(data: Data) -> [Station] {
@@ -186,7 +162,6 @@ class StationsTableController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationTableCell_2.self), for: indexPath) as! StationTableCell_2
         
         let station = (searchController.isActive) ? searchResults[indexPath.row] : stations[indexPath.row]
-    
 
         // Configure the cell...
 
@@ -194,55 +169,17 @@ class StationsTableController: UITableViewController {
         cell.stationAbbr.sizeToFit()
         cell.stationCity.text = station.city
         cell.stationName.text = station.name
-//        cell.stationAddress.text = station.address
         return cell
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let station = (searchController.isActive) ? searchResults[indexPath.row] : stations[indexPath.row]
-        print("Selected station: \(station.name)")
-        print("Performing segue with sender: \(self)")
-//        DispatchQueue.backgroundThread(delay: 0.0, background: {self.stationSelected = self.getStationInfoData(station)}, completion: {self.performSegue(withIdentifier: "StationDetailSeque", sender: self )})
         self.performSegue(withIdentifier: "StationDetailSeque", sender: self )
     }
     
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 56
     }
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
 
     
     // MARK: - Navigation
@@ -257,13 +194,7 @@ class StationsTableController: UITableViewController {
                 let selectedStation = (searchController.isActive) ? searchResults[indexPath.row] : stations[indexPath.row]
                 destinationController.stationAbbr = selectedStation.abbreviation
                 destinationController.station = selectedStation
-//                destinationController.navigationItem.title = selectedStation.name
-                
-                // create UILabel
 
-                
-                
-                
             }
             
         }
@@ -278,5 +209,13 @@ extension StationsTableController: UISearchResultsUpdating {
             filterContent(for: searchText)
             tableView.reloadData()
         }
+    }
+}
+
+extension StationsTableController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.changeNavBarColors_Ext()
+        self.changeTabBarColors_Ext()
     }
 }

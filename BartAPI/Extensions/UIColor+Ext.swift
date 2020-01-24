@@ -40,10 +40,11 @@ extension UIColor {
         static let bartPurple = UIColor(196, 99, 197)
         static let bartGreen = UIColor(51, 153, 51)
         static let bartYellow = UIColor(255, 255, 51)
+        static let bartWhite = UIColor(255, 255, 255)
     }
     
     enum BARTCOLORS: String {
-        case RED, YELLOW, BLUE, GREEN, BIEGE, PURPLE, ORANGE
+        case RED, YELLOW, BLUE, GREEN, BIEGE, PURPLE, ORANGE, WHITE
         
         var colors: UIColor {
             switch self {
@@ -61,7 +62,8 @@ extension UIColor {
                 return Custom.bartPurple
             case .ORANGE:
                 return Custom.bartOrange
-            
+            case .WHITE:
+                return Custom.bartWhite
             }
         }
     }

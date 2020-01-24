@@ -154,6 +154,7 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
     func setUpNavBar() {
         self.navigationController?.navigationBar.prefersLargeTitles = true
         self.navigationItem.title = "Fare"
+        self.changeNavBarColors_Ext()
     }
     
     func createFarePopUp() {
@@ -320,7 +321,8 @@ extension FarePickerController: UITableViewDelegate, UITableViewDataSource {
 extension FarePickerController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-
+        self.changeNavBarColors_Ext()
+        self.changeTabBarColors_Ext()
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
             
             if previousTraitCollection?.userInterfaceStyle == .dark {

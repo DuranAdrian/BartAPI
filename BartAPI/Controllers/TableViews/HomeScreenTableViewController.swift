@@ -102,7 +102,6 @@ class HomeScreenTableViewController: UITableViewController {
     }
     
     func getAdvisoryData() {
-//        let urlString = "https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=MW9S-E7SL-26DU-VV8V&json=y"
         let urlString = "https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=MW9S-E7SL-26DU-VV8V&json=y"
         guard let advisoryURL = URL(string: urlString) else { print("adv failed"); return }
         let task = URLSession.shared.dataTask(with: advisoryURL, completionHandler: { (data, response, error) -> Void in
@@ -151,18 +150,6 @@ class HomeScreenTableViewController: UITableViewController {
         initTimer.tolerance = 0.5
         self.timer = initTimer
         
-//        DispatchQueue.backgroundThread(delay: 5.0, background: {
-//            print("INSIDE BACKGROUND THREAD")
-//            let initTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
-//            RunLoop.current.add(initTimer, forMode: .common)
-//            initTimer.tolerance = 0.1
-//            self.timer = initTimer
-//            print("Timer complete") }, completion: {
-//
-//            print("Backgroundthread should be complete")
-//            self.tableView.reloadSections([1], with: .fade)
-//        })
-        
     }
     @objc func timerFunction() {
         print("PULLING NEW DATA! \(Date())")
@@ -195,7 +182,7 @@ class HomeScreenTableViewController: UITableViewController {
     func setUpNavBar() {
         self.navigationItem.title = "Home"
         // MUST ADD BACKGROUND COLOR TO HIDE ADVISORY
-        changeNavBarColor()
+        self.changeNavBarColors_Ext()
         if !hasPulledData {
             let activityIcon = UIBarButtonItem(customView: activityView)
             self.navigationItem.setRightBarButton(activityIcon, animated: true)
@@ -203,38 +190,6 @@ class HomeScreenTableViewController: UITableViewController {
             
         }
     }
-    
-    func changeNavBarColor() {
-        if #available(iOS 13, *) {
-            let appearance = UINavigationBarAppearance()
-            if self.traitCollection.userInterfaceStyle == .dark {
-                appearance.backgroundColor = .black
-                appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.white]
-
-                self.navigationController?.navigationBar.tintColor = .black
-
-            } else {
-                appearance.backgroundColor = .white
-                appearance.titleTextAttributes = [.foregroundColor: UIColor.black]
-                appearance.largeTitleTextAttributes = [.foregroundColor: UIColor.black]
-
-                self.navigationController?.navigationBar.tintColor = .white
-
-            }
-            self.navigationController?.navigationBar.standardAppearance = appearance
-            self.navigationController?.navigationBar.compactAppearance = appearance
-            self.navigationController?.navigationBar.scrollEdgeAppearance = appearance
-            self.navigationController?.navigationBar.layoutSubviews()
-            self.navigationController?.navigationBar.layoutIfNeeded()
-        } else {
-
-            UINavigationBar.appearance().tintColor = .black
-            UINavigationBar.appearance().barTintColor = .white
-            UINavigationBar.appearance().isTranslucent = false
-        }
-    }
-    
         
     /// Get nearest station
     func getData() {
@@ -292,7 +247,6 @@ class HomeScreenTableViewController: UITableViewController {
             if let data = data {
                 if direction == "n" {
                     self.northTrains = self.parseTrainJSONData(data: data)
-//
                     self.nextNorthTrain = self.findNextTrain(self.northTrains, "North")
                     
                 } else {
@@ -339,7 +293,6 @@ class HomeScreenTableViewController: UITableViewController {
                 position = index
             }
         }
-        print("Next train heading to \(trains[0].estimate[position].destination) in about \(nextTrainAtTime) minutes")
         return trains[0].estimate[position]
     }
     
@@ -385,7 +338,6 @@ class HomeScreenTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         // Section one contains mapview and nearest Station
-        // Section 2 contains next trains arriving at platforms
         if (hasPulledData && section == 1) {
             return "Next Arriving Train"
         }
@@ -439,6 +391,7 @@ class HomeScreenTableViewController: UITableViewController {
                 if hasPulledData {
                     /// Find if Delays
 //                    print(nextNorthTrain.nextEstimate[0])
+                    // FIXME :-  INDEX OUT OF RANGE
                     if (nextNorthTrain.nextEstimate[0].isDelayed()) {
 
                         let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
@@ -559,6 +512,8 @@ class HomeScreenTableViewController: UITableViewController {
 extension HomeScreenTableViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        changeNavBarColor()
+        self.changeNavBarColors_Ext()
+        self.changeTabBarColors_Ext()
+
     }
 }

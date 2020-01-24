@@ -95,7 +95,7 @@ class StationDetailViewController: UITableViewController {
         ]
         
         navigationItem.title = title
-        
+        self.changeNavBarColors_Ext()
         if !successFullDataPull {
             let activityIcon = UIBarButtonItem(customView: activityView)
             self.navigationItem.setRightBarButton(activityIcon, animated: true)
@@ -541,6 +541,7 @@ class StationDetailViewController: UITableViewController {
             
             let key = Array(platformsAndTrains.keys).sorted()
             let cellTrain = platformsAndTrains[key[2]]![indexPath.row]
+            print(cellTrain)
             
             let color = UIColor.BARTCOLORS(rawValue: cellTrain.nextEstimate[0].color)
             var foundDelay: Bool = false
@@ -673,9 +674,13 @@ extension StationDetailViewController: mapViewDelegate, MKMapViewDelegate {
 extension StationDetailViewController {
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
-        
+        self.changeNavBarColors_Ext()
+        self.changeTabBarColors_Ext()
         if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            self.tableView.reloadSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
+            if self.platformSections.count > 1 {
+                self.tableView.reloadSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
+
+            }
         }
     }
 }
