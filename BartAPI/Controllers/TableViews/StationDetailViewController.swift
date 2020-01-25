@@ -598,21 +598,39 @@ class StationDetailViewController: UITableViewController {
         
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let keys = Array(platformsAndTrains.keys).sorted()
-        if section == 1 {
-            return "Platform \(platformsAndTrains[keys[0]]![0].nextEstimate[0].platform)"
-//            print("Keys at index 0: \(keys[0])")
-//            return ""
-//            return "Platform 1"
-        }
-        if section == 2 {
-            return "Platform \(platformsAndTrains[keys[1]]![0].nextEstimate[0].platform)"
-        }
-        if section == 3 {
-            return "Platform \(platformsAndTrains[keys[2]]![0].nextEstimate[0].platform)"
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        if section > 0 {
+            let keys = Array(platformsAndTrains.keys).sorted()
+            
+            let headerLabel = UILabel(frame: CGRect(x: 16.0, y: 0.0, width: self.view.frame.width - 16 , height: 20))
+            headerLabel.font = .preferredFont(forTextStyle: .callout)
+            headerLabel.textAlignment = .left
+            headerLabel.textColor = .black
+            let headerView = UIView()
+            headerView.layer.backgroundColor = UIColor.systemGray3.cgColor
+            headerView.addSubview(headerLabel)
+            
+            if section == 1 {
+                headerLabel.text = "Platform \(platformsAndTrains[keys[0]]![0].nextEstimate[0].platform)"
+            }
+            if section == 2 {
+                headerLabel.text = "Platform \(platformsAndTrains[keys[1]]![0].nextEstimate[0].platform)"
+            }
+
+            if section == 3 {
+                headerLabel.text = "Platform \(platformsAndTrains[keys[2]]![0].nextEstimate[0].platform)"
+            }
+
+            
+            return headerView
         }
         return nil
+
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return (section > 0) ? 20.0 : 0.0
+        
     }
 
 }

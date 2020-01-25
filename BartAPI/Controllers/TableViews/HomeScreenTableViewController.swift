@@ -336,12 +336,27 @@ class HomeScreenTableViewController: UITableViewController {
 
     }
     
-    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        // Section one contains mapview and nearest Station
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         if (hasPulledData && section == 1) {
-            return "Next Arriving Train"
+            let headerLabel = UILabel(frame: CGRect(x: 16.0, y: 0.0, width: self.view.frame.width - 16 , height: 25))
+            headerLabel.text = "Next Arriving Train"
+            headerLabel.font = .preferredFont(forTextStyle: .callout)
+            headerLabel.textAlignment = .left
+            headerLabel.textColor = .black
+            let headerView = UIView()
+            headerView.layer.backgroundColor = UIColor.systemGray3.cgColor
+            headerView.addSubview(headerLabel)
+            
+            return headerView
         }
         return nil
+    }
+    
+    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        if (hasPulledData && section == 1) {
+            return 25.0
+        }
+        return 0.0
     }
 
     
@@ -514,6 +529,8 @@ extension HomeScreenTableViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         self.changeNavBarColors_Ext()
         self.changeTabBarColors_Ext()
+        if self.tableView.numberOfSections > 0 {
+            self.tableView.reloadSections(IndexSet(integersIn: 1...1), with: .fade)        }
 
     }
 }
