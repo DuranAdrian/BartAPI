@@ -93,9 +93,11 @@ class HomeScreenTableViewController: UITableViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
             self.hidePopUpContraint.isActive = false
             self.showPopUpContraint.isActive = true
-            UIView.animate(withDuration: 1.5, delay: 0.0, options: .curveLinear, animations: {
+            UIView.animate(withDuration: 1.5, delay: 5.0, options: .curveLinear, animations: {
                 self.tableView.layoutIfNeeded()
-            }, completion: nil)
+            }, completion: { _ in
+                self.createAdvisoryTimer()
+            })
             
         })
         
@@ -162,6 +164,28 @@ class HomeScreenTableViewController: UITableViewController {
             self.tableView.reloadSections([1], with: .fade)
         })
         
+    }
+    
+    func createAdvisoryTimer() {
+        // Since repeat is false, it will invalidate itself once complete.
+        let advTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(timerHideAdvisory), userInfo: nil, repeats: false)
+        RunLoop.current.add(advTimer, forMode: .common)
+        advTimer.tolerance = 5.0
+        
+    }
+    
+    @objc func timerHideAdvisory() {
+        // Check if user already dimissed view.
+        if self.showPopUpContraint.isActive {
+            self.showPopUpContraint.isActive = false
+            self.hidePopUpContraint.isActive = true
+            UIView.animate(withDuration: 2.5, animations: {
+                self.tableView.layoutIfNeeded()
+            }, completion: { _ in
+                self.popUp.removeFromSuperview()
+            })
+
+        }
     }
     
             
