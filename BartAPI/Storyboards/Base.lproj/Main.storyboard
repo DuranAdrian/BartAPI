@@ -123,10 +123,10 @@
             </objects>
             <point key="canvasLocation" x="2927" y="96"/>
         </scene>
-        <!--Home Screen Table View Controller-->
+        <!--Modified Home View Controller-->
         <scene sceneID="uPe-Mg-Tio">
             <objects>
-                <tableViewController id="9wB-wY-f7y" customClass="HomeScreenTableViewController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="9wB-wY-f7y" customClass="ModifiedHomeViewController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="TnN-tZ-xMZ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -35,10 +35,12 @@ extension MKMapView {
                     let region = MKCoordinateRegion(center: annotation.coordinate, latitudinalMeters: 450, longitudinalMeters: 450)
                     self.showAnnotations(self.annotations, animated: true)
                     self.setRegion(region, animated: false)
+                    print("SUCCESS \(self.annotations.count)")
                 }
             }
         })
     }
+    
     
     func routeToDestination(_ destination: CLLocation) {
         self.showsUserLocation = true

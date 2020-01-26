@@ -23,7 +23,7 @@
 	<key>MKDirectionsApplicationSupportedModes</key>
 	<array/>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>You need to grant this app access to your location.</string>
+	<string>This application uses current location to find closest BART Station.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>This application uses current location to find closest BART Station.</string>
 	<key>NSLocationUsageDescription</key>

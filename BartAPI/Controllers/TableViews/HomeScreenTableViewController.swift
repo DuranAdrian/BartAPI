@@ -12,7 +12,7 @@ import MapKit
 class HomeScreenTableViewController: UITableViewController {
     let stationAPIURL = "https://api.bart.gov/api/stn.aspx?cmd=stns&key=MW9S-E7SL-26DU-VV8V&json=y"
     var mapView: MKMapView!
-    fileprivate let locationManager: CLLocationManager! = CLLocationManager()
+    fileprivate var locationManager = CLLocationManager()
 
     var stations = [Station]()
     var northTrains = [Train]()
@@ -29,11 +29,14 @@ class HomeScreenTableViewController: UITableViewController {
     var showPopUpContraint: NSLayoutConstraint!
     
     var hasPulledData: Bool = false
+    var switchedViews: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpNavBar()
         setUpTableView()
+        locationManager.delegate = self
+        checkLocationPermission()
 
         // load nearest station using .userInteractive
         DispatchQueue.userInteractiveThread(delay: 5.0, background: { self.getData() }, completion: {
@@ -51,16 +54,53 @@ class HomeScreenTableViewController: UITableViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         print("Timer should be invalidated..")
-        timer?.invalidate()
+//        timer?.invalidate()
+        switchedViews = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        guard let _ = timer else {
-            return
+        if switchedViews {
+            self.tableView.reloadSections([1], with: .fade)
+            switchedViews = false
         }
-        createtimer()
     }
+    
+    func checkLocationPermission(){
+        switch CLLocationManager.authorizationStatus() {
+            case .authorizedAlways:
+                // Do Map Stuff
+                print("always authorize")
+                // Normal Mode
+                break
+            case .authorizedWhenInUse:
+                print("Authrized When In Use")
+                // Normal Mode
+
+                break
+            case .denied:
+                //Show alert with instructions to turn on
+                print("Denied")
+                // Show all stations on map
+                break
+            case .notDetermined:
+                locationManager.requestWhenInUseAuthorization()
+                // Show all location on map
+                print("Not Determined")
+                break
+            case .restricted:
+                // User cannot change status
+                // Show all stations on map
+                print("Restricted")
+                break
+            
+            @unknown default:
+                // locationManger.requestWhenInUseAuthorization()
+                // show all locations on map
+                break
+            }
+    }
+
     
     func createAdvisory(_ adv: Advisory) {
         
@@ -117,7 +157,15 @@ class HomeScreenTableViewController: UITableViewController {
                 print("displaying advisory....")
                 
                 DispatchQueue.main.async {
-                    self.createAdvisory(test)
+                    if (self.showPopUpContraint?.isActive) != nil {
+                        print("first advisory has been shown already")
+                        if (test.bsa[0].description != "No delays reported." && !self.showPopUpContraint.isActive ) {
+                            self.createAdvisory(test)
+                        }
+                    } else {
+                        print("first time showing advisory")
+                        self.createAdvisory(test)
+                    }
                 }
             }
             
@@ -153,22 +201,32 @@ class HomeScreenTableViewController: UITableViewController {
         self.timer = initTimer
         
     }
+    
     @objc func timerFunction() {
         print("PULLING NEW DATA! \(Date())")
         self.activityView.startAnimating()
         DispatchQueue.backgroundThread(delay: 1.0, background: {
             self.getTrainData("n")
             self.getTrainData("s")
+            self.getAdvisoryData()
         }, completion: {
-            self.activityView.stopAnimating()
-            self.tableView.reloadSections([1], with: .fade)
+            if let _ = self.viewIfLoaded?.window {
+                // View is active
+                self.activityView.stopAnimating()
+                self.tableView.reloadSections([1], with: .fade)
+            } else {
+                // View is not active
+                
+            }
+            
+            
         })
         
     }
     
     func createAdvisoryTimer() {
         // Since repeat is false, it will invalidate itself once complete.
-        let advTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(timerHideAdvisory), userInfo: nil, repeats: false)
+        let advTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerHideAdvisory), userInfo: nil, repeats: false)
         RunLoop.current.add(advTimer, forMode: .common)
         advTimer.tolerance = 5.0
         
@@ -179,7 +237,7 @@ class HomeScreenTableViewController: UITableViewController {
         if self.showPopUpContraint.isActive {
             self.showPopUpContraint.isActive = false
             self.hidePopUpContraint.isActive = true
-            UIView.animate(withDuration: 2.5, animations: {
+            UIView.animate(withDuration: 1.0, animations: {
                 self.tableView.layoutIfNeeded()
             }, completion: { _ in
                 self.popUp.removeFromSuperview()
@@ -191,16 +249,12 @@ class HomeScreenTableViewController: UITableViewController {
             
     func setUpTableView() {
         self.tableView.tableFooterView = UIView()
-//        self.tableView.separatorInset = UIEdgeInsets.zero
-//        self.tableView.layoutMargins = UIEdgeInsets.zero
+        
         self.tableView.register(UINib(nibName: "StationMapTableCell", bundle: nil), forCellReuseIdentifier: "StationMapTableCell")
         self.tableView.register(UINib(nibName: "NearestStationTableCell", bundle: nil), forCellReuseIdentifier: "NearestStationTableCell")
         self.tableView.register(UINib(nibName: "NextTrainCell", bundle: nil), forCellReuseIdentifier: "NextTrainCell")
         self.tableView.register(UINib(nibName: "DelayedNextTrainCell", bundle: nil), forCellReuseIdentifier: "DelayedNextTrainCell")
-//        self.tableView.rowHeight = UITableView.automaticDimension
-//        self.tableView.estimatedRowHeight = UITableView.automaticDimension
-//        self.tableView.delegate = self
-//        self.tableView.dataSource = self
+
     }
     
     func setUpNavBar() {
@@ -556,5 +610,12 @@ extension HomeScreenTableViewController {
         if self.tableView.numberOfSections > 0 {
             self.tableView.reloadSections(IndexSet(integersIn: 1...1), with: .fade)        }
 
+    }
+}
+
+extension HomeScreenTableViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        checkLocationPermission()
+        
     }
 }
