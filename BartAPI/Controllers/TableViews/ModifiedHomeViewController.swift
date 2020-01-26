@@ -15,12 +15,22 @@ class ModifiedHomeViewController: UITableViewController {
     fileprivate var locationManager = CLLocationManager()
     fileprivate var activityMonitorView = UIActivityIndicatorView()
     
+    // List of all stations
     var stations = [Station]()
+    // Closest Station info
     private var closestStation: Station?
     private var closestStationDistance: CLLocationDistance?
+    // Next directional trains for closest station
+    private var nextNorthTrain: EstimateDeparture?
+    private var nextSouthTrain: EstimateDeparture?
+    
+    // Initial map mode
     var mapMode: MapMode = MapMode.blank
     
-    var hasPulledData: Bool = false
+    // Check if closestStationData has been pulled successfully
+    var hasPullClosestStation: Bool = false
+    var hasPullNextNorthTrain: Bool = false
+    var hasPullNextSouthTrain: Bool = false
     
     enum MapMode {
         case normal
@@ -51,6 +61,102 @@ class ModifiedHomeViewController: UITableViewController {
         })
 
     }
+    
+    func setUpTableView() {
+        tableView.tableFooterView = UIView()
+        tableView.register(UINib(nibName: "HomeMapViewCell", bundle: nil), forCellReuseIdentifier: "HomeMapViewCell")
+        tableView.register(UINib(nibName: "NearestStationTableCell", bundle: nil), forCellReuseIdentifier: "NearestStationTableCell")
+        tableView.register(UINib(nibName: "NextTrainCell", bundle: nil), forCellReuseIdentifier: "NextTrainCell")
+        tableView.register(UINib(nibName: "DelayedNextTrainCell", bundle: nil), forCellReuseIdentifier: "DelayedNextTrainCell")
+
+    }
+    
+    func setUpNavView() {
+        self.navigationItem.title = "Home"
+        // MUST ADD BACKGROUND COLOR TO HIDE ADVISORY
+        self.changeNavBarColors_Ext()
+        let activityIcon = UIBarButtonItem(customView: activityMonitorView)
+        self.navigationItem.setRightBarButton(activityIcon, animated: true)
+        activityMonitorView.startAnimating()
+    }
+    
+    func checkLocationPermissions(){
+        // PERMISSION REQUEST WILL ONLY POP UP ONCE
+        // CREATE CUSTOM ALERT TO TELL USERS TO GO TO SETTINGS TO ENABLE LOCATION
+        //        https://stackoverflow.com/questions/29980832/request-permissions-again-after-user-denies-location-services
+        
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways:
+            print("Always Authorized")
+            mapMode = .normal
+            findClosetStation(completionHandler: { (value) in
+                self.activityMonitorView.stopAnimating()
+                self.hasPullClosestStation = true
+                self.tableView.reloadSections([0], with: .fade)
+            })
+            break
+            
+        case .authorizedWhenInUse:
+            print("Authrized When In Use")
+            mapMode = .normal
+            findClosetStation(completionHandler: { (value) in
+                self.activityMonitorView.stopAnimating()
+                self.hasPullClosestStation = true
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                if value {
+                    self.getTrainData("n", completionHandler: { value in
+                        if value {
+                            self.hasPullNextNorthTrain = true
+                            DispatchQueue.main.async {
+                                print("Adding section...")
+                                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+//                                self.tableView.reloadSections([1], with: .fade)
+                            }
+                        }
+                    })
+                    self.getTrainData("s", completionHandler: { value in
+                        if value {
+                            self.hasPullNextSouthTrain = true
+                            DispatchQueue.main.async {
+                                self.tableView.reloadRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
+                            }
+                        }
+                    })
+//                    print(self.nextNorthTrain)
+                }
+                
+            })
+            break
+            
+        case .denied:
+            //Show alert with instructions to turn on
+            print("Denied")
+            mapMode = .restricted
+            break
+            
+        case .notDetermined:
+            print("Not Determined")
+            locationManager.requestWhenInUseAuthorization()
+            mapMode = .restricted
+            tableView.reloadData()
+            break
+            
+        case .restricted:
+            print("Restricted")
+            // User cannot change status
+            mapMode = .restricted
+            break
+            
+        @unknown default:
+            locationManager.requestWhenInUseAuthorization()
+            mapMode = .restricted
+            break
+        }
+        //        tableView.reloadData()
+    }
+    
     // GET LIST OF ALL STATIONS
     func getStationList(completionHandler: @escaping (Bool) -> Void) {
         let stationAPIUrl = "https://api.bart.gov/api/stn.aspx?cmd=stns&key=\(bartAPIKey)&json=y"
@@ -100,7 +206,7 @@ class ModifiedHomeViewController: UITableViewController {
         self.activityMonitorView.startAnimating()
         var closestStation: Station?
         var smallestDistance: CLLocationDistance?
-        for (index, station) in stations.enumerated() {
+        for station in stations {
             let distance = userLocation.distance(from: station.location)
             if smallestDistance == nil || distance < smallestDistance! {
                 closestStation = station
@@ -115,79 +221,73 @@ class ModifiedHomeViewController: UITableViewController {
     
     }
     
-    func setUpTableView() {
-        tableView.tableFooterView = UIView()
-        tableView.register(UINib(nibName: "HomeMapViewCell", bundle: nil), forCellReuseIdentifier: "HomeMapViewCell")
-        self.tableView.register(UINib(nibName: "NearestStationTableCell", bundle: nil), forCellReuseIdentifier: "NearestStationTableCell")
+    // GET NEXT TRAIN DATA
+    func getTrainData(_ direction: String, completionHandler: @escaping (Bool) -> Void) {
+        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
 
-    }
-    
-    func setUpNavView() {
-        self.navigationItem.title = "Home"
-        // MUST ADD BACKGROUND COLOR TO HIDE ADVISORY
-        self.changeNavBarColors_Ext()
-        let activityIcon = UIBarButtonItem(customView: activityMonitorView)
-        self.navigationItem.setRightBarButton(activityIcon, animated: true)
-        activityMonitorView.startAnimating()
-    }
-    
-    func checkLocationPermissions(){
-        // PERMISSION REQUEST WILL ONLY POP UP ONCE
-        // CREATE CUSTOM ALERT TO TELL USERS TO GO TO SETTINGS TO ENABLE LOCATION
-//        https://stackoverflow.com/questions/29980832/request-permissions-again-after-user-denies-location-services
-        
-        switch CLLocationManager.authorizationStatus() {
-        case .authorizedAlways:
-            print("Always Authorized")
-            mapMode = .normal
-            findClosetStation(completionHandler: { (value) in
-                self.activityMonitorView.stopAnimating()
-                self.hasPulledData = true
-                self.tableView.reloadSections([0], with: .fade)
-            })
-            break
+        guard let trainURL = URL(string: filteredTrainAPIUrl) else { print("HAD TO RETURN FROM TRAINURL"); return }
+        self.activityMonitorView.startAnimating()
+        let task = URLSession.shared.dataTask(with: trainURL, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print("Could not connect to filteredTrainAPIUrl: \(error)")
+                return
+            }
             
-        case .authorizedWhenInUse:
-            print("Authrized When In Use")
-            mapMode = .normal
-            findClosetStation(completionHandler: { (value) in
-                self.activityMonitorView.stopAnimating()
-                self.hasPulledData = true
+            ///connection succesfull
+            if let data = data {
+                if direction == "n" {
+                    self.nextNorthTrain = self.findNextTrain(self.parseTrainJSONData(data: data), "North")
+                } else {
+                    self.nextSouthTrain = self.findNextTrain(self.parseTrainJSONData(data: data), "South")
+
+                }
                 DispatchQueue.main.async {
-                    self.tableView.reloadSections([0], with: .fade)
-//                    self.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .fade)
+                    self.activityMonitorView.stopAnimating()
+                    completionHandler(true)
                 }
                 
-//                self.tableView.reloadData()
-            })
-            break
-            
-        case .denied:
-            //Show alert with instructions to turn on
-            print("Denied")
-            mapMode = .restricted
-            break
-            
-        case .notDetermined:
-            print("Not Determined")
-            locationManager.requestWhenInUseAuthorization()
-            mapMode = .restricted
-            tableView.reloadData()
-            break
-            
-        case .restricted:
-            print("Restricted")
-            // User cannot change status
-            mapMode = .restricted
-            break
-        
-        @unknown default:
-            locationManager.requestWhenInUseAuthorization()
-            mapMode = .restricted
-            break
-        }
-//        tableView.reloadData()
+            }
+//
+        })
+        task.resume()
     }
+        
+    func parseTrainJSONData(data: Data) -> [Train] {
+        var parsedTrains = [Train]()
+        let decoder = JSONDecoder()
+        
+        do {
+            let trainDataStore = try decoder.decode(TrainContainer.self, from: data)
+            parsedTrains = trainDataStore.trains
+//            print("FOUND TRAINS: \(parsedTrains)")
+        } catch {
+            print("Error parsing Train JSON Data: \(error)")
+        }
+        
+        return parsedTrains
+    }
+        
+    // Find next train
+    /// ACCORDING TO THE BART API. THE NEXT ARRIVAL WILL ALWAYS BE AT INDEX [0], THUS NO NEED TO ITERATE THROUGH ALL ESTIMATES
+    // CAN PROBABLY BE OPTIMIZED A BIT BUT FOR NOW IT WILL DO.
+    func findNextTrain(_ trains: [Train], _ direction: String) -> EstimateDeparture {
+        var nextTrainAtTime: Int32 = UINT8_MAX
+        var position = 0
+        for (index, destination) in trains[0].estimate.enumerated() {
+            var checkingNexttime: Int32
+            if destination.nextEstimate[0].arrival == "Leaving" {
+                checkingNexttime = 0
+            } else {
+                checkingNexttime = Int32(destination.nextEstimate[0].arrival)!
+            }
+            if checkingNexttime < nextTrainAtTime {
+                nextTrainAtTime = checkingNexttime
+                position = index
+            }
+        }
+        return trains[0].estimate[position]
+    }
+
     
     // FORMATTING FUNCTIONS
     
@@ -204,11 +304,13 @@ class ModifiedHomeViewController: UITableViewController {
         switch mapMode {
         case .blank:
             return 0
+            
         case .restricted:
-            print("RESTRICTED MODE IN NUMBER OF SECTIONS")
             return 1
+            
         case .normal:
-            return 1
+            print("NUMBER OF SECTIONS == 2")
+            return 2
         }
         
     }
@@ -225,6 +327,7 @@ class ModifiedHomeViewController: UITableViewController {
             return 1
             
         case .normal:
+            print("NUMBER OF ROWS IN EACH SECTION == 2")
             return 2
         }
 
@@ -259,13 +362,11 @@ class ModifiedHomeViewController: UITableViewController {
                     return cell
                 case 1:
                     // NEAREST STATION INFO
-                    print("Inside of [0,1]")
-                    if hasPulledData {
-                        print("Has pulled data")
+                    if hasPullClosestStation {
                         let cell = tableView.dequeueReusableCell(withIdentifier: "NearestStationTableCell", for: indexPath) as! NearestStationTableCell
                         cell.stationDistance.text = String(describing: convertMetersToMiles(closestStationDistance!)) + " Miles"
                         cell.stationName.text = closestStation!.name
-                        cell.isHidden = !hasPulledData
+                        cell.isHidden = !hasPullClosestStation
                         return cell
 
                     } else {
@@ -275,38 +376,106 @@ class ModifiedHomeViewController: UITableViewController {
                     return UITableViewCell()
                 }
             case 1:
+                print("Inside section 2")
                 switch indexPath.row {
                 case 0:
                     // NEXT NORTH BOUND TRAIN
-                    return UITableViewCell()
+                    if hasPullNextNorthTrain {
+                        // ENSURE NEXTNORTHTRAIN IS NOT NIL
+                        guard let train = nextNorthTrain else {
+                            return UITableViewCell()
+                        }
+                        // NEXT NORTH TRAIN IS NOW VALID
+                        if train.nextEstimate[0].isDelayed() {
+                            let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
+                            let color = UIColor.BARTCOLORS(rawValue: train.nextEstimate[0].color)
+                            cell.routeColorView.backgroundColor = color?.colors
+                            cell.routeDirection.text = train.nextEstimate[0].direction
+                            cell.destination.text = train.destination
+                            if train.nextEstimate[0].arrival == "Leaving" {
+                                cell.timeUntilArrival.text = "Leaving Now"
+                            } else {
+                                cell.timeUntilArrival.text = "\(Int(train.nextEstimate[0].arrival)! + train.nextEstimate[0].computeDelayTime()) Mins"
+                            }
+                            
+                            return cell
+                        } else {
+                            let cell = tableView.dequeueReusableCell(withIdentifier: "NextTrainCell", for: indexPath) as! NextTrainCell
+                            print(train.nextEstimate[0].color)
+                            let color = UIColor.BARTCOLORS(rawValue: train.nextEstimate[0].color)
+                            cell.routeColorView.backgroundColor = color?.colors
+                            cell.routeDirection.text = train.nextEstimate[0].direction
+                            cell.destination.text = train.destination
+                            if train.nextEstimate[0].arrival == "Leaving" {
+                                cell.timeUntilArrival.text = "Leaving Now"
+                            } else {
+                                cell.timeUntilArrival.text = "\(Int(train.nextEstimate[0].arrival)! + train.nextEstimate[0].computeDelayTime()) Mins"
+                            }
+                            
+                            return cell
+
+                        }
+                        
+                    }
+                    let cell = UITableViewCell()
+                    cell.isHidden = true
+                    return cell
                 case 1:
                     // NEXT SOUTH BOUND TRAIN
-                    return UITableViewCell()
+                    if hasPullNextSouthTrain {
+                        // ENSURE NEXTNORTHTRAIN IS NOT NIL
+                        guard let train = nextSouthTrain else {
+                            return UITableViewCell()
+                        }
+                        // NEXT NORTH TRAIN IS NOW VALID
+                        if train.nextEstimate[0].isDelayed() {
+                            let cell = tableView.dequeueReusableCell(withIdentifier: "DelayedNextTrainCell", for: indexPath) as! DelayedNextTrainCell
+                            let color = UIColor.BARTCOLORS(rawValue: train.nextEstimate[0].color)
+                            cell.routeColorView.backgroundColor = color?.colors
+                            cell.routeDirection.text = train.nextEstimate[0].direction
+                            cell.destination.text = train.destination
+                            if train.nextEstimate[0].arrival == "Leaving" {
+                                cell.timeUntilArrival.text = "Leaving Now"
+                            } else {
+                                cell.timeUntilArrival.text = "\(Int(train.nextEstimate[0].arrival)! + train.nextEstimate[0].computeDelayTime()) Mins"
+                            }
+                            
+                            return cell
+                        } else {
+                            let cell = tableView.dequeueReusableCell(withIdentifier: "NextTrainCell", for: indexPath) as! NextTrainCell
+                            print(train.nextEstimate[0].color)
+                            let color = UIColor.BARTCOLORS(rawValue: train.nextEstimate[0].color)
+                            cell.routeColorView.backgroundColor = color?.colors
+                            cell.routeDirection.text = train.nextEstimate[0].direction
+                            cell.destination.text = train.destination
+                            if train.nextEstimate[0].arrival == "Leaving" {
+                                cell.timeUntilArrival.text = "Leaving Now"
+                            } else {
+                                cell.timeUntilArrival.text = "\(Int(train.nextEstimate[0].arrival)! + train.nextEstimate[0].computeDelayTime()) Mins"
+                            }
+                            
+                            return cell
+
+                        }
+                        
+                    }
+                    let cell = UITableViewCell()
+                    cell.isHidden = true
+                    return cell
+
                 default:
-                    return UITableViewCell()
+                    let cell = UITableViewCell()
+                    cell.isHidden = true
+                    return cell
+
                 }
                 
             default:
-                return UITableViewCell()
+                let cell = UITableViewCell()
+                cell.isHidden = true
+                return cell
+
             }
-            
-//            switch indexPath.section {
-//            case 0:
-//                switch indexPath.row {
-//                case 0:
-//                    let cell = tableView.dequeueReusableCell(withIdentifier: "HomeMapViewCell", for: indexPath) as! HomeMapViewCell
-//
-//                    cell.setUpNearest(nearestStation: closestStation!)
-//                    return cell
-//
-//                default:
-//                    return UITableViewCell()
-//                }
-//            default:
-//                return UITableViewCell()
-//            }
-//
-//            return UITableViewCell()
         }
     }
     
@@ -316,12 +485,15 @@ class ModifiedHomeViewController: UITableViewController {
             if indexPath.row == 0 {
                 return self.view.getSafeAreaSize().height/2
             } else {
-                return hasPulledData ? 68.0 : 0.0
-//                return 68.0
+                return hasPullClosestStation ? 68.0 : 0.0
             }
-        } else {
-            
-            return hasPulledData ? 63.0 : 0.0
+         } else {
+            // IN CASE THERES IS ONLY ONE DIRECTION
+            if indexPath.row == 0 {
+                return hasPullNextNorthTrain ? 63.0 : 0.0
+            } else {
+                return hasPullNextSouthTrain ? 63.0 : 0.0
+            }
         }
 
     }
