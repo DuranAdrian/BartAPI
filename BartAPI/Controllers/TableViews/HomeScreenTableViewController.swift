@@ -194,6 +194,28 @@ class HomeScreenTableViewController: UITableViewController {
         })
     }
     
+    func createAdvisoryTimer() {
+        // Since repeat is false, it will invalidate itself once complete.
+        let advTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerHideAdvisory), userInfo: nil, repeats: false)
+        RunLoop.current.add(advTimer, forMode: .common)
+        advTimer.tolerance = 5.0
+        
+    }
+    
+    @objc func timerHideAdvisory() {
+        // Check if user already dimissed view.
+        if self.showPopUpContraint.isActive {
+            self.showPopUpContraint.isActive = false
+            self.hidePopUpContraint.isActive = true
+            UIView.animate(withDuration: 1.0, animations: {
+                self.tableView.layoutIfNeeded()
+            }, completion: { _ in
+                self.popUp.removeFromSuperview()
+            })
+            
+        }
+    }
+    
     func createtimer() {
         let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
         RunLoop.current.add(initTimer, forMode: .common)
@@ -224,27 +246,7 @@ class HomeScreenTableViewController: UITableViewController {
         
     }
     
-    func createAdvisoryTimer() {
-        // Since repeat is false, it will invalidate itself once complete.
-        let advTimer = Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(timerHideAdvisory), userInfo: nil, repeats: false)
-        RunLoop.current.add(advTimer, forMode: .common)
-        advTimer.tolerance = 5.0
-        
-    }
     
-    @objc func timerHideAdvisory() {
-        // Check if user already dimissed view.
-        if self.showPopUpContraint.isActive {
-            self.showPopUpContraint.isActive = false
-            self.hidePopUpContraint.isActive = true
-            UIView.animate(withDuration: 1.0, animations: {
-                self.tableView.layoutIfNeeded()
-            }, completion: { _ in
-                self.popUp.removeFromSuperview()
-            })
-
-        }
-    }
     
             
     func setUpTableView() {

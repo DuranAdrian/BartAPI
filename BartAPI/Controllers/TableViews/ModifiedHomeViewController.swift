@@ -26,6 +26,12 @@ class ModifiedHomeViewController: UITableViewController {
     // TIMER FOR PULLING NEXT TRAIN
     var timer: Timer?
     
+    // ADVISORY POP UP
+    var advPopUp: AdvisoryPopUp!
+    private var previousAdvisory: Advisory?
+    var hidePopUpContraint: NSLayoutConstraint!
+    var showPopUpContraint: NSLayoutConstraint!
+    
     // Initial map mode
     var mapMode: MapMode = MapMode.blank
     
@@ -48,6 +54,7 @@ class ModifiedHomeViewController: UITableViewController {
         
         // Get list of stations regardless of location enabled
         getStationList(completionHandler: { (value) in
+            self.getAdvisoryData()
             if value {
                 print("Complete station list")
                 DispatchQueue.main.async {
@@ -117,7 +124,6 @@ class ModifiedHomeViewController: UITableViewController {
                         if value {
                             self.hasPullNextNorthTrain = true
                             DispatchQueue.main.async {
-                                print("Adding section...")
                                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
 //                                self.tableView.reloadSections([1], with: .fade)
                             }
@@ -132,7 +138,7 @@ class ModifiedHomeViewController: UITableViewController {
                         }
                     })
                     self.createNextTrainsTimer()
-//                    print(self.nextNorthTrain)
+
                 }
                 
             })
@@ -167,25 +173,24 @@ class ModifiedHomeViewController: UITableViewController {
     
     // CREATE TIMER TO ATTACH TO PULLING NEXT TRAIN EVERY 30 SECONDS
     func createNextTrainsTimer() {
-        let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.nextTrainsTimerFunction), userInfo: nil, repeats: true)
+        let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.updateDataTimerFunction), userInfo: nil, repeats: true)
         RunLoop.current.add(initTimer, forMode: .common)
         initTimer.tolerance = 0.5
         self.timer = initTimer
         
     }
     
-    @objc func nextTrainsTimerFunction() {
+    @objc func updateDataTimerFunction() {
         DispatchQueue.main.async {
             self.activityMonitorView.startAnimating()
         }
         DispatchQueue.backgroundThread(delay: 1.0, background: {
             self.getTrainData("n", completionHandler: { _ in })
             self.getTrainData("s", completionHandler: { _ in})
-//            self.getAdvisoryData()
+            self.getAdvisoryData()
         }, completion: {
             if let _ = self.viewIfLoaded?.window {
                 // View is active
-                
                 self.activityMonitorView.stopAnimating()
                 self.tableView.reloadSections([1], with: .fade)
             } else {
@@ -198,7 +203,6 @@ class ModifiedHomeViewController: UITableViewController {
         
     }
 
-    
     // GET LIST OF ALL STATIONS
     func getStationList(completionHandler: @escaping (Bool) -> Void) {
         let stationAPIUrl = "https://api.bart.gov/api/stn.aspx?cmd=stns&key=\(bartAPIKey)&json=y"
@@ -304,7 +308,6 @@ class ModifiedHomeViewController: UITableViewController {
         do {
             let trainDataStore = try decoder.decode(TrainContainer.self, from: data)
             parsedTrains = trainDataStore.trains
-//            print("FOUND TRAINS: \(parsedTrains)")
         } catch {
             print("Error parsing Train JSON Data: \(error)")
         }
@@ -332,6 +335,130 @@ class ModifiedHomeViewController: UITableViewController {
         }
         return trains[0].estimate[position]
     }
+    
+    // ADVISORY POP UP
+    func getAdvisoryData() {
+        let urlString = "https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=MW9S-E7SL-26DU-VV8V&json=y"
+        guard let advisoryURL = URL(string: urlString) else { return }
+        let task = URLSession.shared.dataTask(with: advisoryURL, completionHandler: { (data, response, error) -> Void in
+            if let error = error {
+                print("Could not connect to ADVISORYAPI: \(error)")
+                return
+            }
+            
+            if let data = data {
+                let advisory = self.parseAdvisoryData(data: data)
+                
+                DispatchQueue.main.async {
+                    if (self.showPopUpContraint?.isActive) != nil {
+                        print("first advisory has been shown already")
+                        if advisory == self.previousAdvisory! {
+                            // don't show same advisory again
+                            return
+                        } else {
+                            // advisory is different
+                            if self.showPopUpContraint.isActive {
+                                // there is currently an active advisory, don't add new one
+                                return
+                            } else {
+                                print("Advisory has changed")
+                                self.createAdvisory(advisory)
+                            }
+                        }
+                    } else {
+                        print("first time showing advisory")
+                        self.previousAdvisory = advisory
+                        self.createAdvisory(advisory)
+                    }
+                }
+            }
+            
+        })
+        task.resume()
+    }
+    
+    func parseAdvisoryData(data: Data) -> Advisory {
+        let decoder = JSONDecoder()
+        do {
+            let dataStore = try decoder.decode(Advisory.self, from: data)
+            return dataStore
+        } catch {
+            print("Error parsing JSON")
+        }
+        return Advisory()
+    }
+    
+    func createAdvisory(_ adv: Advisory) {
+        advPopUp = AdvisoryPopUp()
+        advPopUp.layer.borderColor = UIColor.Custom.annotationBlue.cgColor
+        advPopUp.layer.backgroundColor = UIColor.Custom.errorRed.cgColor
+        advPopUp.layer.borderWidth = 1.0
+        advPopUp.layer.cornerRadius = 15.0
+        advPopUp.layer.masksToBounds = true
+        advPopUp.setMessage(message: adv.bsa[0].description)
+        let tapToRemoveGesture = UITapGestureRecognizer(target: self, action: #selector(hidePopUp(_:)))
+        tapToRemoveGesture.numberOfTouchesRequired = 1
+        tapToRemoveGesture.numberOfTapsRequired = 1
+        advPopUp.addGestureRecognizer(tapToRemoveGesture)
+        
+        self.tableView.addSubview(advPopUp)
+        
+        // Hide above screen
+        advPopUp.translatesAutoresizingMaskIntoConstraints = false
+        advPopUp.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 5).isActive = true
+        advPopUp.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -5).isActive = true
+        
+        hidePopUpContraint = advPopUp.bottomAnchor.constraint(equalTo: self.tableView.topAnchor)
+        showPopUpContraint = advPopUp.topAnchor.constraint(equalTo: self.tableView.topAnchor, constant: 10)
+        
+        hidePopUpContraint.isActive = true
+        showPopUpContraint.isActive = false
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5, execute: {
+            self.hidePopUpContraint.isActive = false
+            self.showPopUpContraint.isActive = true
+            UIView.animate(withDuration: 1.5, delay: 5.0, options: .curveLinear, animations: {
+                self.tableView.layoutIfNeeded()
+            }, completion: { _ in
+                self.createHideAdvTimer()
+            })
+            
+        })
+        
+    }
+    
+    @objc func hidePopUp(_ sender: UITapGestureRecognizer) {
+        self.showPopUpContraint.isActive = false
+        self.hidePopUpContraint.isActive = true
+        UIView.animate(withDuration: 0.5, delay: 0.0, options: .curveLinear, animations: {
+            self.tableView.layoutIfNeeded()
+        }, completion: { _ in
+            self.advPopUp.removeFromSuperview()
+        })
+    }
+    
+    func createHideAdvTimer() {
+        // Since repeat is false, it will invalidate itself once complete.
+        let advTimer = Timer.scheduledTimer(timeInterval: 10.0, target: self, selector: #selector(timerHideAdvisory), userInfo: nil, repeats: false)
+        RunLoop.current.add(advTimer, forMode: .common)
+        advTimer.tolerance = 5.0
+        
+    }
+    
+    @objc func timerHideAdvisory() {
+        // Check if user already dimissed view.
+        if self.showPopUpContraint.isActive {
+            self.showPopUpContraint.isActive = false
+            self.hidePopUpContraint.isActive = true
+            UIView.animate(withDuration: 1.0, animations: {
+                self.tableView.layoutIfNeeded()
+            }, completion: { _ in
+                self.advPopUp.removeFromSuperview()
+            })
+            
+        }
+    }
+
 
     
     // FORMATTING FUNCTIONS
@@ -354,7 +481,6 @@ class ModifiedHomeViewController: UITableViewController {
             return 1
             
         case .normal:
-            print("NUMBER OF SECTIONS == 2")
             return 2
         }
         
@@ -362,17 +488,14 @@ class ModifiedHomeViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        print("INSIDE OF NUMBER OF ROWS IN.")
         switch mapMode {
         case .blank:
             return 0
             
         case .restricted:
-            print("RESTRICTED MODE IN NUMBER OF ROWS IN SECTION")
             return 1
             
         case .normal:
-            print("NUMBER OF ROWS IN EACH SECTION == 2")
             return 2
         }
 
@@ -384,7 +507,6 @@ class ModifiedHomeViewController: UITableViewController {
             return UITableViewCell()
             
         case .restricted:
-            print("RESTRICTED MODE IN CELL FOR ROW AT")
             let cell = tableView.dequeueReusableCell(withIdentifier: "HomeMapViewCell", for: indexPath) as! HomeMapViewCell
             
             cell.setUpRestricted(listOfStations: stations)
@@ -392,8 +514,6 @@ class ModifiedHomeViewController: UITableViewController {
             return cell
 
         case .normal:
-            print("NORMAL MODE IN CELL FOR ROW AT")
-            
             switch indexPath.section {
             case 0:
                 
@@ -421,7 +541,6 @@ class ModifiedHomeViewController: UITableViewController {
                     return UITableViewCell()
                 }
             case 1:
-                print("Inside section 2")
                 switch indexPath.row {
                 case 0:
                     // NEXT NORTH BOUND TRAIN
@@ -446,7 +565,6 @@ class ModifiedHomeViewController: UITableViewController {
                             return cell
                         } else {
                             let cell = tableView.dequeueReusableCell(withIdentifier: "NextTrainCell", for: indexPath) as! NextTrainCell
-                            print(train.nextEstimate[0].color)
                             let color = UIColor.BARTCOLORS(rawValue: train.nextEstimate[0].color)
                             cell.routeColorView.backgroundColor = color?.colors
                             cell.routeDirection.text = train.nextEstimate[0].direction
@@ -488,7 +606,6 @@ class ModifiedHomeViewController: UITableViewController {
                             return cell
                         } else {
                             let cell = tableView.dequeueReusableCell(withIdentifier: "NextTrainCell", for: indexPath) as! NextTrainCell
-                            print(train.nextEstimate[0].color)
                             let color = UIColor.BARTCOLORS(rawValue: train.nextEstimate[0].color)
                             cell.routeColorView.backgroundColor = color?.colors
                             cell.routeDirection.text = train.nextEstimate[0].direction
@@ -551,3 +668,14 @@ extension ModifiedHomeViewController: CLLocationManagerDelegate {
         checkLocationPermissions()
     }
 }
+extension ModifiedHomeViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.changeNavBarColors_Ext()
+        self.changeTabBarColors_Ext()
+        if self.tableView.numberOfSections > 0 {
+            self.tableView.reloadSections(IndexSet(integersIn: 1...1), with: .fade)        }
+
+    }
+}
+

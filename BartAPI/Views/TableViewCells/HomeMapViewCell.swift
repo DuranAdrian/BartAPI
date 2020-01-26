@@ -80,7 +80,6 @@ class HomeMapViewCell: UITableViewCell, MKMapViewDelegate {
     
     // Helper method for setUpNearest
     func addClosestStation(nearestStation: Station){
-        print("Inside helper.")
         // use nearestStation to create annotation and add
         let annotation = MKPointAnnotation()
         annotation.title = nearestStation.name
@@ -92,7 +91,6 @@ class HomeMapViewCell: UITableViewCell, MKMapViewDelegate {
         guard let _ = CLLocationManager().location else { return }
         CLLocationManager().startUpdatingLocation()
         self.homeMapView.showsUserLocation = true
-        print("side of user location:")
         
         // set up route
         let sourceLocation = MKMapItem.forCurrentLocation()

@@ -47,6 +47,12 @@ struct Advisory: Codable {
     }
 }
 
+extension Advisory: Equatable {
+    static func == (lhs: Advisory, rhs: Advisory) -> Bool {
+        return lhs.bsa[0].description == rhs.bsa[0].description
+    }
+}
+
 struct BSA: Codable {
     let station: String
     let description: String
