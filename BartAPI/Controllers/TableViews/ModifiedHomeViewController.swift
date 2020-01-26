@@ -23,6 +23,8 @@ class ModifiedHomeViewController: UITableViewController {
     // Next directional trains for closest station
     private var nextNorthTrain: EstimateDeparture?
     private var nextSouthTrain: EstimateDeparture?
+    // TIMER FOR PULLING NEXT TRAIN
+    var timer: Timer?
     
     // Initial map mode
     var mapMode: MapMode = MapMode.blank
@@ -60,6 +62,11 @@ class ModifiedHomeViewController: UITableViewController {
             
         })
 
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        timer?.invalidate()
     }
     
     func setUpTableView() {
@@ -124,6 +131,7 @@ class ModifiedHomeViewController: UITableViewController {
                             }
                         }
                     })
+                    self.createNextTrainsTimer()
 //                    print(self.nextNorthTrain)
                 }
                 
@@ -156,6 +164,40 @@ class ModifiedHomeViewController: UITableViewController {
         }
         //        tableView.reloadData()
     }
+    
+    // CREATE TIMER TO ATTACH TO PULLING NEXT TRAIN EVERY 30 SECONDS
+    func createNextTrainsTimer() {
+        let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.nextTrainsTimerFunction), userInfo: nil, repeats: true)
+        RunLoop.current.add(initTimer, forMode: .common)
+        initTimer.tolerance = 0.5
+        self.timer = initTimer
+        
+    }
+    
+    @objc func nextTrainsTimerFunction() {
+        DispatchQueue.main.async {
+            self.activityMonitorView.startAnimating()
+        }
+        DispatchQueue.backgroundThread(delay: 1.0, background: {
+            self.getTrainData("n", completionHandler: { _ in })
+            self.getTrainData("s", completionHandler: { _ in})
+//            self.getAdvisoryData()
+        }, completion: {
+            if let _ = self.viewIfLoaded?.window {
+                // View is active
+                
+                self.activityMonitorView.stopAnimating()
+                self.tableView.reloadSections([1], with: .fade)
+            } else {
+                // View is not active
+                
+            }
+            
+            
+        })
+        
+    }
+
     
     // GET LIST OF ALL STATIONS
     func getStationList(completionHandler: @escaping (Bool) -> Void) {
@@ -226,7 +268,10 @@ class ModifiedHomeViewController: UITableViewController {
         let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
 
         guard let trainURL = URL(string: filteredTrainAPIUrl) else { print("HAD TO RETURN FROM TRAINURL"); return }
-        self.activityMonitorView.startAnimating()
+        DispatchQueue.main.async {
+            self.activityMonitorView.startAnimating()
+        }
+        
         let task = URLSession.shared.dataTask(with: trainURL, completionHandler: { (data, response, error) -> Void in
             if let error = error {
                 print("Could not connect to filteredTrainAPIUrl: \(error)")
