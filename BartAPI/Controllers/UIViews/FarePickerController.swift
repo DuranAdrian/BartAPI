@@ -102,7 +102,7 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
     
     func parseFareJSONData(data: Data) -> FareContainer {
         let decoder = JSONDecoder()
-        var container = [FareContainer]()
+        let container = [FareContainer]()
         do {
             let fareData = try decoder.decode(FareContainer.self, from: data)
             print("Completed parsing...")

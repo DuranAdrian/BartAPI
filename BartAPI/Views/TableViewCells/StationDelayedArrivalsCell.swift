@@ -28,7 +28,6 @@ class StationDelayedArrivalsCell: UITableViewCell {
         let normalAttribute = [NSAttributedString.Key.foregroundColor: UIColor.darkGray, NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)]
         
         if delay {
-            print("Delay is TRUE, adding red delay....")
             let delayText = "Delayed"
             let delayAttribute = [NSAttributedString.Key.foregroundColor: UIColor.Custom.errorRed, NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)]
             let delayString = NSAttributedString(string: delayText, attributes: delayAttribute)

@@ -54,13 +54,6 @@ struct EstimateDeparture: Codable {
         limited = try container.decode(String.self, forKey: .limited)
         nextEstimate = try container.decode([Estimate].self, forKey: .nextEstimate)
     }
-    
-//    init(newDestination: String? = nil, newAbbreviation: String? = nil, newLimited: String? = nil, newNextEstimate: [Estimate]? = nil) {
-//        destination = newDestination!
-//        abbreviation = newAbbreviation!
-//        limited = newLimited!
-//        nextEstimate = newNextEstimate!
-//    }
 
     init() {
         destination = ""

@@ -33,7 +33,7 @@ class ModifiedHomeViewController: UITableViewController {
     var showPopUpContraint: NSLayoutConstraint!
     
     // Initial map mode
-    var mapMode: MapMode = MapMode.blank
+    var mapMode: MapMode = MapMode.restricted
     
     // Check if closestStationData has been pulled successfully
     var hasPullClosestStation: Bool = false
@@ -43,7 +43,6 @@ class ModifiedHomeViewController: UITableViewController {
     enum MapMode {
         case normal
         case restricted
-        case blank
     }
 
     override func viewDidLoad() {
@@ -106,7 +105,28 @@ class ModifiedHomeViewController: UITableViewController {
             findClosetStation(completionHandler: { (value) in
                 self.activityMonitorView.stopAnimating()
                 self.hasPullClosestStation = true
-                self.tableView.reloadSections([0], with: .fade)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+                if value {
+                    self.getTrainData("n", completionHandler: { value in
+                        if value {
+                            self.hasPullNextNorthTrain = true
+                            DispatchQueue.main.async {
+                                self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
+                            }
+                        }
+                    })
+                    self.getTrainData("s", completionHandler: { value in
+                        if value {
+                            self.hasPullNextSouthTrain = true
+                            DispatchQueue.main.async {
+                                self.tableView.reloadRows(at: [IndexPath(row: 1, section: 1)], with: .fade)
+                            }
+                        }
+                    })
+                    self.createNextTrainsTimer()
+                }
             })
             break
             
@@ -125,7 +145,6 @@ class ModifiedHomeViewController: UITableViewController {
                             self.hasPullNextNorthTrain = true
                             DispatchQueue.main.async {
                                 self.tableView.reloadRows(at: [IndexPath(row: 0, section: 1)], with: .fade)
-//                                self.tableView.reloadSections([1], with: .fade)
                             }
                         }
                     })
@@ -140,7 +159,6 @@ class ModifiedHomeViewController: UITableViewController {
                     self.createNextTrainsTimer()
 
                 }
-                
             })
             break
             
@@ -148,19 +166,23 @@ class ModifiedHomeViewController: UITableViewController {
             //Show alert with instructions to turn on
             print("Denied")
             mapMode = .restricted
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+            showPrivacyAlert()
             break
             
         case .notDetermined:
             print("Not Determined")
             locationManager.requestWhenInUseAuthorization()
             mapMode = .restricted
-            tableView.reloadData()
+            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
             break
             
         case .restricted:
             print("Restricted")
             // User cannot change status
             mapMode = .restricted
+            tableView.reloadData()
+            showPrivacyAlert()
             break
             
         @unknown default:
@@ -168,7 +190,29 @@ class ModifiedHomeViewController: UITableViewController {
             mapMode = .restricted
             break
         }
-        //        tableView.reloadData()
+    }
+    
+    func showPrivacyAlert() {
+        let alertController = UIAlertController(title: "Allow location access", message: "Turn on location services to view Closest Station.", preferredStyle: .alert)
+        let settingsAlert = UIAlertAction(title: "Settings", style: .default, handler: { action in
+            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            if UIApplication.shared.canOpenURL(settingsURL) {
+//                self.tableView.reloadData()
+                UIApplication.shared.open(settingsURL, completionHandler: { (success) in
+                    if success {
+                        alertController.dismiss(animated: false, completion: nil)
+                    }
+                })
+            }
+        })
+        let okAlert = UIAlertAction(title: "OK", style: .default, handler: { _ in
+            alertController.dismiss(animated: false, completion: nil)
+        })
+        
+        alertController.addAction(okAlert)
+        alertController.addAction(settingsAlert)
+        
+        self.present(alertController, animated: true)
     }
     
     // CREATE TIMER TO ATTACH TO PULLING NEXT TRAIN EVERY 30 SECONDS
@@ -245,10 +289,6 @@ class ModifiedHomeViewController: UITableViewController {
             print("Cannot find user location")
             return
         }
-//        self.closestStation = stations[26]
-//        self.closestStationDistance = userLocation.distance(from: stations[26].location)
-//        completionHandler(true)
-//        return
         self.activityMonitorView.startAnimating()
         var closestStation: Station?
         var smallestDistance: CLLocationDistance?
@@ -262,9 +302,6 @@ class ModifiedHomeViewController: UITableViewController {
         self.closestStation = closestStation
         self.closestStationDistance = smallestDistance
         completionHandler(true)
-//        self.getTrainData("n")
-//        self.getTrainData("s")
-    
     }
     
     // GET NEXT TRAIN DATA
@@ -458,8 +495,6 @@ class ModifiedHomeViewController: UITableViewController {
             
         }
     }
-
-
     
     // FORMATTING FUNCTIONS
     
@@ -474,9 +509,6 @@ class ModifiedHomeViewController: UITableViewController {
         // #warning Incomplete implementation, return the number of sections
         
         switch mapMode {
-        case .blank:
-            return 0
-            
         case .restricted:
             return 1
             
@@ -489,9 +521,6 @@ class ModifiedHomeViewController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         switch mapMode {
-        case .blank:
-            return 0
-            
         case .restricted:
             return 1
             
@@ -503,9 +532,6 @@ class ModifiedHomeViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch mapMode {
-        case .blank:
-            return UITableViewCell()
-            
         case .restricted:
             let cell = tableView.dequeueReusableCell(withIdentifier: "HomeMapViewCell", for: indexPath) as! HomeMapViewCell
             
@@ -657,10 +683,7 @@ class ModifiedHomeViewController: UITableViewController {
                 return hasPullNextSouthTrain ? 63.0 : 0.0
             }
         }
-
     }
-    
-
 }
 
 extension ModifiedHomeViewController: CLLocationManagerDelegate {
@@ -673,9 +696,9 @@ extension ModifiedHomeViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         self.changeNavBarColors_Ext()
         self.changeTabBarColors_Ext()
-        if self.tableView.numberOfSections > 0 {
-            self.tableView.reloadSections(IndexSet(integersIn: 1...1), with: .fade)        }
-
+        if self.tableView.numberOfSections > 1 && (CLLocationManager.authorizationStatus() != .denied){
+            self.tableView.reloadSections(IndexSet(integersIn: 1...1), with: .fade)
+        }
     }
 }
 

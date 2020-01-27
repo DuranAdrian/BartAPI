@@ -35,7 +35,6 @@ struct Advisory: Codable {
         date = try advisoryContainer.decode(String.self, forKey: .date)
         time = try advisoryContainer.decode(String.self, forKey: .time)
         
-        
         // OPEN BSA FOLDER INSIDE OF ROOT
         bsa = try advisoryContainer.decode([BSA].self, forKey: .bsa)
     }

@@ -59,31 +59,19 @@ struct StationInfo: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        print("ATTEMPING NAME DECODING...")
         name = try container.decode(String.self, forKey: .name)
-        print("ATTEMPING ABBREVIATION DECODING...")
         abbreviation = try container.decode(String.self, forKey: .abbreviation)
-        print("ATTEMPING LATITUDE DECODING...")
         latitude = try container.decode(String.self, forKey: .latitude)
-        print("ATTEMPING LONGITUDE DECODING...")
         longitude = try container.decode(String.self, forKey: .longitude)
-        print("ATTEMPING ADDRESS DECODING...")
         address = try container.decode(String.self, forKey: .address)
-        print("ATTEMPING CITY DECODING...")
         city = try container.decode(String.self, forKey: .city)
-        print("ATTEMPING COUNTY DECODING...")
         county = try container.decode(String.self, forKey: .county)
-        print("ATTEMPING STATE DECODING...")
         state = try container.decode(String.self, forKey: .state)
-        print("ATTEMPING ZIPCODE DECODING...")
         zipcode = try container.decode(String.self, forKey: .zipcode)
-        print("ATTEMPING LOCATION DECODING...")
         location = CLLocation(latitude: CLLocationDegrees(latitude)!, longitude: CLLocationDegrees(longitude)!)
         let northRouteContainer = try container.nestedContainer(keyedBy: RouteKey.self, forKey: .northRoute)
-        print("ATTEMPING NORTHROUTE DECODING...")
         northRoute = try northRouteContainer.decode([String].self, forKey: .route)
         let southRouteContainer = try container.nestedContainer(keyedBy: RouteKey.self, forKey: .southRoute)
-        print("ATTEMPING SOUTHROUTE DECODING...")
         southRoute = try southRouteContainer.decode([String].self, forKey: .route)
         
         do {
@@ -91,7 +79,6 @@ struct StationInfo: Codable {
             print("ATTEMPING NORTHPLATFORM DECODING...")
             northPlatform = try northPlatformContainer.decode([String].self, forKey: .platform)
         } catch DecodingError.typeMismatch {
-            print("ERROR........NORTH PLATFORM TYPE WAS MISMATCHED")
             northPlatform = []
         }
 
@@ -100,7 +87,6 @@ struct StationInfo: Codable {
             print("ATTEMPING SOUTHPLATFORM DECODING...")
             southPlatform = try southPlatformContainer.decode([String].self, forKey: .platform)
         } catch DecodingError.typeMismatch {
-            print("ERROR........SOUTH PLATFORM TYPE WAS MISMATCHED")
             southPlatform = []
         }
         
@@ -154,13 +140,8 @@ extension StationInfoContainer: Decodable {
     }
     
     init(from decoder: Decoder) throws {
-        print("Attempting container...")
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        print("Attempting rootkey...")
         let rootContainer = try container.nestedContainer(keyedBy: RootKey.self, forKey: .root)
-        print("Attempting stationkey...")
-//        let stationContainer = try rootContainer.nestedContainer(keyedBy: StationKey.self, forKey: .stations)
-        print("TRYING STATIONCONTAINER DECODING...")
         do {
             let stationContainer = try rootContainer.nestedContainer(keyedBy: StationKey.self, forKey: .stations)
             stations = try stationContainer.decode(StationInfo.self, forKey: .station)
@@ -177,8 +158,6 @@ extension StationInfoContainer: Decodable {
             print("No Error Message Found")
             error = ""
         }
-        
-        //        stations = try stationContainer.decode(StationInfo.self, forKey: .station)
     }
     
 }

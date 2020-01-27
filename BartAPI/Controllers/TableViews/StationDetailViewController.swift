@@ -29,6 +29,7 @@ class StationDetailViewController: UITableViewController {
     // MapView for table cell
     var customMapView: MKMapView = MKMapView()
     var willShowRoute: Bool = false
+    var hasPermissionToShowRoute: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,7 +44,6 @@ class StationDetailViewController: UITableViewController {
             }, completion: {
                 self.successFullDataPull = true
                 self.activityView.stopAnimating()
-                print("COUNT: \(self.platformSections.count)")
                 if self.platformSections.count > 0 {
                     self.tableView.beginUpdates()
                     self.tableView.insertSections(IndexSet(integersIn: 1...self.platformSections.count), with: .fade)
@@ -58,7 +58,6 @@ class StationDetailViewController: UITableViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-//        self.activityView.stopAnimating()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -74,12 +73,11 @@ class StationDetailViewController: UITableViewController {
         tableView.register(UINib(nibName: "StationArrivalsCell", bundle: nil), forCellReuseIdentifier: "StationArrivalsCell")
         tableView.register(UINib(nibName: "ModifiedStationDetailMapCell", bundle: nil), forCellReuseIdentifier: "ModifiedStationDetailMapCell")
         tableView.register(UINib(nibName: "StationDelayedArrivalsCell", bundle: nil), forCellReuseIdentifier: "StationDelayedArrivalsCell")
-        
     }
     
     func setUpNavBar(){
         self.navigationController!.navigationBar.prefersLargeTitles = true
-        guard let title = station?.name, #available(iOS 11.0, *) else { return }
+        guard let title = station?.name, #available(iOS 13.0, *) else { return }
 
         let maxWidth = UIScreen.main.bounds.size.width - 60
         var fontSize = UIFont.preferredFont(forTextStyle: .largeTitle).pointSize
@@ -180,7 +178,6 @@ class StationDetailViewController: UITableViewController {
                 OperationQueue.main.addOperation {
                     print("StationInfo data has been parsed, reloding view")
                     self.tableView.reloadData()
-
                 }
             }
             
@@ -217,7 +214,6 @@ class StationDetailViewController: UITableViewController {
             if let data = data {
                 let _ = self.parseTrainJSONData(data: data)
             }
-//
         })
         task.resume()
     }
@@ -253,7 +249,7 @@ class StationDetailViewController: UITableViewController {
         
         var platformNum: Int = 1
         var numSections: [Int] = []
-        for (index, value) in listOfTrains.enumerated() {
+        for (_, _) in listOfTrains.enumerated() {
             numSections.append(platformNum)
             platformNum += 1
         }
@@ -266,52 +262,31 @@ class StationDetailViewController: UITableViewController {
     func formatRoutes(_ routes: [String]) -> String {
         var routeToFormat = "Routes: "
         routeToFormat.append(routes.map{ $0.replacingOccurrences(of: "ROUTE ", with: "") }.joined(separator: ", "))
-        
-
         return routeToFormat
     }
     
-    func findRouteColor(_ route: String) -> String {
-        var color: String = "PINK"
-        self.routes.forEach { element in
-            if element.routeID == route {
-                color = element.color
-                
-            }
-        }
-        return color
-    }
-    
     func formatPlatforms(_ platforms: [String]) -> String {
-        
         var platformToFormat = (platforms.count == 1) ? "Platform: " : "Platforms: "
-    
         platformToFormat.append(platforms.joined(separator: ","))
-
         return platformToFormat
     }
     
     func formatArrivalTime(_ time: String) -> String {
         switch time {
-        case "leaving":
-            return "Leaving"
-        case "Leaving":
+        case "Leaving", "leaving":
             return "Leaving"
         case "1":
             return time + " Min"
         default:
             return time + " Mins"
         }
-        
     }
     
     func formatDelayArrival(_ estimate: Estimate) -> NSAttributedString {
         var normalArrival: String
         var normalAttributes: [NSAttributedString.Key: NSObject]
         switch estimate.arrival {
-            case "leaving":
-                normalArrival = "Leaving"
-            case "Leaving":
+           case "Leaving", "leaving":
                 normalArrival = "Leaving"
             case "1":
                 normalArrival = "1 Min"
@@ -336,10 +311,7 @@ class StationDetailViewController: UITableViewController {
             var delayedArrival: String
             var arrivalPlaceHolder: Int
             switch estimate.arrival {
-                case "leaving":
-                    arrivalPlaceHolder = 0
-                    break
-                case "Leaving":
+                case "Leaving", "leaving":
                     arrivalPlaceHolder = 0
                     break
                 default:
@@ -364,12 +336,6 @@ class StationDetailViewController: UITableViewController {
 
     }
     
-    // Map Manipulation
-    
-    @objc func findRoute(_ sender: UIButton) {
-        print("Attemping to find route...")
-    }
-
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
@@ -392,19 +358,15 @@ class StationDetailViewController: UITableViewController {
         guard let _ = stationInfo else {
             return 1
         }
-//        print(platformsAndTrains)
         let keys = Array(platformsAndTrains.keys).sorted()
         switch section {
             case 0:
                 return 2
             case 1:
-//                print("Number of rows in 1: \(platformsAndTrains[keys[0]]!.count)")
                 return platformsAndTrains[keys[0]]!.count
             case 2:
-//                print("Number of rows in 2: \(platformsAndTrains[keys[1]]!.count)")
                 return platformsAndTrains[keys[1]]!.count
             case 3:
-//                print("Number of rows in 3: \(platformsAndTrains[keys[2]]!.count)")
                 return platformsAndTrains[keys[2]]!.count
             default:
                 return 0
@@ -417,7 +379,6 @@ class StationDetailViewController: UITableViewController {
         case 0:
             switch indexPath.row {
                 case 0:
-                    print("Setting up Station Map Cell...")
                     let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ModifiedStationDetailMapCell.self), for: indexPath) as! ModifiedStationDetailMapCell
                     cell.mapView.delegate = self
                     if willShowRoute {
@@ -426,25 +387,20 @@ class StationDetailViewController: UITableViewController {
                         cell.mapView.removeRoute()
                         cell.mapView.addLocation(station.location)
                     }
-                    print("Completed Station Map Cell")
                     return cell
                 case 1:
-                    print("Setting up Station Detail Cell...")
                     let cell = tableView.dequeueReusableCell(withIdentifier: "StationDetailNameTableCell", for: indexPath) as! StationDetailNameTableCell
                     if let station = stationInfo {
                         cell.stationAddress.text = station.address
                         cell.stationCity.text = [station.city, station.zipcode].joined(separator: ", ")
                     }
                     cell.routeDelegate = self
-//                    cell.findRouteButton.target(forAction: #selector(findRoute(_:)), withSender: self)
-                    print("Completed Station Detail Cell")
                     return cell
                 default:
                     return UITableViewCell()
             }
         case 1:
             // PLATFORM 1
-            print("1: Setting up StationDelayedArrivalsCell Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             let key = Array(platformsAndTrains.keys).sorted()
             let cellTrain = platformsAndTrains[key[0]]![indexPath.row]
@@ -490,7 +446,6 @@ class StationDetailViewController: UITableViewController {
             return cell
         case 2:
             // PLATFORM 2
-            print("2: Setting up StationDelayedArrivalsCell Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             
             let key = Array(platformsAndTrains.keys).sorted()
@@ -536,7 +491,6 @@ class StationDetailViewController: UITableViewController {
             return cell
         case 3:
             // PLATFORM 3
-            print("3: Setting up StationDelayedArrivalsCell Cell...")
             let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: StationDelayedArrivalsCell.self), for: indexPath) as! StationDelayedArrivalsCell
             
             let key = Array(platformsAndTrains.keys).sorted()
@@ -635,28 +589,75 @@ class StationDetailViewController: UITableViewController {
 
 }
 extension StationDetailViewController: mapViewDelegate, MKMapViewDelegate {
-    func didPressButton() {
+    
+    func checkLocationForRoutePermissions() {
+        switch CLLocationManager.authorizationStatus() {
+        case .authorizedAlways:
+            updateRouteToStation()
+//            tableView.reloadData()
+//            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+            break
+        case .authorizedWhenInUse:
+//            tableView.reloadData()
+            updateRouteToStation()
+            break
+        case .denied:
+            // SHOW PRIVACY POPUP ACTIVATION
+            showPrivacyAlert()
+//            tableView.reloadData()
+            break
+        case .notDetermined:
+            CLLocationManager().requestWhenInUseAuthorization()
+            break
+        case .restricted:
+            // USER CANNOT CHANGE
+            // SHOW PRIVACY POP ACTIVATION
+            showPrivacyAlert()
+//            tableView.reloadData()
+            break
+        @unknown default:
+            CLLocationManager().requestWhenInUseAuthorization()
+            break
+        }
+    }
+    
+    func showPrivacyAlert() {
+        let alertController = UIAlertController(title: "Allow location access ", message: "Turn on location services to view route.", preferredStyle: .alert)
+        let settingsAlert = UIAlertAction(title: "Settings", style: .default, handler: { action in
+            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            if UIApplication.shared.canOpenURL(settingsURL) {
+                UIApplication.shared.open(settingsURL, completionHandler: { (success) in
+                    print("Settings opened")
+                })
+            }
+        })
+        let okAlert = UIAlertAction(title: "OK", style: .default, handler: nil)
+        
+        alertController.addAction(okAlert)
+        alertController.addAction(settingsAlert)
+        
+        self.present(alertController, animated: true)
+    }
+    
+    func updateRouteToStation() {
+        
         if willShowRoute {
-            // Remove Route
-            customMapView.removeRoute()
+           // Remove Route
             willShowRoute = false
-            tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-        } else {
-            // Show Route
-            customMapView.delegate = self
-            let locationManager: CLLocationManager! = CLLocationManager()
-            locationManager.requestWhenInUseAuthorization()
-            locationManager.desiredAccuracy = kCLLocationAccuracyBest
-            locationManager.distanceFilter = kCLDistanceFilterNone
-            locationManager.startUpdatingLocation()
-            guard let _ = locationManager?.location else { return }
-            customMapView.showsUserLocation = true
-            customMapView.userTrackingMode = .follow
-            customMapView.addLocation(stationInfo.location)
-            customMapView.routeToDestination(stationInfo.location)
+//            tableView.reloadData()
+           tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
+       } else {
+           // Show Route
             willShowRoute = true
             tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-        }
+
+//            tableView.reloadData()
+       }
+    }
+    
+    func didPressButton() {
+        // Check user permission first
+        checkLocationForRoutePermissions()
     }
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
@@ -700,5 +701,11 @@ extension StationDetailViewController {
 
             }
         }
+    }
+}
+
+extension StationDetailViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        checkLocationForRoutePermissions()
     }
 }
