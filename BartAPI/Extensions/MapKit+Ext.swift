@@ -72,8 +72,9 @@ extension MKMapView {
         })
     }
     
-    func removeRoute() {
+    func removeRoute(completionHandler: (Bool) -> Void) {
         self.removeOverlays(self.overlays)
+        completionHandler(true)
     }
 
 }

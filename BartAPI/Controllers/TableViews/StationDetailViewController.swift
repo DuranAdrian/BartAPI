@@ -69,6 +69,8 @@ class StationDetailViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         self.tableView.rowHeight = UITableView.automaticDimension
         self.tableView.estimatedRowHeight = 215.0
+        tableView.allowsMultipleSelection = false
+        tableView.allowsSelection = false
         tableView.register(UINib(nibName: "StationDetailNameTableCell", bundle: nil), forCellReuseIdentifier: "StationDetailNameTableCell")
         tableView.register(UINib(nibName: "StationArrivalsCell", bundle: nil), forCellReuseIdentifier: "StationArrivalsCell")
         tableView.register(UINib(nibName: "ModifiedStationDetailMapCell", bundle: nil), forCellReuseIdentifier: "ModifiedStationDetailMapCell")
@@ -381,12 +383,19 @@ class StationDetailViewController: UITableViewController {
                 case 0:
                     let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: ModifiedStationDetailMapCell.self), for: indexPath) as! ModifiedStationDetailMapCell
                     cell.mapView.delegate = self
+                    
                     if willShowRoute {
                         cell.mapView.routeToDestination(stationInfo.location)
                     } else {
-                        cell.mapView.removeRoute()
-                        cell.mapView.addLocation(station.location)
+                        cell.mapView.removeRoute(completionHandler: { value in
+                            if value {
+                                cell.mapView.addLocation(station.location)
+
+                            }
+                        })
+//                        cell.mapView.addLocation(station.location)
                     }
+                    
                     return cell
                 case 1:
                     let cell = tableView.dequeueReusableCell(withIdentifier: "StationDetailNameTableCell", for: indexPath) as! StationDetailNameTableCell

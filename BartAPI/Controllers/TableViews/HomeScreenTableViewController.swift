@@ -251,7 +251,8 @@ class HomeScreenTableViewController: UITableViewController {
             
     func setUpTableView() {
         self.tableView.tableFooterView = UIView()
-        
+        self.tableView.allowsSelection = false
+        self.tableView.allowsMultipleSelection = false
         self.tableView.register(UINib(nibName: "StationMapTableCell", bundle: nil), forCellReuseIdentifier: "StationMapTableCell")
         self.tableView.register(UINib(nibName: "NearestStationTableCell", bundle: nil), forCellReuseIdentifier: "NearestStationTableCell")
         self.tableView.register(UINib(nibName: "NextTrainCell", bundle: nil), forCellReuseIdentifier: "NextTrainCell")

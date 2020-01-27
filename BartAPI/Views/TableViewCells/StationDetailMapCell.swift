@@ -21,6 +21,7 @@ class StationDetailMapCell: UITableViewCell, MKMapViewDelegate {
 
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.selectionStyle = .none
     }
     
     func initialZoom() {
