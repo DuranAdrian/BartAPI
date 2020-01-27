@@ -12,7 +12,7 @@ The user will be able to:
 * View a list of all Stations.
 * View a specific station's details, such as location on Apple Maps, name, address and trains arriving.
 * View next trains at closest station.
-* What the fare between 2 stations is + time of arrival.
+* What the fare between 2 stations is.
 * Any advisory information.
 
 ## SCREENSHOTS:
