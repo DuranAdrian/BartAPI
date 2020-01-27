@@ -18,29 +18,29 @@ The user will be able to:
 ## SCREENSHOTS:
 **Home View**
 
-<img src="https://github.com/DuranAdrian/BartAPI/tree/master/BartAPI/Screenshots/HomeView.png" width="300">
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/HomeView.png" width="300">
 
 
 **Home View with Advisory**
 
-<img src="https://github.com/DuranAdrian/BartAPI/tree/master/BartAPI/Screenshots/HomeWithAdvisory.png" width="300">
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/HomeWithAdvisory.png" width="300">
 
 
 **Station List**
 
-<img src="https://github.com/DuranAdrian/BartAPI/tree/master/BartAPI/Screenshots/StationList.png" width="300">
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/StationList.png" width="300">
 
 
 **Station Details**
 
-<img src="https://github.com/DuranAdrian/BartAPI/tree/master/BartAPI/Screenshots/StationDetailView.png" width="300">
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/StationDetailView.png" width="300">
 
 
 **Fare View**
 
-<img src="https://github.com/DuranAdrian/BartAPI/tree/master/BartAPI/Screenshots/FareView.png" width="300">
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/FareView.png" width="300">
 
 
 **Fare Popup**
 
-<img src="https://github.com/DuranAdrian/BartAPI/tree/master/BartAPI/Screenshots/FareWithPopUp.png" width="300">
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/FareWithPopUp.png" width="300">
