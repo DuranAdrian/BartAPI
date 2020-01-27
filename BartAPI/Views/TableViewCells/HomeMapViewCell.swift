@@ -13,9 +13,15 @@ class HomeMapViewCell: UITableViewCell, MKMapViewDelegate {
     
     @IBOutlet var homeMapView: MKMapView! {
         didSet {
+            print("Setting map...")
             homeMapView.delegate = self
             // SET DEFAULT MAP TO BAY AREA
-            self.homeMapView.setVisibleMapRect(MKMapRect(x: 42898162.432955734, y: 103525349.38215713, width: 513503.85990115255, height: 487384.8018284887), edgePadding: UIEdgeInsets(top: 35, left: 0, bottom: 30, right: 0 ), animated: true)
+            let location = CLLocationCoordinate2D(latitude: 51.50007773,
+            longitude: -0.1246402)
+            
+            let span = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
+           let region = MKCoordinateRegion(center: location, span: span)
+           homeMapView.setRegion(region, animated: true)
 
         }
     }
@@ -54,6 +60,7 @@ class HomeMapViewCell: UITableViewCell, MKMapViewDelegate {
             
             return annotation
         }
+        print(zoomRect)
         self.homeMapView.addAnnotations(annotations)
         self.homeMapView.setVisibleMapRect(zoomRect, edgePadding: UIEdgeInsets(top: 35, left: 0, bottom: 30, right: 0 ), animated: true)
     }

@@ -394,6 +394,7 @@ class ModifiedHomeViewController: UITableViewController {
                             return
                         } else {
                             // advisory is different
+                            self.previousAdvisory = advisory
                             if self.showPopUpContraint.isActive {
                                 // there is currently an active advisory, don't add new one
                                 return

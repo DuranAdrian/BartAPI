@@ -27,7 +27,7 @@
                 </constraints>
             </tableViewCellContentView>
             <connections>
-                <outlet property="homeMapView" destination="ngP-gs-gKY" id="llA-eG-G7s"/>
+                <outlet property="homeMapView" destination="ngP-gs-gKY" id="agF-sh-mW0"/>
             </connections>
             <point key="canvasLocation" x="73.913043478260875" y="112.16517857142857"/>
         </tableViewCell>
