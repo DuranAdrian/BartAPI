@@ -105,19 +105,6 @@ class StationsTableController: UITableViewController {
             guard let stationURL = URL(string: stationInfoAPIURL) else { return stationToReturn }
             
             let task = URLSession.shared.dataTask(with: stationURL, completionHandler: { (data, response, error) -> Void in
-                if let error = error {
-                    print("Could not connect to stationAPI: \(error)")
-                    return
-                }
-                
-                ///connection succesfull
-                if let data = data {
-                    // Used for debugging
-    //                if let JSONString = String(data: data, encoding: String.Encoding.utf8) {
-    //                   print(JSONString)
-    //                }
-                    stationToReturn = self.parseStationInfoJSONData(data: data)
-                }
                 
             })
             task.resume()

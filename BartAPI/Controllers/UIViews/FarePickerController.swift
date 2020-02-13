@@ -215,7 +215,9 @@ class FarePickerController: UIViewController, UIPickerViewDelegate, UIPickerView
         self.viewFareButton.showLoading()
         pullFareData(completionHandler: { [weak self ] (tripFare) in
             self?.tripFare = tripFare
+
             DispatchQueue.main.async {
+                self?.fareTableView.reloadData()
                 self?.createFarePopUp()
                 self?.viewFareButton.hideLoading()
                 self?.viewFareButton.setTitle("View Fare", for: .normal)
@@ -292,7 +294,7 @@ extension FarePickerController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: String(describing: FareCostCell.self), for: indexPath) as! FareCostCell
-        
+        print("Using the following trip fare: \(tripFare!.standardFares.fare)")
         let fare = tripFare!.standardFares.fare[indexPath.row]
         cell.cost.text = "$ \(fare.amount)"
         

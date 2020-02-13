@@ -306,7 +306,8 @@ class ModifiedHomeViewController: UITableViewController {
     
     // GET NEXT TRAIN DATA
     func getTrainData(_ direction: String, completionHandler: @escaping (Bool) -> Void) {
-        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&dir=\(direction)&key=MW9S-E7SL-26DU-VV8V&json=y"
+        let filteredTrainAPIUrl = "https://api.bart.gov/api/etd.aspx?cmd=etd&orig=\(String(describing: self.closestStation!.abbreviation.lowercased()))&key=MW9S-E7SL-26DU-VV8V&dir=\(direction)&json=y"
+        print("trainURL: \(filteredTrainAPIUrl)")
 
         guard let trainURL = URL(string: filteredTrainAPIUrl) else { print("HAD TO RETURN FROM TRAINURL"); return }
         DispatchQueue.main.async {

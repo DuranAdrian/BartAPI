@@ -21,9 +21,13 @@ struct Train: Codable {
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
+        print("Setting station name...")
         stationName = try container.decode(String.self, forKey: .stationName)
+        print("Setting abbreviation...")
         abbreviation = try container.decode(String.self, forKey: .abbreviation)
+        print("Setting etd...")
         estimate = try container.decode([EstimateDeparture].self, forKey: .estimate)
+        print("Completed")
     }
     
     init() {
