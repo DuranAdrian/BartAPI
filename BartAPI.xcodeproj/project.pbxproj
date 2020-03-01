@@ -37,6 +37,11 @@
 		93762B0723C677EA002D3460 /* StationTableCell_2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762B0623C677EA002D3460 /* StationTableCell_2.xib */; };
 		93762B0923C67818002D3460 /* StationTableCell_2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0823C67818002D3460 /* StationTableCell_2.swift */; };
 		93762B0B23C6BBB7002D3460 /* FindRouteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */; };
+		9394A296240B547F00E8A2BF /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A295240B547F00E8A2BF /* NetworkManager.swift */; };
+		9394A298240B555F00E8A2BF /* StationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A297240B555F00E8A2BF /* StationsAPI.swift */; };
+		9394A29A240B569E00E8A2BF /* ScheduleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A299240B569E00E8A2BF /* ScheduleAPI.swift */; };
+		9394A29C240B56EC00E8A2BF /* RealTimeInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A29B240B56EC00E8A2BF /* RealTimeInfoAPI.swift */; };
+		9394A29F240B573900E8A2BF /* AdvisoryInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A29E240B573900E8A2BF /* AdvisoryInfoAPI.swift */; };
 		93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */; };
 		93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */; };
 		93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */; };
@@ -98,6 +103,11 @@
 		93762B0623C677EA002D3460 /* StationTableCell_2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationTableCell_2.xib; sourceTree = "<group>"; };
 		93762B0823C67818002D3460 /* StationTableCell_2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationTableCell_2.swift; sourceTree = "<group>"; };
 		93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindRouteButton.swift; sourceTree = "<group>"; };
+		9394A295240B547F00E8A2BF /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		9394A297240B555F00E8A2BF /* StationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsAPI.swift; sourceTree = "<group>"; };
+		9394A299240B569E00E8A2BF /* ScheduleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleAPI.swift; sourceTree = "<group>"; };
+		9394A29B240B56EC00E8A2BF /* RealTimeInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeInfoAPI.swift; sourceTree = "<group>"; };
+		9394A29E240B573900E8A2BF /* AdvisoryInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisoryInfoAPI.swift; sourceTree = "<group>"; };
 		93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Ext.swift"; sourceTree = "<group>"; };
 		93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
 		93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NextTrainCell.xib; sourceTree = "<group>"; };
@@ -233,6 +243,26 @@
 			path = UIViews;
 			sourceTree = "<group>";
 		};
+		9394A294240B546F00E8A2BF /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				9394A29D240B571700E8A2BF /* BartAPI */,
+				9394A295240B547F00E8A2BF /* NetworkManager.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		9394A29D240B571700E8A2BF /* BartAPI */ = {
+			isa = PBXGroup;
+			children = (
+				9394A297240B555F00E8A2BF /* StationsAPI.swift */,
+				9394A299240B569E00E8A2BF /* ScheduleAPI.swift */,
+				9394A29B240B56EC00E8A2BF /* RealTimeInfoAPI.swift */,
+				9394A29E240B573900E8A2BF /* AdvisoryInfoAPI.swift */,
+			);
+			path = BartAPI;
+			sourceTree = "<group>";
+		};
 		93B847D923D2C32A004FCBCC /* UIViews */ = {
 			isa = PBXGroup;
 			children = (
@@ -261,6 +291,7 @@
 		93DF8F1823A99153007766BB /* BartAPI */ = {
 			isa = PBXGroup;
 			children = (
+				9394A294240B546F00E8A2BF /* Network */,
 				93E1EEEF23CEABED00C5676A /* Protocols */,
 				936E9C3023AB240900BD9E56 /* Extensions */,
 				933BF8AF23A9BC5A00A501A0 /* Storyboards */,
@@ -406,6 +437,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9371C97223B042B10022C0F4 /* UIView+Ext.swift in Sources */,
+				9394A29C240B56EC00E8A2BF /* RealTimeInfoAPI.swift in Sources */,
 				933BF8B523A9C3C700A501A0 /* StationDetailMapCell.swift in Sources */,
 				9370226A23BE80FA00D45D8C /* Train.swift in Sources */,
 				934AC9DE23DCD81D00E49DD1 /* HomeMapViewCell.swift in Sources */,
@@ -423,11 +455,14 @@
 				93BF613223DBB2B10000C6D2 /* UIViewController+Ext.swift in Sources */,
 				93214C8E23AE9FA1008BD634 /* Route.swift in Sources */,
 				936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */,
+				9394A296240B547F00E8A2BF /* NetworkManager.swift in Sources */,
 				93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */,
 				934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */,
 				93762B0923C67818002D3460 /* StationTableCell_2.swift in Sources */,
 				93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */,
+				9394A298240B555F00E8A2BF /* StationsAPI.swift in Sources */,
 				93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */,
+				9394A29F240B573900E8A2BF /* AdvisoryInfoAPI.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
 				934B350F23D29D8C00A692F0 /* FareSegController.swift in Sources */,
 				93E1EEF323D02B0700C5676A /* MapKit+Ext.swift in Sources */,
@@ -438,6 +473,7 @@
 				934E3F7E23ADB42E004A1EE3 /* StationDetailNameTableCell.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
 				934E3F8023ADB947004A1EE3 /* HomeScreenTableViewController.swift in Sources */,
+				9394A29A240B569E00E8A2BF /* ScheduleAPI.swift in Sources */,
 				934AC9DC23DCD11100E49DD1 /* ModifiedHomeViewController.swift in Sources */,
 				930F8E9523DAAAB5008DDC35 /* Advisory.swift in Sources */,
 				93DF8F3823A99BDF007766BB /* StationsTableController.swift in Sources */,
