@@ -11,65 +11,36 @@
 		930F8E9523DAAAB5008DDC35 /* Advisory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930F8E9423DAAAB5008DDC35 /* Advisory.swift */; };
 		93214C8E23AE9FA1008BD634 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93214C8D23AE9FA1008BD634 /* Route.swift */; };
 		93214C9123B037BF008BD634 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93214C9023B037BF008BD634 /* MapKit.framework */; };
-		933BF8B323A9BDED00A501A0 /* StationDetails.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */; };
-		933BF8B523A9C3C700A501A0 /* StationDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933BF8B423A9C3C700A501A0 /* StationDetailMapCell.swift */; };
-		933BF8B823A9C58B00A501A0 /* StationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933BF8B723A9C58B00A501A0 /* StationDetailViewController.swift */; };
-		933BF8BA23A9C5E200A501A0 /* StationDetailInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933BF8B923A9C5E200A501A0 /* StationDetailInfoCell.swift */; };
-		934AC9DC23DCD11100E49DD1 /* ModifiedHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934AC9DB23DCD11100E49DD1 /* ModifiedHomeViewController.swift */; };
-		934AC9DE23DCD81D00E49DD1 /* HomeMapViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934AC9DD23DCD81D00E49DD1 /* HomeMapViewCell.swift */; };
-		934AC9E023DCD86900E49DD1 /* HomeMapViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934AC9DF23DCD86900E49DD1 /* HomeMapViewCell.xib */; };
-		934B350D23D2992800A692F0 /* StationFare.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934B350C23D2992800A692F0 /* StationFare.storyboard */; };
-		934B350F23D29D8C00A692F0 /* FareSegController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934B350E23D29D8C00A692F0 /* FareSegController.swift */; };
-		934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */; };
-		934E3F7A23ADAF3F004A1EE3 /* StationTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934E3F7923ADAF3F004A1EE3 /* StationTableCell.xib */; };
-		934E3F7C23ADB40C004A1EE3 /* StationDetailNameTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934E3F7B23ADB40C004A1EE3 /* StationDetailNameTableCell.xib */; };
-		934E3F7E23ADB42E004A1EE3 /* StationDetailNameTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934E3F7D23ADB42E004A1EE3 /* StationDetailNameTableCell.swift */; };
-		934E3F8023ADB947004A1EE3 /* HomeScreenTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934E3F7F23ADB947004A1EE3 /* HomeScreenTableViewController.swift */; };
-		934E3F8723ADBAAE004A1EE3 /* StationMapTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 934E3F8623ADBAAE004A1EE3 /* StationMapTableCell.xib */; };
 		936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */; };
 		936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3323AB673800BD9E56 /* StationInfo.swift */; };
 		9370226A23BE80FA00D45D8C /* Train.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9370226923BE80FA00D45D8C /* Train.swift */; };
 		9371C97223B042B10022C0F4 /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9371C97123B042B10022C0F4 /* UIView+Ext.swift */; };
-		9371C97423B0444E0022C0F4 /* NearestStationTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */; };
-		9371C97623B28A330022C0F4 /* NearestStationTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */; };
-		93762AFA23C3E56B002D3460 /* DelayedNextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */; };
-		93762AFE23C3F49E002D3460 /* DelayedNextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */; };
-		93762B0723C677EA002D3460 /* StationTableCell_2.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93762B0623C677EA002D3460 /* StationTableCell_2.xib */; };
-		93762B0923C67818002D3460 /* StationTableCell_2.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0823C67818002D3460 /* StationTableCell_2.swift */; };
-		93762B0B23C6BBB7002D3460 /* FindRouteButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */; };
+		93940C73240DA302004303AE /* NeoHomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C72240DA302004303AE /* NeoHomeViewController.swift */; };
+		93940C77240DA386004303AE /* NeoMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C76240DA386004303AE /* NeoMap.swift */; };
+		93940C7A240DA3D3004303AE /* NeoTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C79240DA3D3004303AE /* NeoTableView.swift */; };
+		93940C7D240DA50F004303AE /* NeoButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C7C240DA50F004303AE /* NeoButton.swift */; };
+		93940C80240DA538004303AE /* NearestStationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C7F240DA538004303AE /* NearestStationCell.swift */; };
+		93940C82240DA54F004303AE /* NextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C81240DA54F004303AE /* NextTrainCell.swift */; };
+		93940C84240DA56B004303AE /* StationListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C83240DA56B004303AE /* StationListCell.swift */; };
+		93940C86240DA5B7004303AE /* TrainArrivalsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C85240DA5B6004303AE /* TrainArrivalsCell.swift */; };
+		93940C88240DA628004303AE /* UIButton+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93940C87240DA628004303AE /* UIButton+Ext.swift */; };
 		9394A296240B547F00E8A2BF /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A295240B547F00E8A2BF /* NetworkManager.swift */; };
 		9394A298240B555F00E8A2BF /* StationsAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A297240B555F00E8A2BF /* StationsAPI.swift */; };
 		9394A29A240B569E00E8A2BF /* ScheduleAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A299240B569E00E8A2BF /* ScheduleAPI.swift */; };
 		9394A29C240B56EC00E8A2BF /* RealTimeInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A29B240B56EC00E8A2BF /* RealTimeInfoAPI.swift */; };
 		9394A29F240B573900E8A2BF /* AdvisoryInfoAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9394A29E240B573900E8A2BF /* AdvisoryInfoAPI.swift */; };
 		93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */; };
-		93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */; };
-		93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */; };
-		93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */; };
-		93B847D823D2C325004FCBCC /* FarePickerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93B847D723D2C325004FCBCC /* FarePickerController.swift */; };
 		93BE2D5A23DA6E5A001FC436 /* AdvisoryPopUp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BE2D5923DA6E5A001FC436 /* AdvisoryPopUp.swift */; };
 		93BF613223DBB2B10000C6D2 /* UIViewController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BF613123DBB2B10000C6D2 /* UIViewController+Ext.swift */; };
-		93BFD5F423C9597D00930419 /* StationArrivalsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93BFD5F323C9597D00930419 /* StationArrivalsCell.xib */; };
-		93BFD5F623C97ED800930419 /* StationArrivalsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93BFD5F523C97ED800930419 /* StationArrivalsCell.swift */; };
-		93C68D8523D64863005F74C0 /* FareCostCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93C68D8423D64863005F74C0 /* FareCostCell.xib */; };
-		93C68D8723D6488C005F74C0 /* FareCostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C68D8623D6488C005F74C0 /* FareCostCell.swift */; };
 		93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1923A99154007766BB /* AppDelegate.swift */; };
 		93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1B23A99154007766BB /* SceneDelegate.swift */; };
-		93DF8F1E23A99154007766BB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F1D23A99154007766BB /* ViewController.swift */; };
 		93DF8F2123A99154007766BB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93DF8F1F23A99154007766BB /* Main.storyboard */; };
 		93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F2223A99154007766BB /* BartAPI.xcdatamodeld */; };
 		93DF8F2623A99157007766BB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 93DF8F2523A99157007766BB /* Assets.xcassets */; };
 		93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 93DF8F2723A99157007766BB /* LaunchScreen.storyboard */; };
 		93DF8F3223A99260007766BB /* Station.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F3123A99260007766BB /* Station.swift */; };
-		93DF8F3423A99781007766BB /* StationTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F3323A99781007766BB /* StationTableCell.swift */; };
-		93DF8F3823A99BDF007766BB /* StationsTableController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93DF8F3723A99BDF007766BB /* StationsTableController.swift */; };
 		93E1EEF123CEAC1C00C5676A /* mapViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E1EEF023CEAC1C00C5676A /* mapViewDelegate.swift */; };
 		93E1EEF323D02B0700C5676A /* MapKit+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E1EEF223D02B0700C5676A /* MapKit+Ext.swift */; };
-		93E1EEF523D02DF800C5676A /* ModifiedStationDetailMapCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E1EEF423D02DF800C5676A /* ModifiedStationDetailMapCell.swift */; };
-		93E1EEF723D02E3F00C5676A /* ModifiedStationDetailMapCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93E1EEF623D02E3F00C5676A /* ModifiedStationDetailMapCell.xib */; };
-		93E1EEF923D0E16F00C5676A /* StationDelayedArrivalsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93E1EEF823D0E16F00C5676A /* StationDelayedArrivalsCell.swift */; };
-		93E1EEFB23D0E19600C5676A /* StationDelayedArrivalsCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 93E1EEFA23D0E19600C5676A /* StationDelayedArrivalsCell.xib */; };
-		93FE712D23D7C75700A5BC88 /* LoadingButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93FE712C23D7C75700A5BC88 /* LoadingButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -77,67 +48,38 @@
 		930F8E9423DAAAB5008DDC35 /* Advisory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Advisory.swift; sourceTree = "<group>"; };
 		93214C8D23AE9FA1008BD634 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		93214C9023B037BF008BD634 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StationDetails.storyboard; sourceTree = "<group>"; };
-		933BF8B423A9C3C700A501A0 /* StationDetailMapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailMapCell.swift; sourceTree = "<group>"; };
-		933BF8B723A9C58B00A501A0 /* StationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailViewController.swift; sourceTree = "<group>"; };
-		933BF8B923A9C5E200A501A0 /* StationDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailInfoCell.swift; sourceTree = "<group>"; };
-		934AC9DB23DCD11100E49DD1 /* ModifiedHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifiedHomeViewController.swift; sourceTree = "<group>"; };
-		934AC9DD23DCD81D00E49DD1 /* HomeMapViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeMapViewCell.swift; sourceTree = "<group>"; };
-		934AC9DF23DCD86900E49DD1 /* HomeMapViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomeMapViewCell.xib; sourceTree = "<group>"; };
-		934B350C23D2992800A692F0 /* StationFare.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StationFare.storyboard; sourceTree = "<group>"; };
-		934B350E23D29D8C00A692F0 /* FareSegController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FareSegController.swift; sourceTree = "<group>"; };
-		934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationRoutesTableCell.swift; sourceTree = "<group>"; };
-		934E3F7923ADAF3F004A1EE3 /* StationTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationTableCell.xib; sourceTree = "<group>"; };
-		934E3F7B23ADB40C004A1EE3 /* StationDetailNameTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationDetailNameTableCell.xib; sourceTree = "<group>"; };
-		934E3F7D23ADB42E004A1EE3 /* StationDetailNameTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDetailNameTableCell.swift; sourceTree = "<group>"; };
-		934E3F7F23ADB947004A1EE3 /* HomeScreenTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeScreenTableViewController.swift; sourceTree = "<group>"; };
-		934E3F8623ADBAAE004A1EE3 /* StationMapTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationMapTableCell.xib; sourceTree = "<group>"; };
 		936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		936E9C3323AB673800BD9E56 /* StationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
 		9370226923BE80FA00D45D8C /* Train.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Train.swift; sourceTree = "<group>"; };
 		9371C97123B042B10022C0F4 /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
-		9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NearestStationTableCell.xib; sourceTree = "<group>"; };
-		9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestStationTableCell.swift; sourceTree = "<group>"; };
-		93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DelayedNextTrainCell.xib; sourceTree = "<group>"; };
-		93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DelayedNextTrainCell.swift; sourceTree = "<group>"; };
-		93762B0623C677EA002D3460 /* StationTableCell_2.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationTableCell_2.xib; sourceTree = "<group>"; };
-		93762B0823C67818002D3460 /* StationTableCell_2.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationTableCell_2.swift; sourceTree = "<group>"; };
-		93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FindRouteButton.swift; sourceTree = "<group>"; };
+		93940C72240DA302004303AE /* NeoHomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoHomeViewController.swift; sourceTree = "<group>"; };
+		93940C76240DA386004303AE /* NeoMap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoMap.swift; sourceTree = "<group>"; };
+		93940C79240DA3D3004303AE /* NeoTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoTableView.swift; sourceTree = "<group>"; };
+		93940C7C240DA50F004303AE /* NeoButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoButton.swift; sourceTree = "<group>"; };
+		93940C7F240DA538004303AE /* NearestStationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NearestStationCell.swift; sourceTree = "<group>"; };
+		93940C81240DA54F004303AE /* NextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextTrainCell.swift; sourceTree = "<group>"; };
+		93940C83240DA56B004303AE /* StationListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationListCell.swift; sourceTree = "<group>"; };
+		93940C85240DA5B6004303AE /* TrainArrivalsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrainArrivalsCell.swift; sourceTree = "<group>"; };
+		93940C87240DA628004303AE /* UIButton+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIButton+Ext.swift"; sourceTree = "<group>"; };
 		9394A295240B547F00E8A2BF /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		9394A297240B555F00E8A2BF /* StationsAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsAPI.swift; sourceTree = "<group>"; };
 		9394A299240B569E00E8A2BF /* ScheduleAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleAPI.swift; sourceTree = "<group>"; };
 		9394A29B240B56EC00E8A2BF /* RealTimeInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealTimeInfoAPI.swift; sourceTree = "<group>"; };
 		9394A29E240B573900E8A2BF /* AdvisoryInfoAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisoryInfoAPI.swift; sourceTree = "<group>"; };
 		93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+Ext.swift"; sourceTree = "<group>"; };
-		93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMapView.swift; sourceTree = "<group>"; };
-		93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = NextTrainCell.xib; sourceTree = "<group>"; };
-		93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextTrainCell.swift; sourceTree = "<group>"; };
-		93B847D723D2C325004FCBCC /* FarePickerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FarePickerController.swift; sourceTree = "<group>"; };
 		93BE2D5923DA6E5A001FC436 /* AdvisoryPopUp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisoryPopUp.swift; sourceTree = "<group>"; };
 		93BF613123DBB2B10000C6D2 /* UIViewController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Ext.swift"; sourceTree = "<group>"; };
-		93BFD5F323C9597D00930419 /* StationArrivalsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationArrivalsCell.xib; sourceTree = "<group>"; };
-		93BFD5F523C97ED800930419 /* StationArrivalsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationArrivalsCell.swift; sourceTree = "<group>"; };
-		93C68D8423D64863005F74C0 /* FareCostCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FareCostCell.xib; sourceTree = "<group>"; };
-		93C68D8623D6488C005F74C0 /* FareCostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FareCostCell.swift; sourceTree = "<group>"; };
 		93DF8F1623A99153007766BB /* BartAPI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BartAPI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		93DF8F1923A99154007766BB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		93DF8F1B23A99154007766BB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		93DF8F1D23A99154007766BB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		93DF8F2023A99154007766BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		93DF8F2323A99154007766BB /* BartAPI.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = BartAPI.xcdatamodel; sourceTree = "<group>"; };
 		93DF8F2523A99157007766BB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		93DF8F2823A99157007766BB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		93DF8F2A23A99157007766BB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93DF8F3123A99260007766BB /* Station.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Station.swift; sourceTree = "<group>"; };
-		93DF8F3323A99781007766BB /* StationTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationTableCell.swift; sourceTree = "<group>"; };
-		93DF8F3723A99BDF007766BB /* StationsTableController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationsTableController.swift; sourceTree = "<group>"; };
 		93E1EEF023CEAC1C00C5676A /* mapViewDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mapViewDelegate.swift; sourceTree = "<group>"; };
 		93E1EEF223D02B0700C5676A /* MapKit+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MapKit+Ext.swift"; sourceTree = "<group>"; };
-		93E1EEF423D02DF800C5676A /* ModifiedStationDetailMapCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModifiedStationDetailMapCell.swift; sourceTree = "<group>"; };
-		93E1EEF623D02E3F00C5676A /* ModifiedStationDetailMapCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ModifiedStationDetailMapCell.xib; sourceTree = "<group>"; };
-		93E1EEF823D0E16F00C5676A /* StationDelayedArrivalsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationDelayedArrivalsCell.swift; sourceTree = "<group>"; };
-		93E1EEFA23D0E19600C5676A /* StationDelayedArrivalsCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StationDelayedArrivalsCell.xib; sourceTree = "<group>"; };
-		93FE712C23D7C75700A5BC88 /* LoadingButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,11 +105,8 @@
 		933BF8AF23A9BC5A00A501A0 /* Storyboards */ = {
 			isa = PBXGroup;
 			children = (
-				934E3F8223ADB97A004A1EE3 /* TableViewCells */,
 				93DF8F1F23A99154007766BB /* Main.storyboard */,
 				93DF8F2723A99157007766BB /* LaunchScreen.storyboard */,
-				933BF8B223A9BDED00A501A0 /* StationDetails.storyboard */,
-				934B350C23D2992800A692F0 /* StationFare.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -175,50 +114,6 @@
 		933BF8B623A9C3CE00A501A0 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
-				93E1EEF823D0E16F00C5676A /* StationDelayedArrivalsCell.swift */,
-				93DF8F3323A99781007766BB /* StationTableCell.swift */,
-				933BF8B423A9C3C700A501A0 /* StationDetailMapCell.swift */,
-				933BF8B923A9C5E200A501A0 /* StationDetailInfoCell.swift */,
-				934E3F7523AC28BE004A1EE3 /* StationRoutesTableCell.swift */,
-				934E3F7D23ADB42E004A1EE3 /* StationDetailNameTableCell.swift */,
-				9371C97523B28A330022C0F4 /* NearestStationTableCell.swift */,
-				93A5EC7723BD5CCE007C5860 /* NextTrainCell.swift */,
-				93762AFD23C3F49E002D3460 /* DelayedNextTrainCell.swift */,
-				93762B0823C67818002D3460 /* StationTableCell_2.swift */,
-				93BFD5F523C97ED800930419 /* StationArrivalsCell.swift */,
-				93E1EEF423D02DF800C5676A /* ModifiedStationDetailMapCell.swift */,
-				93C68D8623D6488C005F74C0 /* FareCostCell.swift */,
-				934AC9DD23DCD81D00E49DD1 /* HomeMapViewCell.swift */,
-			);
-			path = TableViewCells;
-			sourceTree = "<group>";
-		};
-		934E3F8123ADB94A004A1EE3 /* TableViews */ = {
-			isa = PBXGroup;
-			children = (
-				93DF8F3723A99BDF007766BB /* StationsTableController.swift */,
-				933BF8B723A9C58B00A501A0 /* StationDetailViewController.swift */,
-				934E3F7F23ADB947004A1EE3 /* HomeScreenTableViewController.swift */,
-				934AC9DB23DCD11100E49DD1 /* ModifiedHomeViewController.swift */,
-			);
-			path = TableViews;
-			sourceTree = "<group>";
-		};
-		934E3F8223ADB97A004A1EE3 /* TableViewCells */ = {
-			isa = PBXGroup;
-			children = (
-				934E3F7923ADAF3F004A1EE3 /* StationTableCell.xib */,
-				934E3F7B23ADB40C004A1EE3 /* StationDetailNameTableCell.xib */,
-				934E3F8623ADBAAE004A1EE3 /* StationMapTableCell.xib */,
-				9371C97323B0444E0022C0F4 /* NearestStationTableCell.xib */,
-				93A5EC7523BD58EA007C5860 /* NextTrainCell.xib */,
-				93762AF923C3E56B002D3460 /* DelayedNextTrainCell.xib */,
-				93762B0623C677EA002D3460 /* StationTableCell_2.xib */,
-				93BFD5F323C9597D00930419 /* StationArrivalsCell.xib */,
-				93E1EEF623D02E3F00C5676A /* ModifiedStationDetailMapCell.xib */,
-				93E1EEFA23D0E19600C5676A /* StationDelayedArrivalsCell.xib */,
-				93C68D8423D64863005F74C0 /* FareCostCell.xib */,
-				934AC9DF23DCD86900E49DD1 /* HomeMapViewCell.xib */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -231,6 +126,7 @@
 				93A5EC6F23B6E6DF007C5860 /* DispatchQueue+Ext.swift */,
 				93E1EEF223D02B0700C5676A /* MapKit+Ext.swift */,
 				93BF613123DBB2B10000C6D2 /* UIViewController+Ext.swift */,
+				93940C87240DA628004303AE /* UIButton+Ext.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -241,6 +137,52 @@
 				93BE2D5923DA6E5A001FC436 /* AdvisoryPopUp.swift */,
 			);
 			path = UIViews;
+			sourceTree = "<group>";
+		};
+		93940C74240DA35C004303AE /* NeoViews */ = {
+			isa = PBXGroup;
+			children = (
+				93940C7E240DA524004303AE /* TableCells */,
+				93940C7B240DA4FE004303AE /* UIButton */,
+				93940C78240DA3C3004303AE /* TableViews */,
+				93940C75240DA37B004303AE /* MapView */,
+			);
+			path = NeoViews;
+			sourceTree = "<group>";
+		};
+		93940C75240DA37B004303AE /* MapView */ = {
+			isa = PBXGroup;
+			children = (
+				93940C76240DA386004303AE /* NeoMap.swift */,
+			);
+			path = MapView;
+			sourceTree = "<group>";
+		};
+		93940C78240DA3C3004303AE /* TableViews */ = {
+			isa = PBXGroup;
+			children = (
+				93940C79240DA3D3004303AE /* NeoTableView.swift */,
+			);
+			path = TableViews;
+			sourceTree = "<group>";
+		};
+		93940C7B240DA4FE004303AE /* UIButton */ = {
+			isa = PBXGroup;
+			children = (
+				93940C7C240DA50F004303AE /* NeoButton.swift */,
+			);
+			path = UIButton;
+			sourceTree = "<group>";
+		};
+		93940C7E240DA524004303AE /* TableCells */ = {
+			isa = PBXGroup;
+			children = (
+				93940C7F240DA538004303AE /* NearestStationCell.swift */,
+				93940C81240DA54F004303AE /* NextTrainCell.swift */,
+				93940C83240DA56B004303AE /* StationListCell.swift */,
+				93940C85240DA5B6004303AE /* TrainArrivalsCell.swift */,
+			);
+			path = TableCells;
 			sourceTree = "<group>";
 		};
 		9394A294240B546F00E8A2BF /* Network */ = {
@@ -266,7 +208,7 @@
 		93B847D923D2C32A004FCBCC /* UIViews */ = {
 			isa = PBXGroup;
 			children = (
-				93B847D723D2C325004FCBCC /* FarePickerController.swift */,
+				93940C72240DA302004303AE /* NeoHomeViewController.swift */,
 			);
 			path = UIViews;
 			sourceTree = "<group>";
@@ -300,7 +242,6 @@
 				93DF8F3023A99252007766BB /* Models */,
 				93DF8F1923A99154007766BB /* AppDelegate.swift */,
 				93DF8F1B23A99154007766BB /* SceneDelegate.swift */,
-				93DF8F1D23A99154007766BB /* ViewController.swift */,
 				93DF8F2523A99157007766BB /* Assets.xcassets */,
 				93DF8F2A23A99157007766BB /* Info.plist */,
 				93DF8F2223A99154007766BB /* BartAPI.xcdatamodeld */,
@@ -324,12 +265,9 @@
 		93DF8F3523A99785007766BB /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				93940C74240DA35C004303AE /* NeoViews */,
 				93762B0123C40EAE002D3460 /* UIViews */,
 				933BF8B623A9C3CE00A501A0 /* TableViewCells */,
-				93A5EC7123BBEB1B007C5860 /* CustomMapView.swift */,
-				93762B0A23C6BBB7002D3460 /* FindRouteButton.swift */,
-				934B350E23D29D8C00A692F0 /* FareSegController.swift */,
-				93FE712C23D7C75700A5BC88 /* LoadingButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -338,7 +276,6 @@
 			isa = PBXGroup;
 			children = (
 				93B847D923D2C32A004FCBCC /* UIViews */,
-				934E3F8123ADB94A004A1EE3 /* TableViews */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -409,23 +346,9 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93A5EC7623BD58EA007C5860 /* NextTrainCell.xib in Resources */,
-				93762B0723C677EA002D3460 /* StationTableCell_2.xib in Resources */,
-				9371C97423B0444E0022C0F4 /* NearestStationTableCell.xib in Resources */,
-				933BF8B323A9BDED00A501A0 /* StationDetails.storyboard in Resources */,
-				93BFD5F423C9597D00930419 /* StationArrivalsCell.xib in Resources */,
-				934AC9E023DCD86900E49DD1 /* HomeMapViewCell.xib in Resources */,
 				93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */,
-				93762AFA23C3E56B002D3460 /* DelayedNextTrainCell.xib in Resources */,
-				934E3F7A23ADAF3F004A1EE3 /* StationTableCell.xib in Resources */,
 				93DF8F2623A99157007766BB /* Assets.xcassets in Resources */,
-				934E3F8723ADBAAE004A1EE3 /* StationMapTableCell.xib in Resources */,
-				93E1EEFB23D0E19600C5676A /* StationDelayedArrivalsCell.xib in Resources */,
 				93DF8F2123A99154007766BB /* Main.storyboard in Resources */,
-				934B350D23D2992800A692F0 /* StationFare.storyboard in Resources */,
-				93E1EEF723D02E3F00C5676A /* ModifiedStationDetailMapCell.xib in Resources */,
-				934E3F7C23ADB40C004A1EE3 /* StationDetailNameTableCell.xib in Resources */,
-				93C68D8523D64863005F74C0 /* FareCostCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -438,49 +361,34 @@
 			files = (
 				9371C97223B042B10022C0F4 /* UIView+Ext.swift in Sources */,
 				9394A29C240B56EC00E8A2BF /* RealTimeInfoAPI.swift in Sources */,
-				933BF8B523A9C3C700A501A0 /* StationDetailMapCell.swift in Sources */,
 				9370226A23BE80FA00D45D8C /* Train.swift in Sources */,
-				934AC9DE23DCD81D00E49DD1 /* HomeMapViewCell.swift in Sources */,
-				93B847D823D2C325004FCBCC /* FarePickerController.swift in Sources */,
 				93E1EEF123CEAC1C00C5676A /* mapViewDelegate.swift in Sources */,
-				93DF8F1E23A99154007766BB /* ViewController.swift in Sources */,
+				93940C77240DA386004303AE /* NeoMap.swift in Sources */,
+				93940C88240DA628004303AE /* UIButton+Ext.swift in Sources */,
 				930B19AD23D3C59000D7A325 /* Fare.swift in Sources */,
+				93940C84240DA56B004303AE /* StationListCell.swift in Sources */,
 				936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */,
-				93E1EEF923D0E16F00C5676A /* StationDelayedArrivalsCell.swift in Sources */,
-				93FE712D23D7C75700A5BC88 /* LoadingButton.swift in Sources */,
-				9371C97623B28A330022C0F4 /* NearestStationTableCell.swift in Sources */,
-				93DF8F3423A99781007766BB /* StationTableCell.swift in Sources */,
-				93C68D8723D6488C005F74C0 /* FareCostCell.swift in Sources */,
 				93DF8F3223A99260007766BB /* Station.swift in Sources */,
 				93BF613223DBB2B10000C6D2 /* UIViewController+Ext.swift in Sources */,
+				93940C7A240DA3D3004303AE /* NeoTableView.swift in Sources */,
 				93214C8E23AE9FA1008BD634 /* Route.swift in Sources */,
 				936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */,
 				9394A296240B547F00E8A2BF /* NetworkManager.swift in Sources */,
 				93A5EC7023B6E6DF007C5860 /* DispatchQueue+Ext.swift in Sources */,
-				934E3F7623AC28BE004A1EE3 /* StationRoutesTableCell.swift in Sources */,
-				93762B0923C67818002D3460 /* StationTableCell_2.swift in Sources */,
 				93DF8F1A23A99154007766BB /* AppDelegate.swift in Sources */,
 				9394A298240B555F00E8A2BF /* StationsAPI.swift in Sources */,
-				93A5EC7823BD5CCE007C5860 /* NextTrainCell.swift in Sources */,
 				9394A29F240B573900E8A2BF /* AdvisoryInfoAPI.swift in Sources */,
+				93940C80240DA538004303AE /* NearestStationCell.swift in Sources */,
+				93940C7D240DA50F004303AE /* NeoButton.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
-				934B350F23D29D8C00A692F0 /* FareSegController.swift in Sources */,
 				93E1EEF323D02B0700C5676A /* MapKit+Ext.swift in Sources */,
-				933BF8B823A9C58B00A501A0 /* StationDetailViewController.swift in Sources */,
-				93762B0B23C6BBB7002D3460 /* FindRouteButton.swift in Sources */,
-				93A5EC7223BBEB1B007C5860 /* CustomMapView.swift in Sources */,
-				93BFD5F623C97ED800930419 /* StationArrivalsCell.swift in Sources */,
-				934E3F7E23ADB42E004A1EE3 /* StationDetailNameTableCell.swift in Sources */,
+				93940C86240DA5B7004303AE /* TrainArrivalsCell.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
-				934E3F8023ADB947004A1EE3 /* HomeScreenTableViewController.swift in Sources */,
 				9394A29A240B569E00E8A2BF /* ScheduleAPI.swift in Sources */,
-				934AC9DC23DCD11100E49DD1 /* ModifiedHomeViewController.swift in Sources */,
 				930F8E9523DAAAB5008DDC35 /* Advisory.swift in Sources */,
-				93DF8F3823A99BDF007766BB /* StationsTableController.swift in Sources */,
-				933BF8BA23A9C5E200A501A0 /* StationDetailInfoCell.swift in Sources */,
+				93940C73240DA302004303AE /* NeoHomeViewController.swift in Sources */,
 				93BE2D5A23DA6E5A001FC436 /* AdvisoryPopUp.swift in Sources */,
-				93762AFE23C3F49E002D3460 /* DelayedNextTrainCell.swift in Sources */,
-				93E1EEF523D02DF800C5676A /* ModifiedStationDetailMapCell.swift in Sources */,
+				93940C82240DA54F004303AE /* NextTrainCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
