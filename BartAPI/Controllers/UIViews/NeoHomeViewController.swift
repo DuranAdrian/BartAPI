@@ -37,6 +37,9 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     // Network Layer
     private let networkManager = NetworkManager()
     
+    // Activity Monitor for Network Calls
+    fileprivate var activityMonitorView = UIActivityIndicatorView()
+    
     // List of all Stations intialize as nil
     private var stationList: [Station]? = nil
     
@@ -67,12 +70,14 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                         let stationList = UserDefaults.standard.value(forKey: "StationList") as! Data
                         self.stationList = try? PropertyListDecoder().decode(Array<Station>.self, from: stationList)
                         self.locationManager.delegate = self
+                        self.activityMonitorView.stopAnimating()
                     })
                 } else {
                     // Failed to pull stations due to connection issue. Cannot set stationList
                     // check permissions
                     DispatchQueue.main.async {
                         self.locationManager.delegate = self
+                        self.activityMonitorView.stopAnimating()
                     }
                 }
             })
@@ -98,6 +103,8 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     private func setUpNavBar() {
         navigationController?.navigationBar.barTintColor = UIColor.Custom.smokeWhite
         navigationItem.title = "HOME"
+        let activityIcon = UIBarButtonItem(customView: activityMonitorView)
+        self.navigationItem.setRightBarButton(activityIcon, animated: true)
     }
     
     private func setUpScrollView() {
@@ -187,13 +194,16 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
      User Defaults. Maybe later on will store off Device in a database such as Firebase.
     */
     private func pullStationList(completion: @escaping (_ complete: Bool) -> Void) {
-
+        
         if UserDefaults.standard.object(forKey: "stationList") != nil {
             // Station list has already been pulled and stored
             print("User Defaults already exist")
             completion(true)
             return
         } else {
+            DispatchQueue.main.async {
+                self.activityMonitorView.startAnimating()
+            }
             // Pull Data and Store in User Defaults
             networkManager.stations.getStationList(completion: { stations, error in
                 if let error = error {
@@ -263,10 +273,16 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                             if let station = self.closestStation {
                                 self.circularMap.setUpNearest(nearestStation: station)
                                 DispatchQueue.global(qos: .userInitiated).async {
+                                    DispatchQueue.main.async {
+                                        self.activityMonitorView.startAnimating()
+                                    }
                                     self.networkManager.eta.getFirstNorthTrain(to: station.abbreviation, completion: {
                                         estimate, error in
                                         if let error = error {
                                             print("Error getting first North train: \(error)")
+                                            DispatchQueue.main.async {
+                                                self.activityMonitorView.stopAnimating()
+                                            }
                                             Thread.current.cancel()
                                         }
                                         if let estimate = estimate {
@@ -278,15 +294,22 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                                                 self.nextTrainsTableView.isHidden = false
                                                 self.nextTrainsTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
                                                 self.nextTrainsTableView.invalidateIntrinsicContentSize()
+                                                self.activityMonitorView.stopAnimating()
                                             }
                                             
                                         }
                                     })
                                 }
                                 DispatchQueue.global(qos: .userInitiated).async {
+                                    DispatchQueue.main.async {
+                                        self.activityMonitorView.startAnimating()
+                                    }
                                     self.networkManager.eta.getFirstSouthTrain(to: station.abbreviation, completion: { estimate, error in
                                         if let error = error {
                                             print("Error getting first South train: \(error)")
+                                            DispatchQueue.main.async {
+                                                self.activityMonitorView.stopAnimating()
+                                            }
                                             Thread.current.cancel()
                                         }
                                         if let estimate = estimate {
@@ -298,6 +321,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                                                 self.nextTrainsTableView.isHidden = false
                                                 self.nextTrainsTableView.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .fade)
                                                 self.nextTrainsTableView.invalidateIntrinsicContentSize()
+                                                self.activityMonitorView.stopAnimating()
                                             }
                                         }
                                     })
@@ -345,6 +369,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     }
     
     // MARK: - TableView
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
