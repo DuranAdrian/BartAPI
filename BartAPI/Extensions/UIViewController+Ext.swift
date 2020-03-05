@@ -40,6 +40,7 @@ extension UIViewController {
             UINavigationBar.appearance().isTranslucent = false
         }
     }
+    
     func changeTabBarColors_Ext() {
         if #available(iOS 13, *) {
             let appearance = UITabBarAppearance()
@@ -63,5 +64,23 @@ extension UIViewController {
             UITabBar.appearance().isTranslucent = false
         }
 
+    }
+    
+    func showPrivacyAlert() {
+        let alertController = UIAlertController(title: "Allow location access ", message: "Turn on location services to view route.", preferredStyle: .alert)
+        let settingsAlert = UIAlertAction(title: "Settings", style: .default, handler: { action in
+            guard let settingsURL = URL(string: UIApplication.openSettingsURLString) else { return }
+            if UIApplication.shared.canOpenURL(settingsURL) {
+                UIApplication.shared.open(settingsURL, completionHandler: { (success) in
+                    print("Settings opened")
+                })
+            }
+        })
+        let okAlert = UIAlertAction(title: "OK", style: .default, handler: nil)
+        
+        alertController.addAction(okAlert)
+        alertController.addAction(settingsAlert)
+        
+        self.present(alertController, animated: true)
     }
 }

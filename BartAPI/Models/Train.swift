@@ -130,6 +130,18 @@ extension Estimate {
     func isLeavingNow() -> Bool {
         return self.arrival == "Leaving Now"
     }
+    
+    func computeTrainETA() -> String {
+        if self.arrival == "Leaving" {
+            return "Leaving Now"
+        }
+        // Arrival will be a value greater than 1 by default, safe to force Unwrap
+        let scheduledArrival = Int(self.arrival)
+        let delayedTime = self.computeDelayTime()
+
+        return "\(scheduledArrival! + delayedTime) Mins"
+    }
+
 }
 
 struct TrainContainer {

@@ -69,7 +69,7 @@ class NextTrainCell: UITableViewCell {
         
         // Adding Route Direction
         routeDirection = UILabel()
-        routeDirection.text = "North"
+        routeDirection.text = "Direction"
         routeDirection.font = UIFont.preferredFont(forTextStyle: .caption2)
         routeDirection.textAlignment = .left
         routeDirection.numberOfLines = 1
@@ -79,7 +79,7 @@ class NextTrainCell: UITableViewCell {
         
         // Adding Route Destination
         destination = UILabel()
-        destination.text = "Warms Springs"
+        destination.text = "Destination"
         destination.font = UIFont.preferredFont(forTextStyle: .title3)
         destination.textAlignment = .left
         destination.numberOfLines = 1
@@ -112,7 +112,7 @@ class NextTrainCell: UITableViewCell {
         // Adding EstimatedTimeArrival
         estimatedTimeArrival = UILabel()
         estimatedTimeArrival = UILabel()
-        estimatedTimeArrival.text = "Leaving Now"
+        estimatedTimeArrival.text = "Time To Departure"
         estimatedTimeArrival.textAlignment = .right
         estimatedTimeArrival.numberOfLines = 1
         estimatedTimeArrival.font = UIFont.preferredFont(forTextStyle: .title3)
@@ -133,6 +133,25 @@ class NextTrainCell: UITableViewCell {
             outerStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
             outerStack.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
         ])
+    }
+    
+    func setArrivalTitle(train: Estimate) -> NSAttributedString {
+        // No matter what the outcome is, we need 'Arrival in'
+        let stringTitle = "Arrival In"
+        let stringAttribute = [NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)]
+        var arrivalString = NSAttributedString(string: stringTitle, attributes: stringAttribute)
+        
+        if train.isDelayed() {
+            // Append red delayed text
+            let delayedTitleString = "Delayed "
+            let delayedAttribute = [NSAttributedString.Key.foregroundColor: UIColor.Custom.errorRed, NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)]
+            let delayedString = NSMutableAttributedString(string: delayedTitleString, attributes: delayedAttribute)
+            delayedString.append(arrivalString)
+            return delayedString
+        } else {
+            // Normal Mode
+            return arrivalString
+        }
     }
 
 }
