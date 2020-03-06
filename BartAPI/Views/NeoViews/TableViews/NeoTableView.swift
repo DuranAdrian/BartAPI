@@ -74,7 +74,7 @@ class NeoTableView: UIView {
     //Need to override otherwise view won't appear
     override var intrinsicContentSize: CGSize {
         // For Debugging purposes
-        print(tableView.contentSize)
+//        print(tableView.contentSize)
         
         return tableView.contentSize
     }

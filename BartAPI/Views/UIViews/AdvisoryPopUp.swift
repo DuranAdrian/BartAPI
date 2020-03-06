@@ -62,6 +62,5 @@ class AdvisoryPopUp: UIView {
     public func setMessage(message: String) {
         self.messageText.text = message
     }
-   
 
 }

@@ -43,6 +43,13 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     // List of all Stations intialize as nil
     private var stationList: [Station]? = nil
     
+    // Advisory Pop Up
+    private var advisoryPopUp: AdvisoryPopUp!
+    private var previousAdvisory: Advisory!
+    private var hideAdvisoryConstraint: NSLayoutConstraint!
+    private var showAdvisoryConstraint: NSLayoutConstraint!
+    private var blurEffectView: UIVisualEffectView!
+    
     // Closest Station - Can be nil
     private var closestStation: Station?
     
@@ -52,6 +59,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     // Next directional trains for found closest station
     private var nextNorthTrain: EstimateDeparture?
     private var nextSouthTrain: EstimateDeparture?
+    private var nextTrainTimer: Timer?
 
     // MARK: - ViewSetUp
     override func viewDidLoad() {
@@ -80,6 +88,8 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                         self.activityMonitorView.stopAnimating()
                     }
                 }
+                // Start pulling Advisory Data Regardless of station list status
+                self.startAdvisories()
             })
         }
         
@@ -185,6 +195,230 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
     
+    // MARK: - Advisory
+    
+    private func startAdvisories() {
+        // THIS FUNCTION GETS CALLED IN VIEW DID LOAD, WILL ALWAYS BE IN SOME KIND OF BACKGROUND THREAD, NOT MAIN
+        print("Pulling Advisories")
+        networkManager.advisories.getAdvisory(completion: { advisory, error in
+            if let error = error {
+                print("Could not get advisory data: \(error)")
+                Thread.current.cancel()
+            }
+            
+            if let advisory = advisory {
+                // Only show the same advisory once
+                // Check if advisory has been shown
+                if (self.showAdvisoryConstraint?.isActive) != nil {
+                    // Since showAdvisoryContraint is not nil, an advisory has already been shown
+                    if advisory == self.previousAdvisory {
+                        // Don't show same advisory
+                        return
+                    } else {
+                        // Advisory is different
+                        self.previousAdvisory = advisory
+                        
+                        if self.showAdvisoryConstraint.isActive {
+                            // There is is currently an active advisory popup
+                            return
+                        } else {
+                            // Advisory has changed
+                            DispatchQueue.main.async {
+                                self.createAdvisory(advisory)
+                            }
+                        }
+                    }
+                } else {
+                    // First time showing Advisory
+                    self.previousAdvisory = advisory
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
+                        self.createAdvisory(advisory)
+                    })
+                }
+            }
+            
+        })
+    }
+    
+    private func createAdvisory(_ adv: Advisory) {
+        // Add Blur Background
+        let blurEffect = UIBlurEffect(style: .light)
+        blurEffectView = UIVisualEffectView(effect: blurEffect)
+        blurEffectView.alpha = 0.0
+        blurEffectView.frame = view.bounds
+        blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        scrollView.addSubview(blurEffectView)
+
+        // Add PopUp on top of view
+        advisoryPopUp = AdvisoryPopUp()
+        advisoryPopUp.layer.borderColor = UIColor.Custom.annotationBlue.cgColor
+        advisoryPopUp.layer.backgroundColor = UIColor.Custom.errorRed.cgColor
+        advisoryPopUp.layer.borderWidth = 1.0
+        advisoryPopUp.layer.cornerRadius = 15.0
+        advisoryPopUp.layer.masksToBounds = true
+        advisoryPopUp.setMessage(message: adv.bsa[0].description)
+        scrollView.addSubview(advisoryPopUp)
+        
+        // Set Leading and Trailing Anchors
+        advisoryPopUp.translatesAutoresizingMaskIntoConstraints = false
+        advisoryPopUp.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 10).isActive = true
+        advisoryPopUp.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10).isActive = true
+        
+        hideAdvisoryConstraint = advisoryPopUp.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor)
+
+        hideAdvisoryConstraint.isActive = true
+        scrollView.layoutIfNeeded()
+        
+        // Show Advisory
+        hideAdvisoryConstraint.isActive = false
+        showAdvisoryConstraint = advisoryPopUp.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10)
+        showAdvisoryConstraint.isActive = true
+        
+        UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveLinear, animations: {
+            self.blurEffectView.alpha = 0.75
+            self.scrollView.layoutIfNeeded()
+            
+        }, completion: { _ in
+            // Create timer to hide
+            self.createAdvisoryTimer()
+        })
+
+
+    }
+    
+    @objc func removeAdvisory() {
+        // Check if user already dimissed view.
+        if self.showAdvisoryConstraint.isActive {
+            showAdvisoryConstraint.isActive = false
+            hideAdvisoryConstraint.isActive = true
+            
+            UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveLinear, animations: {
+                self.blurEffectView.alpha = 0.0
+                self.scrollView.layoutIfNeeded()
+            }, completion: { _ in
+                self.advisoryPopUp.removeFromSuperview()
+                self.blurEffectView.removeFromSuperview()
+            })
+        }
+    }
+    
+    // MARK: - Timers
+    private func createAdvisoryTimer() {
+        // Since repeat is false, it will invalidate itself once complete.
+        let advTimer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(removeAdvisory), userInfo: nil, repeats: false)
+        RunLoop.current.add(advTimer, forMode: .common)
+        advTimer.tolerance = 5.0
+    }
+
+    // CREATE TIMER TO ATTACH TO PULLING NEXT TRAIN AND ADVISORY EVERY 30 SECONDS
+    private func createNextTrainsTimer() {
+        print("CREATING TRAIN TIMER")
+        let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.updateDataTimerFunction), userInfo: nil, repeats: true)
+        RunLoop.current.add(initTimer, forMode: .common)
+        initTimer.tolerance = 0.5
+        self.nextTrainTimer = initTimer
+    }
+    
+    @objc private func updateDataTimerFunction() {
+        print("Creating timer function")
+        DispatchQueue.main.async {
+            self.activityMonitorView.startAnimating()
+        }
+        // Ensure current station is valid
+        if let station = closestStation {
+            // Create dispatch group to update both next North Train and South Train before updating tableview in one statement
+            DispatchQueue.global(qos: .userInteractive).asyncAfter(deadline: .now() + 1.0, execute: {
+                let group = DispatchGroup()
+                // Pull next North Train
+                group.enter()
+                self.networkManager.eta.getFirstNorthTrain(to: station.abbreviation, completion: { estimate, error in
+                    if let error = error {
+                        print("Error updating first North train: \(error)")
+//                        DispatchQueue.main.async {
+//                            self.activityMonitorView.stopAnimating()
+//                        }
+                        group.leave()
+                    }
+                    if let estimate = estimate {
+                        print("SUCCESSFULL NEXT NORTH ESTIMATE")
+                        self.nextNorthTrain = estimate
+                        group.leave()
+                    }
+                })
+                
+                // Pull next South Train
+                group.enter()
+                self.networkManager.eta.getFirstSouthTrain(to: station.abbreviation, completion: { estimate, error in
+                    if let error = error {
+                        print("Error updating first South Train: \(error)")
+                        group.leave()
+                    }
+                    if let estimate = estimate {
+                        print("SUCCESSFULL NEXT SOUTH ESTIMATE")
+                        self.nextSouthTrain = estimate
+                        group.leave()
+
+                    }
+                })
+                group.enter()
+                // Pull Advisory Data
+                self.networkManager.advisories.getAdvisory(completion: { advisory, error in
+                    if let error = error {
+                        print("Error updating Advisory: \(error)")
+                        group.leave()
+                    }
+                    if let advisory = advisory {
+                        // Check if advisory has been shown
+                        print("Updated Advisory")
+                        print(advisory)
+                        if (self.showAdvisoryConstraint?.isActive) != nil {
+                            // Since showAdvisoryContraint is not nil, an advisory has already been shown
+                            if advisory == self.previousAdvisory {
+                                // Don't show same advisory
+                                print("Advisory is the same")
+                                group.leave()
+                                return
+                            } else {
+                                // Advisory is different
+                                self.previousAdvisory = advisory
+                                
+                                if self.showAdvisoryConstraint.isActive {
+                                    // There is is currently an active advisory popup
+                                    print("Advisory is currently active")
+                                    group.leave()
+                                    return
+                                } else {
+                                    // Advisory has changed
+                                    print("Advisory is new")
+                                    DispatchQueue.main.async {
+                                        self.createAdvisory(advisory)
+                                    }
+                                    group.leave()
+                                }
+                            }
+                        } else {
+                            // First time showing Advisory
+                            self.previousAdvisory = advisory
+                            DispatchQueue.main.async {
+                                self.createAdvisory(advisory)
+                            }
+                            group.leave()
+                        }
+                    }
+                })
+                
+                group.notify(queue: .main) { [weak self] in
+                    print("UPDATING VIEW")
+                    self?.nextTrainLabel.isHidden = false
+                    self?.nextTrainsTableView.isHidden = false
+                    self?.nextTrainsTableView.tableView.reloadSections([0], with: .fade)
+                    self?.nextTrainsTableView.invalidateIntrinsicContentSize()
+                    self?.activityMonitorView.stopAnimating()
+                }
+            })
+        }
+    }
+    
     // MARK: - HelperFunctions
     /*
      Find if user has already pulled Station list in User Defaults.
@@ -270,61 +504,45 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                             self.nearestStationTableView.tableView.reloadData()
                             self.nearestStationTableView.invalidateIntrinsicContentSize()
                             
+                            // Ensure station exist
                             if let station = self.closestStation {
                                 self.circularMap.setUpNearest(nearestStation: station)
+                                self.activityMonitorView.startAnimating()
                                 DispatchQueue.global(qos: .userInitiated).async {
-                                    DispatchQueue.main.async {
-                                        self.activityMonitorView.startAnimating()
-                                    }
+                                    let group = DispatchGroup()
+                                    group.enter()
                                     self.networkManager.eta.getFirstNorthTrain(to: station.abbreviation, completion: {
                                         estimate, error in
                                         if let error = error {
                                             print("Error getting first North train: \(error)")
-                                            DispatchQueue.main.async {
-                                                self.activityMonitorView.stopAnimating()
-                                            }
-                                            Thread.current.cancel()
+                                            group.leave()
                                         }
                                         if let estimate = estimate {
                                             print("SUCCESSFULL NEXT NORTH ESTIMATE")
-                                            print(estimate)
                                             self.nextNorthTrain = estimate
-                                            DispatchQueue.main.async {
-                                                self.nextTrainLabel.isHidden = false
-                                                self.nextTrainsTableView.isHidden = false
-                                                self.nextTrainsTableView.tableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .fade)
-                                                self.nextTrainsTableView.invalidateIntrinsicContentSize()
-                                                self.activityMonitorView.stopAnimating()
-                                            }
-                                            
+                                            group.leave()
                                         }
                                     })
-                                }
-                                DispatchQueue.global(qos: .userInitiated).async {
-                                    DispatchQueue.main.async {
-                                        self.activityMonitorView.startAnimating()
-                                    }
+                                    group.enter()
                                     self.networkManager.eta.getFirstSouthTrain(to: station.abbreviation, completion: { estimate, error in
                                         if let error = error {
                                             print("Error getting first South train: \(error)")
-                                            DispatchQueue.main.async {
-                                                self.activityMonitorView.stopAnimating()
-                                            }
-                                            Thread.current.cancel()
+                                            group.leave()
                                         }
                                         if let estimate = estimate {
                                             print("SUCCESSFULL NEXT SOUTH ESTIMATE")
-                                            print(estimate)
                                             self.nextSouthTrain = estimate
-                                            DispatchQueue.main.async {
-                                                self.nextTrainLabel.isHidden = false
-                                                self.nextTrainsTableView.isHidden = false
-                                                self.nextTrainsTableView.tableView.reloadRows(at: [IndexPath(row: 1, section: 0)], with: .fade)
-                                                self.nextTrainsTableView.invalidateIntrinsicContentSize()
-                                                self.activityMonitorView.stopAnimating()
-                                            }
+                                            group.leave()
                                         }
                                     })
+                                    group.notify(queue: .main) { [weak self] in
+                                        self?.nextTrainLabel.isHidden = false
+                                        self?.nextTrainsTableView.isHidden = false
+                                        self?.nextTrainsTableView.tableView.reloadSections([0], with: .fade)
+                                        self?.nextTrainsTableView.invalidateIntrinsicContentSize()
+                                        self?.activityMonitorView.stopAnimating()
+                                        self?.createNextTrainsTimer()
+                                    }
                                 }
                             }
                         }

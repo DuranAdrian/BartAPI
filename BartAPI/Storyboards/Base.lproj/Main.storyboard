@@ -59,10 +59,10 @@
             </objects>
             <point key="canvasLocation" x="1039.1304347826087" y="95.758928571428569"/>
         </scene>
-        <!--View Controller-->
+        <!--Advisory Test View Controller-->
         <scene sceneID="LhO-uX-v8N">
             <objects>
-                <viewController id="RGz-as-HVL" sceneMemberID="viewController">
+                <viewController id="RGz-as-HVL" customClass="AdvisoryTestViewController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="UaY-yT-wQU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

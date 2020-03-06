@@ -11,7 +11,7 @@ import Foundation
 class AdvisoryInfoAPI: NetworkManager {
     // Advisories
     // COMPLETE
-    func getAdvisory(completion: @escaping (_ data: Advisory?, _ error: String?) -> ()) {
+    func getAdvisory(completion: @escaping (_ advisory: Advisory?, _ error: String?) -> ()) {
         let apiURL = "https://api.bart.gov/api/bsa.aspx?cmd=bsa&key=\(self.apiKey)&json=y"
         guard let advisoryURL = URL(string: apiURL) else {
             completion(nil, "Could not create advisory URL")
