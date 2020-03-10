@@ -28,6 +28,18 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
         manager.delegate = self
         return manager
     }()
+    // Circle Constraints
+    private var circleTopMapConstraint: NSLayoutConstraint!
+    private var circleCenteredX: NSLayoutConstraint!
+    private var circleWidthContraint: NSLayoutConstraint!
+    private var circleHeightContraint: NSLayoutConstraint!
+    // Full Screen Constraints
+    private var fullTopMapConstraint: NSLayoutConstraint!
+    private var fullLeadingMapConstraint: NSLayoutConstraint!
+    private var fullTrailingMapConstraint: NSLayoutConstraint!
+    private var fullBottomMapConstraint: NSLayoutConstraint!
+
+    
 
     // TableViews with 1 label
     var nearestStationTableView: NeoTableView!
@@ -45,6 +57,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     
     // Advisory Pop Up
     private var advisoryPopUp: AdvisoryPopUp!
+//    private var disableAdvisory: Bool = true
     private var previousAdvisory: Advisory!
     private var hideAdvisoryConstraint: NSLayoutConstraint!
     private var showAdvisoryConstraint: NSLayoutConstraint!
@@ -89,7 +102,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                     }
                 }
                 // Start pulling Advisory Data Regardless of station list status
-                self.startAdvisories()
+//                self.startAdvisories()
             })
         }
         
@@ -112,6 +125,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     
     private func setUpNavBar() {
         navigationController?.navigationBar.barTintColor = UIColor.Custom.smokeWhite
+        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "HOME"
         let activityIcon = UIBarButtonItem(customView: activityMonitorView)
         self.navigationItem.setRightBarButton(activityIcon, animated: true)
@@ -120,10 +134,10 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     private func setUpScrollView() {
         view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
@@ -131,6 +145,11 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
         // Add CircularMap
         circularMap = NeoMap(frame: CGRect(x: 0, y: 0, width: 300, height: 300))
         circularMap.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Attach Gesture to switch to full screen map view when user taps on map
+        let tap = UITapGestureRecognizer(target: self, action: #selector(makeMapFullScreen(_:)))
+        tap.numberOfTapsRequired = 1
+        circularMap.addGestureRecognizer(tap)
 
         scrollView.addSubview(circularMap)
         
@@ -162,13 +181,21 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
 
         scrollView.addSubview(nextTrainsTableView)
 
+        circleTopMapConstraint = circularMap.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 15)
+        circleTopMapConstraint.isActive = true
+        circleCenteredX = circularMap.centerXAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.centerXAnchor)
+        circleCenteredX.isActive = true
+        circleWidthContraint = circularMap.widthAnchor.constraint(equalToConstant: 300)
+        circleWidthContraint.isActive = true
+        circleHeightContraint = circularMap.heightAnchor.constraint(equalToConstant: 300)
+        circleHeightContraint.isActive = true
         
         NSLayoutConstraint.activate([
             // CircularMap
-            circularMap.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 15),
-            circularMap.centerXAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.centerXAnchor),
-            circularMap.widthAnchor.constraint(equalToConstant: 300),
-            circularMap.heightAnchor.constraint(equalToConstant: 300),
+//            circularMap.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 15),
+//            circularMap.centerXAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.centerXAnchor),
+//            circularMap.widthAnchor.constraint(equalToConstant: 300),
+//            circularMap.heightAnchor.constraint(equalToConstant: 300),
             
             // Nearest Station
             nearestStationTableView.topAnchor.constraint(equalTo: circularMap.bottomAnchor, constant: 50),
@@ -183,7 +210,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
             nextTrainsTableView.topAnchor.constraint(equalTo: nextTrainLabel.bottomAnchor, constant: 10),
             nextTrainsTableView.leadingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.leadingAnchor),
             nextTrainsTableView.trailingAnchor.constraint(equalTo: scrollView.layoutMarginsGuide.trailingAnchor),
-            scrollView.bottomAnchor.constraint(equalTo: nextTrainsTableView.bottomAnchor, constant: 10)
+//            scrollView.bottomAnchor.constraint(equalTo: nextTrainsTableView.bottomAnchor, constant: 10)
         ])
     }
     
@@ -224,7 +251,10 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                         } else {
                             // Advisory has changed
                             DispatchQueue.main.async {
-                                self.createAdvisory(advisory)
+                                if !self.circularMap.isFullScreen {
+                                    self.createAdvisory(advisory)
+                                }
+                                
                             }
                         }
                     }
@@ -232,7 +262,9 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                     // First time showing Advisory
                     self.previousAdvisory = advisory
                     DispatchQueue.main.asyncAfter(deadline: .now() + 5.0, execute: {
-                        self.createAdvisory(advisory)
+                        if !self.circularMap.isFullScreen {
+                            self.createAdvisory(advisory)
+                        }
                     })
                 }
             }
@@ -247,7 +279,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
         blurEffectView.alpha = 0.0
         blurEffectView.frame = view.bounds
         blurEffectView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        scrollView.addSubview(blurEffectView)
+//        scrollView.addSubview(blurEffectView)
 
         // Add PopUp on top of view
         advisoryPopUp = AdvisoryPopUp()
@@ -275,7 +307,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
         showAdvisoryConstraint.isActive = true
         
         UIView.animate(withDuration: 1.0, delay: 0.0, options: .curveLinear, animations: {
-            self.blurEffectView.alpha = 0.75
+            self.blurEffectView.alpha = 0.0
             self.scrollView.layoutIfNeeded()
             
         }, completion: { _ in
@@ -313,7 +345,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
     // CREATE TIMER TO ATTACH TO PULLING NEXT TRAIN AND ADVISORY EVERY 30 SECONDS
     private func createNextTrainsTimer() {
         print("CREATING TRAIN TIMER")
-        let initTimer = Timer.scheduledTimer(timeInterval: 30.0, target: self, selector: #selector(self.updateDataTimerFunction), userInfo: nil, repeats: true)
+        let initTimer = Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(self.updateDataTimerFunction), userInfo: nil, repeats: true)
         RunLoop.current.add(initTimer, forMode: .common)
         initTimer.tolerance = 0.5
         self.nextTrainTimer = initTimer
@@ -391,7 +423,9 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                                     // Advisory has changed
                                     print("Advisory is new")
                                     DispatchQueue.main.async {
-                                        self.createAdvisory(advisory)
+                                        if !self.circularMap.isFullScreen {
+                                            self.createAdvisory(advisory)
+                                        }
                                     }
                                     group.leave()
                                 }
@@ -400,7 +434,9 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
                             // First time showing Advisory
                             self.previousAdvisory = advisory
                             DispatchQueue.main.async {
-                                self.createAdvisory(advisory)
+                                if !self.circularMap.isFullScreen {
+                                    self.createAdvisory(advisory)
+                                }
                             }
                             group.leave()
                         }
@@ -720,6 +756,135 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
         cell.isHidden = true
         cell.backgroundColor = UIColor.Custom.smokeWhite
         return cell
+    }
+
+    // MARK: - Navigation
+    
+    @objc func makeMapFullScreen(_ sender: UITapGestureRecognizer? = nil) {
+    
+        circleTopMapConstraint.isActive = false
+        circleCenteredX.isActive = false
+        circleWidthContraint.isActive = false
+        circleHeightContraint.isActive = false
+        
+        
+        fullTopMapConstraint = circularMap.topAnchor.constraint(equalTo: view.topAnchor)
+        fullTopMapConstraint.isActive = true
+        fullLeadingMapConstraint = circularMap.leadingAnchor.constraint(equalTo: view.leadingAnchor)
+        fullLeadingMapConstraint.isActive = true
+        fullTrailingMapConstraint = circularMap.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        fullTrailingMapConstraint.isActive = true
+        fullBottomMapConstraint = circularMap.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+        fullBottomMapConstraint.isActive = true
+        
+        // Adjust nav bar to transparent ot make full screen
+//        setUpNavBar(adjust: true)
+        
+        // Hides TabBar
+        tabBarController?.tabBar.isHidden = true
+        // Make nav bar transparent
+
+        navigationController?.makeTransparent()
+        navigationItem.title = nil
+        // Animates Hiding appearently
+        UIView.transition(with: tabBarController!.view, duration: 0.85, options: .transitionCrossDissolve, animations: nil)
+
+        self.circularMap.layer.borderWidth = 0.0
+        UIView.animate(withDuration: 1.0, animations: {
+            self.circularMap.layer.cornerRadius = 0.0
+            self.circularMap.map.layer.cornerRadius = 0.0
+//            self.circularMap.layer.borderWidth = 0.0
+            self.circularMap.topLeftShadow.isHidden = true
+            self.circularMap.bottomRightShadow.isHidden = true
+            self.navigationItem.largeTitleDisplayMode = .never
+            self.scrollView.layoutIfNeeded()
+        }, completion: { _ in
+            //Remove border
+//            self.circularMap.layer.borderWidth = 0.0
+            // Remove tap gesture
+            self.circularMap.gestureRecognizers?.removeLast()
+            // Enable map interaction
+            self.circularMap.map.isUserInteractionEnabled = true
+            // Add back button to navigation bar
+//            let backButtonImage = UIImage(systemName: "arrow.left")
+            let backButton = UIButton()
+            let backImage = UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold))
+            backButton.setImage(UIImage(systemName: "arrow.left", withConfiguration: UIImage.SymbolConfiguration(weight: .bold)), for: .normal)
+            backButton.tintColor = .white
+//            let navbutton = UIBarButtonItem(customView: backButton)
+            let navButton = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(self.reduceMap))
+//            navbutton.target = self
+//            navbutton.action = #selector(self.reduceMap)
+//
+//            let mapReduceButton = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(self.reduceMap))
+            self.navigationItem.setLeftBarButton(navButton, animated: true)
+            
+            // Create Temporary button on top
+//            let button = NeoButton()
+//            button.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
+//            button.tag = 45
+//            button.setBackgroundImage(UIImage(systemName: "arrowshape.turn.up.left.fill"), for: .normal)
+//            button.addTarget(self, action: #selector(self.reduceMap), for: .touchUpInside)
+//            self.scrollView.addSubview(button)
+//            button.translatesAutoresizingMaskIntoConstraints = false
+//            button.topAnchor.constraint(equalTo: self.scrollView.topAnchor, constant: 10).isActive = true
+//            button.leadingAnchor.constraint(equalTo: self.scrollView.leadingAnchor, constant: 10).isActive = true
+//            button.heightAnchor.constraint(equalToConstant: 40).isActive = true
+//            button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+            
+            
+            // Add buttons to corner
+            self.circularMap.addButtonsToCorner()
+            // Switch flag
+            self.circularMap.isFullScreen = true
+        })
+    }
+    
+    @objc func reduceMap() {
+        fullTopMapConstraint.isActive = false
+        fullLeadingMapConstraint.isActive = false
+        fullTrailingMapConstraint.isActive = false
+        fullBottomMapConstraint.isActive = false
+        
+        circleTopMapConstraint.isActive = true
+        circleCenteredX.isActive = true
+        circleWidthContraint.isActive = true
+        circleHeightContraint.isActive = true
+        
+        self.circularMap.removeMenuButtons(all: true)
+        
+        // Show Tab Bar
+        tabBarController?.tabBar.isHidden = false
+        // Show Navigation Bar
+        setUpNavBar()
+        // Animates Showing appearently
+        UIView.transition(with: tabBarController!.view, duration: 0.85, options: .transitionCrossDissolve, animations: nil)
+        
+        // remove Navigation bar button
+        self.navigationItem.leftBarButtonItem = nil
+        scrollView.viewWithTag(45)?.removeFromSuperview()
+        UIView.animate(withDuration: 1.0, animations: {
+            self.circularMap.layer.cornerRadius = self.circularMap.originalCornerRadius
+            self.circularMap.map.layer.cornerRadius = self.circularMap.originalCornerRadius
+            self.circularMap.layer.borderWidth = 5.0
+            self.navigationItem.largeTitleDisplayMode = .always
+            self.scrollView.layoutIfNeeded()
+        }, completion: { _ in
+            // Readjust zoom level to fit
+            // Reshow shadows on map
+            self.circularMap.topLeftShadow.isHidden = false
+            self.circularMap.bottomRightShadow.isHidden = false
+            // Reshow border
+//            self.circularMap.layer.borderWidth = 5.0
+            // Reattach tap gesture to cicularMap
+            let tap = UITapGestureRecognizer(target: self, action: #selector(self.makeMapFullScreen(_:)))
+            tap.numberOfTapsRequired = 1
+            self.circularMap.addGestureRecognizer(tap)
+            // Zoom back to initial
+            self.circularMap.fitVisualMap()
+            self.circularMap.isFullScreen = false
+            // Modify Neo Map to add buttons to mapView
+        })
     }
 }
 

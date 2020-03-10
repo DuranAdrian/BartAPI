@@ -126,10 +126,40 @@
                         <viewLayoutGuide key="safeArea" id="bUq-MQ-3qx"/>
                     </view>
                     <navigationItem key="navigationItem" id="5g3-yg-AzZ"/>
+                    <connections>
+                        <segue destination="6ya-Ny-aev" kind="show" identifier="showMapView" id="NLh-gc-i11"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3WA-Wb-EA2" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2048" y="-709"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="dIq-k9-2h4">
+            <objects>
+                <viewController id="6ya-Ny-aev" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="urK-Zc-cqZ">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" mapType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="Tv8-61-qTX">
+                                <rect key="frame" x="0.0" y="140" width="414" height="673"/>
+                            </mapView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="Tv8-61-qTX" firstAttribute="leading" secondItem="Q6h-5F-qe3" secondAttribute="leading" id="bl2-yk-efu"/>
+                            <constraint firstItem="Tv8-61-qTX" firstAttribute="top" secondItem="Q6h-5F-qe3" secondAttribute="top" id="kpb-uY-i34"/>
+                            <constraint firstItem="Q6h-5F-qe3" firstAttribute="trailing" secondItem="Tv8-61-qTX" secondAttribute="trailing" id="sx8-MD-mhq"/>
+                            <constraint firstItem="Q6h-5F-qe3" firstAttribute="bottom" secondItem="Tv8-61-qTX" secondAttribute="bottom" id="z3D-C3-b72"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="Q6h-5F-qe3"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="gTt-Se-ZZj"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="whR-gu-JNx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3145" y="-709"/>
         </scene>
     </scenes>
     <resources>
