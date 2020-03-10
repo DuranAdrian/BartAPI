@@ -36,6 +36,7 @@ class StationListCell: UITableViewCell {
     }
 
     fileprivate func setUpCell(){
+        backgroundColor = UIColor.Custom.smokeWhite
         // Station Name
         stationName = UILabel()
         stationName.text = "24th St Mission"

@@ -12,7 +12,7 @@
 		93214C8E23AE9FA1008BD634 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93214C8D23AE9FA1008BD634 /* Route.swift */; };
 		93214C9123B037BF008BD634 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93214C9023B037BF008BD634 /* MapKit.framework */; };
 		932BC52A24145D3900D5501A /* NavigationController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932BC52924145D3900D5501A /* NavigationController+Ext.swift */; };
-		935DEB6D2410B65600CF808F /* AdvisoryTestViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935DEB6C2410B65600CF808F /* AdvisoryTestViewController.swift */; };
+		9356108024171A1600D92CC1 /* StationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356107F24171A1600D92CC1 /* StationListViewController.swift */; };
 		936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */; };
 		936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3323AB673800BD9E56 /* StationInfo.swift */; };
 		9370226A23BE80FA00D45D8C /* Train.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9370226923BE80FA00D45D8C /* Train.swift */; };
@@ -51,7 +51,7 @@
 		93214C8D23AE9FA1008BD634 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		93214C9023B037BF008BD634 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		932BC52924145D3900D5501A /* NavigationController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationController+Ext.swift"; sourceTree = "<group>"; };
-		935DEB6C2410B65600CF808F /* AdvisoryTestViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisoryTestViewController.swift; sourceTree = "<group>"; };
+		9356107F24171A1600D92CC1 /* StationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationListViewController.swift; sourceTree = "<group>"; };
 		936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		936E9C3323AB673800BD9E56 /* StationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
 		9370226923BE80FA00D45D8C /* Train.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Train.swift; sourceTree = "<group>"; };
@@ -214,7 +214,7 @@
 			isa = PBXGroup;
 			children = (
 				93940C72240DA302004303AE /* NeoHomeViewController.swift */,
-				935DEB6C2410B65600CF808F /* AdvisoryTestViewController.swift */,
+				9356107F24171A1600D92CC1 /* StationListViewController.swift */,
 			);
 			path = UIViews;
 			sourceTree = "<group>";
@@ -369,7 +369,6 @@
 				9394A29C240B56EC00E8A2BF /* RealTimeInfoAPI.swift in Sources */,
 				9370226A23BE80FA00D45D8C /* Train.swift in Sources */,
 				93E1EEF123CEAC1C00C5676A /* mapViewDelegate.swift in Sources */,
-				935DEB6D2410B65600CF808F /* AdvisoryTestViewController.swift in Sources */,
 				93940C77240DA386004303AE /* NeoMap.swift in Sources */,
 				93940C88240DA628004303AE /* UIButton+Ext.swift in Sources */,
 				930B19AD23D3C59000D7A325 /* Fare.swift in Sources */,
@@ -389,6 +388,7 @@
 				93940C80240DA538004303AE /* NearestStationCell.swift in Sources */,
 				93940C7D240DA50F004303AE /* NeoButton.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
+				9356108024171A1600D92CC1 /* StationListViewController.swift in Sources */,
 				93E1EEF323D02B0700C5676A /* MapKit+Ext.swift in Sources */,
 				93940C86240DA5B7004303AE /* TrainArrivalsCell.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
