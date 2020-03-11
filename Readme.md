@@ -4,7 +4,7 @@ This app is my second learning project. This time I'm mainly working with JSON, 
 
 I have reworked Version 1.0 (Now V.1.5.1) by attempting to use a Neomorphism Design building everything from code and minimizing my storyboard usage this time. 
 
-Based on feedback I received, I extracted the networking calls and made a simple network layer that is seperate from the view Controller in an attempt to make the code cleaner and minimize dependancy.
+Based on feedback I received, I extracted the networking calls and made a simple network layer that is seperate from the view Controller in an attempt to make the code cleaner and minimize dependancy. I also added in an animation to make the map full screen with 3 buttons to find route from current location (Blue), show all stations (Red), and give turn by turn navigation using the Google Maps app (Green).
 
 NOTES: 
 * App V.1.0  is visible better in native dark mode.
