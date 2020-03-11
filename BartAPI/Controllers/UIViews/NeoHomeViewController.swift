@@ -786,6 +786,11 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
 
         navigationController?.makeTransparent()
         navigationItem.title = nil
+        if traitCollection.userInterfaceStyle == .light {
+            self.navigationController?.navigationBar.tintColor = .black
+        } else {
+            self.navigationController?.navigationBar.tintColor = .white
+        }
         // Animates Hiding appearently
         UIView.transition(with: tabBarController!.view, duration: 0.85, options: .transitionCrossDissolve, animations: nil)
 
@@ -883,7 +888,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
             // Zoom back to initial
             self.circularMap.fitVisualMap()
             self.circularMap.isFullScreen = false
-            // Modify Neo Map to add buttons to mapView
+            self.navigationController?.navigationBar.tintColor = .white
         })
     }
 }
@@ -891,5 +896,21 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
 extension NeoHomeViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         checkLocationPermissions()
+    }
+}
+
+extension NeoHomeViewController {
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if fullTopMapConstraint.isActive {
+            // Going to light mode
+            if previousTraitCollection?.userInterfaceStyle == .dark {
+                self.navigationController?.navigationBar.tintColor = .black
+            } else {
+                // Going to dark mode
+                self.navigationController?.navigationBar.tintColor = .white
+            }
+        }
     }
 }

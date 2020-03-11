@@ -34,6 +34,8 @@ extension UIColor {
         static let disabledBlue = UIColor(26, 110, 112)
         static let errorRed = UIColor(231,76, 60)
         static let smokeWhite = UIColor(232, 238, 246)
+        static let mapGreen = UIColor(60, 186, 84)
+        static let mapRed = UIColor(219, 50, 54)
         static let darkSmokeWhite = UIColor(208, 214, 221)
         static let bartRed = UIColor(255, 0, 0)
         static let bartOrange = UIColor(255, 153, 51)

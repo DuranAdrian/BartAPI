@@ -398,17 +398,17 @@ class NeoMap: UIView, MKMapViewDelegate, CLLocationManagerDelegate {
         }
         // Temporary background colors to distinguish
         // Button 1 will show route
-        button1.backgroundColor = .cyan
+        button1.backgroundColor = UIColor.Custom.annotationBlue
         button1.setImage(UIImage(systemName: "arrow.up.right.diamond.fill"), for: .normal)
         button1.imageView?.tintColor = .white
         button1.addTarget(self, action: #selector(showRoute2), for: .touchUpInside)
         // Button 2 will show all stations and disable route
-        button2.backgroundColor = .red
+        button2.backgroundColor = UIColor.Custom.mapRed
         button2.setImage(UIImage(systemName: "mappin.circle"), for: .normal)
         button2.imageView?.tintColor = .white
         button2.addTarget(self, action: #selector(showAllStations), for: .touchUpInside)
         // Button 3 will open google maps to give turn by turn navigation
-        button3.backgroundColor = .green
+        button3.backgroundColor = UIColor.Custom.mapGreen
         button3.setImage(UIImage(systemName: "map.fill"), for: .normal)
         button3.imageView?.tintColor = .white
         button3.addTarget(self, action: #selector(openGoogleMaps), for: .touchUpInside)

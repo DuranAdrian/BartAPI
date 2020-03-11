@@ -100,6 +100,7 @@ class NeoStationDetailViewController: UIViewController {
     fileprivate func setUpNavBar() {
         let activityIcon = UIBarButtonItem(customView: activityView)
         self.navigationItem.setRightBarButton(activityIcon, animated: true)
+        navigationController?.navigationBar.tintColor = .black
     }
 
     
