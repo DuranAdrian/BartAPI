@@ -32,10 +32,13 @@ The user will be able to:
 
 <img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/HomeView.png" width="300">
 
+**V.1.5.1 Full Map View**
+
+<img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/UpdatedFullMap.png" width="300">
+
 **V.1.5.1 Home View with Advisory**
 
 <img src="https://github.com/DuranAdrian/BartAPI/blob/master/BartAPI/Screenshots/UpdatedHomeAdvisory.png" width="300">
-
 
 **V.1.0 Home View with Advisory**
 
