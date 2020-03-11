@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="1071" y="863"/>
         </scene>
-        <!--View Controller-->
+        <!--Neo Fare View Controller-->
         <scene sceneID="1nn-oL-oGj">
             <objects>
-                <viewController id="5jz-iW-BdL" sceneMemberID="viewController">
+                <viewController id="5jz-iW-BdL" customClass="NeoFareViewController" customModule="BartAPI" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vtf-6W-ohT">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

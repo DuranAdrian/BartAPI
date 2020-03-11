@@ -15,6 +15,9 @@
 		9356108024171A1600D92CC1 /* NeoStationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356107F24171A1600D92CC1 /* NeoStationListViewController.swift */; };
 		9356108224172EFB00D92CC1 /* NeoStationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356108124172EFB00D92CC1 /* NeoStationDetailViewController.swift */; };
 		9356108624180FA600D92CC1 /* StationDetails.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9356108524180FA600D92CC1 /* StationDetails.storyboard */; };
+		935610882418A7A300D92CC1 /* NeoFareViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 935610872418A7A300D92CC1 /* NeoFareViewController.swift */; };
+		9356108B2418A81C00D92CC1 /* NeoSegController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356108A2418A81C00D92CC1 /* NeoSegController.swift */; };
+		9356108D2418B87200D92CC1 /* FareCostCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356108C2418B87200D92CC1 /* FareCostCell.swift */; };
 		936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */; };
 		936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3323AB673800BD9E56 /* StationInfo.swift */; };
 		9370226A23BE80FA00D45D8C /* Train.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9370226923BE80FA00D45D8C /* Train.swift */; };
@@ -56,6 +59,9 @@
 		9356107F24171A1600D92CC1 /* NeoStationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoStationListViewController.swift; sourceTree = "<group>"; };
 		9356108124172EFB00D92CC1 /* NeoStationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoStationDetailViewController.swift; sourceTree = "<group>"; };
 		9356108524180FA600D92CC1 /* StationDetails.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StationDetails.storyboard; sourceTree = "<group>"; };
+		935610872418A7A300D92CC1 /* NeoFareViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoFareViewController.swift; sourceTree = "<group>"; };
+		9356108A2418A81C00D92CC1 /* NeoSegController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoSegController.swift; sourceTree = "<group>"; };
+		9356108C2418B87200D92CC1 /* FareCostCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FareCostCell.swift; sourceTree = "<group>"; };
 		936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		936E9C3323AB673800BD9E56 /* StationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
 		9370226923BE80FA00D45D8C /* Train.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Train.swift; sourceTree = "<group>"; };
@@ -123,8 +129,17 @@
 		933BF8B623A9C3CE00A501A0 /* TableViewCells */ = {
 			isa = PBXGroup;
 			children = (
+				9356108C2418B87200D92CC1 /* FareCostCell.swift */,
 			);
 			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		935610892418A7FB00D92CC1 /* SegController */ = {
+			isa = PBXGroup;
+			children = (
+				9356108A2418A81C00D92CC1 /* NeoSegController.swift */,
+			);
+			path = SegController;
 			sourceTree = "<group>";
 		};
 		936E9C3023AB240900BD9E56 /* Extensions */ = {
@@ -152,6 +167,7 @@
 		93940C74240DA35C004303AE /* NeoViews */ = {
 			isa = PBXGroup;
 			children = (
+				935610892418A7FB00D92CC1 /* SegController */,
 				93940C7E240DA524004303AE /* TableCells */,
 				93940C7B240DA4FE004303AE /* UIButton */,
 				93940C78240DA3C3004303AE /* TableViews */,
@@ -221,6 +237,7 @@
 				93940C72240DA302004303AE /* NeoHomeViewController.swift */,
 				9356107F24171A1600D92CC1 /* NeoStationListViewController.swift */,
 				9356108124172EFB00D92CC1 /* NeoStationDetailViewController.swift */,
+				935610872418A7A300D92CC1 /* NeoFareViewController.swift */,
 			);
 			path = UIViews;
 			sourceTree = "<group>";
@@ -383,8 +400,11 @@
 				932BC52A24145D3900D5501A /* NavigationController+Ext.swift in Sources */,
 				936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */,
 				93DF8F3223A99260007766BB /* Station.swift in Sources */,
+				9356108B2418A81C00D92CC1 /* NeoSegController.swift in Sources */,
+				9356108D2418B87200D92CC1 /* FareCostCell.swift in Sources */,
 				93BF613223DBB2B10000C6D2 /* UIViewController+Ext.swift in Sources */,
 				93940C7A240DA3D3004303AE /* NeoTableView.swift in Sources */,
+				935610882418A7A300D92CC1 /* NeoFareViewController.swift in Sources */,
 				93214C8E23AE9FA1008BD634 /* Route.swift in Sources */,
 				936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */,
 				9394A296240B547F00E8A2BF /* NetworkManager.swift in Sources */,
