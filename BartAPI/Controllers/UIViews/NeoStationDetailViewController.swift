@@ -37,6 +37,9 @@ class NeoStationDetailViewController: UIViewController {
     var platform3Label: UILabel!
     var platform3TableView: NeoTableView!
     var platform3Data = [EstimateDeparture]()
+    
+    let activityView: UIActivityIndicatorView = UIActivityIndicatorView()
+    var timer: Timer?
 
 
     override func viewDidLoad() {
@@ -48,6 +51,7 @@ class NeoStationDetailViewController: UIViewController {
         super.viewDidLoad()
         setUpScrollView()
         setUpMapAndAddress()
+        setUpNavBar()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -59,10 +63,14 @@ class NeoStationDetailViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Start pulling platform data on different thread
+        activityView.startAnimating()
         DispatchQueue.global(qos: .userInitiated).async {
             NetworkManager().eta.getEstimateTime(at: self.station.abbreviation, completion: { estimate, error in
                 if let error = error {
                     print("ERROR WITH GETTING PLATFORM DATA: \(error)")
+                    DispatchQueue.main.async {
+                        self.activityView.stopAnimating()
+                    }
                     return
                 }
                 if let estimate = estimate {
@@ -71,7 +79,9 @@ class NeoStationDetailViewController: UIViewController {
                         if complete {
                             // Update Platform list
                             DispatchQueue.main.async {
+                                self.activityView.stopAnimating()
                                 self.setUpPlatforms()
+                                self.createPlatformUpdateTimer()
                             }
                         }
                     })
@@ -81,6 +91,17 @@ class NeoStationDetailViewController: UIViewController {
 
         }
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        timer?.invalidate()
+    }
+    
+    fileprivate func setUpNavBar() {
+        let activityIcon = UIBarButtonItem(customView: activityView)
+        self.navigationItem.setRightBarButton(activityIcon, animated: true)
+    }
+
     
     fileprivate func setUpMap() {
         stationMap.setUpNearest(nearestStation: station)
@@ -180,6 +201,17 @@ class NeoStationDetailViewController: UIViewController {
     }
     
     fileprivate func seperatePlatforms(using trains: [EstimateDeparture], completion: @escaping (_ complete: Bool) -> ()) {
+        // Dump data for refresh
+        if !platform1Data.isEmpty {
+            platform1Data.removeAll()
+        }
+        if !platform2Data.isEmpty {
+            platform2Data.removeAll()
+        }
+        if !platform3Data.isEmpty {
+            platform3Data.removeAll()
+        }
+
         for train in trains {
             if train.nextEstimate[0].platform == "1" {
                 platform1Data.append(train)
@@ -191,10 +223,10 @@ class NeoStationDetailViewController: UIViewController {
                 platform3Data.append(train)
             }
         }
-        completion(true)
         print("Platform1Data: \(platform1Data)")
         print("Platform2Data: \(platform2Data)")
         print("Platform3Data: \(platform3Data)")
+        completion(true)
 
     }
     
@@ -289,6 +321,64 @@ class NeoStationDetailViewController: UIViewController {
         platform3TableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
         scrollView.bottomAnchor.constraint(equalTo: platform3TableView.bottomAnchor, constant: 10)
         ])
+    }
+    
+    fileprivate func createPlatformUpdateTimer() {
+        let trainTimer = Timer.scheduledTimer(timeInterval: 15.0, target: self, selector: #selector(self.timerFunction), userInfo: nil, repeats: true)
+        RunLoop.current.add(trainTimer, forMode: .common)
+        trainTimer.tolerance = 0.5
+        self.timer = trainTimer
+    }
+    
+    @objc func timerFunction() {
+        self.activityView.startAnimating()
+        
+        DispatchQueue.global(qos: .userInitiated).async {
+            NetworkManager().eta.getEstimateTime(at: self.station.abbreviation, completion: { estimate, error in
+                if let error = error {
+                    print("ERROR WITH GETTING PLATFORM DATA: \(error)")
+                    DispatchQueue.main.async {
+                        self.activityView.stopAnimating()
+                    }
+                    return
+                }
+                if let estimate = estimate {
+                    print("SUCCESS PULLING PLATFORM DATA")
+                    self.seperatePlatforms(using: estimate.trains[0].estimate, completion: { complete in
+                        if complete {
+                            // Update Platform list
+                            DispatchQueue.main.async {
+                                self.activityView.stopAnimating()
+                                self.platform1TableView.tableView.reloadData()
+                                self.platform2TableView.tableView.reloadData()
+                                self.platform3TableView.tableView.reloadData()
+                                self.adjustPlatformLabels()
+                            }
+                        }
+                    })
+                }
+            })
+        }
+    }
+    
+    fileprivate func adjustPlatformLabels() {
+        if platform1Data.isEmpty {
+            platform1Label.isHidden = true
+        } else {
+            platform1Label.isHidden = false
+        }
+        if platform2Data.isEmpty {
+            platform2Label.isHidden = true
+        } else {
+            platform2Label.isHidden = false
+        }
+        if platform3Data.isEmpty {
+            platform3Label.isHidden = true
+        } else {
+            platform3Label.isHidden = false
+        }
+
+
     }
     
     fileprivate func setUpAddressComponet() {
