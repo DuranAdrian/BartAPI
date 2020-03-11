@@ -477,7 +477,7 @@ class NeoHomeViewController: UIViewController, UITableViewDataSource, UITableVie
             // Pull Data and Store in User Defaults
             networkManager.stations.getStationList(completion: { stations, error in
                 if let error = error {
-                    print("ERROR: \(error)")
+                    print("ERROR with stationList: \(error)")
                     completion(false)
                     return
                 }

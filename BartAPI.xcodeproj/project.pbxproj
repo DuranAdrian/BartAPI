@@ -12,7 +12,9 @@
 		93214C8E23AE9FA1008BD634 /* Route.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93214C8D23AE9FA1008BD634 /* Route.swift */; };
 		93214C9123B037BF008BD634 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93214C9023B037BF008BD634 /* MapKit.framework */; };
 		932BC52A24145D3900D5501A /* NavigationController+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 932BC52924145D3900D5501A /* NavigationController+Ext.swift */; };
-		9356108024171A1600D92CC1 /* StationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356107F24171A1600D92CC1 /* StationListViewController.swift */; };
+		9356108024171A1600D92CC1 /* NeoStationListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356107F24171A1600D92CC1 /* NeoStationListViewController.swift */; };
+		9356108224172EFB00D92CC1 /* NeoStationDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9356108124172EFB00D92CC1 /* NeoStationDetailViewController.swift */; };
+		9356108624180FA600D92CC1 /* StationDetails.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9356108524180FA600D92CC1 /* StationDetails.storyboard */; };
 		936E9C3223AB241E00BD9E56 /* UIColor+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */; };
 		936E9C3423AB673800BD9E56 /* StationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936E9C3323AB673800BD9E56 /* StationInfo.swift */; };
 		9370226A23BE80FA00D45D8C /* Train.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9370226923BE80FA00D45D8C /* Train.swift */; };
@@ -51,7 +53,9 @@
 		93214C8D23AE9FA1008BD634 /* Route.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Route.swift; sourceTree = "<group>"; };
 		93214C9023B037BF008BD634 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
 		932BC52924145D3900D5501A /* NavigationController+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NavigationController+Ext.swift"; sourceTree = "<group>"; };
-		9356107F24171A1600D92CC1 /* StationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationListViewController.swift; sourceTree = "<group>"; };
+		9356107F24171A1600D92CC1 /* NeoStationListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoStationListViewController.swift; sourceTree = "<group>"; };
+		9356108124172EFB00D92CC1 /* NeoStationDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NeoStationDetailViewController.swift; sourceTree = "<group>"; };
+		9356108524180FA600D92CC1 /* StationDetails.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StationDetails.storyboard; sourceTree = "<group>"; };
 		936E9C3123AB241E00BD9E56 /* UIColor+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Ext.swift"; sourceTree = "<group>"; };
 		936E9C3323AB673800BD9E56 /* StationInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StationInfo.swift; sourceTree = "<group>"; };
 		9370226923BE80FA00D45D8C /* Train.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Train.swift; sourceTree = "<group>"; };
@@ -111,6 +115,7 @@
 			children = (
 				93DF8F1F23A99154007766BB /* Main.storyboard */,
 				93DF8F2723A99157007766BB /* LaunchScreen.storyboard */,
+				9356108524180FA600D92CC1 /* StationDetails.storyboard */,
 			);
 			path = Storyboards;
 			sourceTree = "<group>";
@@ -214,7 +219,8 @@
 			isa = PBXGroup;
 			children = (
 				93940C72240DA302004303AE /* NeoHomeViewController.swift */,
-				9356107F24171A1600D92CC1 /* StationListViewController.swift */,
+				9356107F24171A1600D92CC1 /* NeoStationListViewController.swift */,
+				9356108124172EFB00D92CC1 /* NeoStationDetailViewController.swift */,
 			);
 			path = UIViews;
 			sourceTree = "<group>";
@@ -352,6 +358,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9356108624180FA600D92CC1 /* StationDetails.storyboard in Resources */,
 				93DF8F2923A99157007766BB /* LaunchScreen.storyboard in Resources */,
 				93DF8F2623A99157007766BB /* Assets.xcassets in Resources */,
 				93DF8F2123A99154007766BB /* Main.storyboard in Resources */,
@@ -388,7 +395,7 @@
 				93940C80240DA538004303AE /* NearestStationCell.swift in Sources */,
 				93940C7D240DA50F004303AE /* NeoButton.swift in Sources */,
 				93DF8F1C23A99154007766BB /* SceneDelegate.swift in Sources */,
-				9356108024171A1600D92CC1 /* StationListViewController.swift in Sources */,
+				9356108024171A1600D92CC1 /* NeoStationListViewController.swift in Sources */,
 				93E1EEF323D02B0700C5676A /* MapKit+Ext.swift in Sources */,
 				93940C86240DA5B7004303AE /* TrainArrivalsCell.swift in Sources */,
 				93DF8F2423A99154007766BB /* BartAPI.xcdatamodeld in Sources */,
@@ -396,6 +403,7 @@
 				930F8E9523DAAAB5008DDC35 /* Advisory.swift in Sources */,
 				93940C73240DA302004303AE /* NeoHomeViewController.swift in Sources */,
 				93BE2D5A23DA6E5A001FC436 /* AdvisoryPopUp.swift in Sources */,
+				9356108224172EFB00D92CC1 /* NeoStationDetailViewController.swift in Sources */,
 				93940C82240DA54F004303AE /* NextTrainCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

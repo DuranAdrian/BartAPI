@@ -134,7 +134,7 @@ class TrainArrivalsCell: UITableViewCell {
     }
     
     func setUpTitle(delay: Bool) -> NSAttributedString {
-        var normalText = "Arrivals Time"
+        var normalText = "Arrival Time"
         let normalAttribute = [NSAttributedString.Key.foregroundColor: UIColor.darkGray, NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)]
         
         if delay {
@@ -142,7 +142,7 @@ class TrainArrivalsCell: UITableViewCell {
             let delayAttribute = [NSAttributedString.Key.foregroundColor: UIColor.Custom.errorRed, NSAttributedString.Key.font: UIFont.preferredFont(forTextStyle: .caption1)]
             let delayString = NSAttributedString(string: delayText, attributes: delayAttribute)
             let combinedString = NSMutableAttributedString()
-            normalText = " Arrivals Time"
+            normalText = " Arrival Time"
             let normalString = NSAttributedString(string: normalText, attributes: normalAttribute)
             
             combinedString.append(delayString)

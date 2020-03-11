@@ -8,7 +8,7 @@
 
 import UIKit
 
-class StationListViewController: UIViewController {
+class NeoStationListViewController: UIViewController {
     
     // Station TableView
     var stationsTableView: NeoTableView!
@@ -57,11 +57,11 @@ class StationListViewController: UIViewController {
             stationsTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -10),
             stationsTableView.bottomAnchor.constraint(equalTo: view.layoutMarginsGuide.bottomAnchor, constant: -15)
         ])
-
     }
+    
 }
 
-extension StationListViewController: UITableViewDelegate, UITableViewDataSource {
+extension NeoStationListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 56.0
     }
@@ -98,9 +98,20 @@ extension StationListViewController: UITableViewDelegate, UITableViewDataSource 
         }
         
     }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "StationDetails", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: "NeoStationDetailViewController") as! NeoStationDetailViewController
+        if let stationList = stationList {
+            vc.station = searchController.isActive ? searchResults[indexPath.row] : stationList[indexPath.row]
+            vc.navigationItem.title = vc.station.name
+            navigationController?.pushViewController(vc, animated: true)
+        }
+
+    }
 }
 
-extension StationListViewController: UISearchResultsUpdating {
+extension NeoStationListViewController: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         if let searchText = searchController.searchBar.text {
             filterContent(for: searchText)
